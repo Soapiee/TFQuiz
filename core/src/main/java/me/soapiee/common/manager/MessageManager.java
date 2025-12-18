@@ -55,7 +55,9 @@ public class MessageManager {
         String def = messageEnum.getDefault();
 
         if (contents.isSet(path)) {
-            return (contents.isList(path)) ? String.join("\n", contents.getStringList(path)) : contents.getString(path);
+            String text = ((contents.isList(path)) ? String.join("\n", contents.getStringList(path)) : contents.getString(path));
+
+            return text.isEmpty() ? null : text;
         } else {
             if (def.contains("\n")) {
                 String[] list;

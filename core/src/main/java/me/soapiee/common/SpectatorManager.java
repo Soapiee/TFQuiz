@@ -23,7 +23,8 @@ public class SpectatorManager {
             String version = "v" + Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
             String providerName = NMSVersion.valueOf(version).getPackage();
 
-            if (version.split("_")[2].equalsIgnoreCase("11")) {
+            String[] minorVersion = version.split("_");
+            if (minorVersion.length >= 3 && version.split("_")[2].equalsIgnoreCase("11")) {
                 if (isPaper()) throw new InstantiationException();
             }
 

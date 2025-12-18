@@ -97,11 +97,11 @@ public class GameSpecs {
 
                 spawn = new Location(
                         Bukkit.getWorld(config.getString("games." + id + ".arena_options.spawn_point.world").replace("'", "")),
-                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.x").replace("'", "")),
-                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.y").replace("'", "")),
-                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.z").replace("'", "")),
-                        Float.parseFloat(config.getString("games." + id + ".arena_options.spawn_point.yaw").replace("'", "")),
-                        Float.parseFloat(config.getString("games." + id + ".arena_options.spawn_point.pitch").replace("'", "")));
+                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.x", "0.0").replace("'", "")),
+                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.y", "0.0").replace("'", "")),
+                        Double.parseDouble(config.getString("games." + id + ".arena_options.spawn_point.z", "0.0").replace("'", "")),
+                        Float.parseFloat(config.getString("games." + id + ".arena_options.spawn_point.yaw", "0.0").replace("'", "")),
+                        Float.parseFloat(config.getString("games." + id + ".arena_options.spawn_point.pitch", "0.0").replace("'", "")));
             } else {
                 config.set("games." + id + ".arena_options.spawn_point.world", "null");
                 config.set("games." + id + ".arena_options.spawn_point.x", "null");
