@@ -284,10 +284,9 @@ public class GameManager {
             int id = game.getID();
             if (config.isSet("games." + id + ".schedule_delay")) {
                 if (game.isPhysicalArena()) return;
-                int delay = config.getInt("games." + id + ".schedule_delay");
-                int resetDelay = 60;
-                if (config.isSet("games." + id + ".schedule_resets"))
-                    resetDelay = config.getInt("games." + id + ".schedule_resets");
+
+                int delay = config.getInt("games." + id + ".schedule_delay", 30);
+                int resetDelay = config.getInt("games." + id + ".schedule_resets", 60);
                 schedulers.put(id, new Scheduler(main, game, delay, resetDelay));
             }
         }
@@ -301,6 +300,10 @@ public class GameManager {
             } catch (IllegalStateException ignored) {
             }
         }
+    }
+
+    public boolean hasScheduler(Game game) {
+        return schedulers.containsKey(game.getID());
     }
 
     public Scheduler getScheduler(int gameID) {

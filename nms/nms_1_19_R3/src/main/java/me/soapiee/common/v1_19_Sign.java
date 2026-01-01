@@ -7,6 +7,6 @@ import org.bukkit.block.Sign;
 public class v1_19_Sign implements VersionProvider {
     @Override
     public void setLine(Sign sign, int lineNo, String text) {
-        sign.setLine(lineNo, Utils.colour(text));
+        sign.setLine(lineNo, Utils.addColour(text));
     }
 }

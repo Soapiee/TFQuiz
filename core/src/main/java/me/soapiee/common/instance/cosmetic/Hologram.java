@@ -49,6 +49,6 @@ public class Hologram {
 
     public String getLocation() {
         if (spawnPoint == null) return null;
-        return "World: " + spawnPoint.getWorld() + " X=" + spawnPoint.getX() + ", Y=" + spawnPoint.getY() + " Z=" + spawnPoint.getZ();
+        return "World: " + spawnPoint.getWorld().getName() + " X=" + spawnPoint.getX() + ", Y=" + spawnPoint.getY() + " Z=" + spawnPoint.getZ();
     }
 }

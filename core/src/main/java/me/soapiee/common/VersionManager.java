@@ -16,6 +16,7 @@ public class VersionManager {
         try {
             String packageName = VersionManager.class.getPackage().getName();
             int version = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
+//            int version = Utils.getMajorVersion();
 
             String providerName;
             if (version <= 19) providerName = "v1_19_Sign";

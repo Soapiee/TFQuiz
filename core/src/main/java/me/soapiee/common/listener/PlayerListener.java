@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
@@ -206,20 +207,30 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         }
     }
 
-    @Override
-    public void conversationAbandoned(@NotNull ConversationAbandonedEvent abandonedEvent) {
-        Player player = (Player) abandonedEvent.getContext().getForWhom();
+    private String getConvoType(Player player) {
         String convoType = player.getPersistentDataContainer().get(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING);
-        player.getPersistentDataContainer().remove(Keys.GAME_SIGN);
-
-        if (convoType == null) return;
         player.getPersistentDataContainer().remove(Keys.ACTIVE_CONVERSATION);
 
-        if (convoType.equalsIgnoreCase("signConvo"))
-            player.sendMessage(Utils.addColour("&cYou have exited the GameSign editor"));
-        if (convoType.equalsIgnoreCase("reloadConvo")) {
-            if (!abandonedEvent.gracefulExit()) player.sendMessage(Utils.addColour("&cYou have cancelled the reload"));
+        return convoType;
+    }
+
+    @Override
+    public void conversationAbandoned(@NotNull ConversationAbandonedEvent abandonedEvent) {
+        Conversable conversable = abandonedEvent.getContext().getForWhom();
+        if (!(conversable instanceof Player)) return;
+        Player player = (Player) conversable;
+
+        String convoType = getConvoType(player);
+        if (convoType == null) return;
+
+        if (convoType.equalsIgnoreCase("signConvo")) {
+            player.getPersistentDataContainer().remove(Keys.GAME_SIGN);
+            conversable.sendRawMessage(Utils.addColour("&cYou have exited the GameSign editor"));
         }
+        if (convoType.equalsIgnoreCase("reloadConvo"))
+            if (!abandonedEvent.gracefulExit())
+                conversable.sendRawMessage(Utils.addColour("&cYou have cancelled the reload"));
+
     }
 
     @EventHandler

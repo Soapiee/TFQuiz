@@ -1,22 +1,20 @@
 package me.soapiee.common.command;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.command.playerCmds.JoinSub;
+import me.soapiee.common.command.playerCmds.LeaveSub;
+import me.soapiee.common.command.playerCmds.ListSub;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.utils.Utils;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PlayerCommand implements CommandExecutor, TabCompleter {
@@ -24,127 +22,78 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
     private final TFQuiz main;
     private final MessageManager messageManager;
 
+    private final String PERMISSION = "tfquiz.player";
+    private final Map<String, SubCmd> subCommands = new HashMap<>();
+
     public PlayerCommand(TFQuiz main) {
         this.main = main;
         this.messageManager = main.getMessageManager();
+
+        register(new JoinSub(main));
+        register(new LeaveSub(main));
+        register(new ListSub(main));
     }
 
-    @Override     // /game <join | leave | list> <gameID>
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
-        if (!(sender instanceof Player)) {
-            Utils.consoleMsg("You must be a player to use this command");
-            return true;
-        }
-
-        Player player = (Player) sender;
-        String cmdUsage = Utils.addColour(this.messageManager.get(Message.GAMECCMDUSAGE));
-        String noPermission = Utils.addColour(this.messageManager.get(Message.NOPERMISSION));
+    // /game join|leave <gameID>
+    // /game list
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (isConsole(sender)) return true;
+        if (!hasPermission(sender)) return true;
 
         if (args.length == 0) {
-            player.sendMessage(cmdUsage);
+            sendMessage(sender, messageManager.get(Message.GAMECCMDUSAGE));
             return true;
         }
 
-        if (!player.hasPermission("tfquiz.player")) {
-            player.sendMessage(noPermission);
+        SubCmd cmd = subCommands.get(args[0]);
+        if (cmd == null) {
+            sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMECCMDUSAGE, label));
             return true;
         }
 
-        String subCommand = args[0].toLowerCase();
-        switch (subCommand) {
-            case "join":
-                if (!player.hasPermission("tfquiz.player.join")) {
-                    player.sendMessage(noPermission);
-                    return true;
-                }
-
-                if (args.length != 2) {
-                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEJOINCMDUSAGE)));
-                    return true;
-                }
-
-                if (this.main.getGameManager().getGame(player) != null) {
-                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMENOTNULL)));
-                    return true;
-                }
-
-                //Check they provided a number/int
-                String invalidGameID = Utils.addColour(this.messageManager.get(Message.GAMEINVALIDGAMEID));
-                int gameID;
-                try {
-                    gameID = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    player.sendMessage(invalidGameID);
-                    return true;
-                }
-
-                //Check the game is a valid game
-                if (this.main.getGameManager().getGame(gameID) != null) {
-                    Game gameToJoin = this.main.getGameManager().getGame(gameID);
-                    switch (gameToJoin.addPlayer(player)) {
-                        case 1:
-                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEINVALIDGAMEMODE)));
-                            return true;
-                        case 2:
-                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEINVALIDSTATE)));
-                            return true;
-                        case 3:
-                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEFULL)));
-                            return true;
-                        case 0:
-                            return true;
-                    }
-                } else {
-                    player.sendMessage(invalidGameID);
-                }
-                return true;
-
-            case "leave":
-                if (!player.hasPermission("tfquiz.player.join")) {
-                    player.sendMessage(noPermission);
-                    return true;
-                }
-
-                if (args.length != 1) break;
-                Game gameToLeave = this.main.getGameManager().getGame(player);
-                if (gameToLeave != null) {
-                    gameToLeave.removePlayer(player);
-                    player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMELEAVE, gameToLeave)));
-                } else {
-                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMELEFTERROR)));
-                }
-                return true;
-
-            case "list":
-                if (!player.hasPermission("tfquiz.player.list")) {
-                    player.sendMessage(noPermission);
-                    return true;
-                }
-                if (args.length != 1) break;
-                player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMELISTHEADER)));
-                for (Game game : this.main.getGameManager().getGames()) {
-                    String message = this.messageManager.getWithPlaceholder(Message.GAMELIST, game);
-                    TextComponent clickableText = new TextComponent(Utils.addColour(message));
-                    clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/game join " + game.getID()));
-                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.addColour(this.messageManager.get(Message.GAMELISTHOVER)))));
-                    player.spigot().sendMessage(clickableText);
-                }
-                return true;
-
-            default:
-                player.sendMessage(cmdUsage);
-                return true;
-        }
-        player.sendMessage(cmdUsage);
+        cmd.execute(sender, label, args);
         return true;
     }
 
-    @Override      //      Usage: /game <join|leave|list> <ID>
+    private void register(SubCmd cmd) {
+        subCommands.put(cmd.getIDENTIFIER(), cmd);
+    }
+
+    private boolean isConsole(CommandSender sender) {
+        if (sender instanceof ConsoleCommandSender) {
+            sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean hasPermission(CommandSender sender) {
+        if (!(sender instanceof Player)) return true;
+
+        Player player = (Player) sender;
+        if (!player.hasPermission(PERMISSION)) sendMessage(player, messageManager.get(Message.NOPERMISSION));
+
+        return player.hasPermission(PERMISSION);
+    }
+
+    private void sendMessage(CommandSender sender, String message) {
+        if (message == null) return;
+
+        if (sender instanceof Player) sender.sendMessage(Utils.addColour(message));
+        else Utils.consoleMsg(message);
+    }
+
+    // /game join|leave <gameID>
+    // /game list
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         final List<String> results = new ArrayList<>();
         switch (args.length) {
             case 1:
+                results.add("help");
+
                 if (sender instanceof Player && sender.hasPermission("tfquiz.player.list")) {
                     results.add("list");
                 }

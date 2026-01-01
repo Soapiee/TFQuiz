@@ -6,6 +6,7 @@ public enum Message {
     CONSOLEUSAGEERROR("console_usage_error", "&cYou must be a player to use this command"),
     NOPERMISSION("no_permission", "&cYou do not have permission to use this command"),
     PLAYERNOTFOUND("player_not_found", "&cPlayer not found"),
+    INVALIDNUMBER("invalid_number_input", "&c%input% is not a valid number"),
 
     //                    --->    ADMIN COMMAND MESSAGES    <---
     ADMINCMDUSAGE("admin_command_usage",
@@ -106,7 +107,7 @@ public enum Message {
     GAMEINVALIDGAMEMODE("game_invalid_gamemode_error", "&cYou must be in survival mode to join this game"),
     FORCEDGAMELEAVE("forced_game_leave", "&cAn admin removed you from game %game_ID%"),
     GAMEFULL("game_full_error", "&cThis game is full"),
-    GAMENOTNULL("already_in_game_error", "&cYou are already in an game"),
+    GAMENOTNULL("already_in_game_error", "&cYou are already in a game"),
     GAMELEAVE("game_leave", "&cYou have left the game"),
     GAMEOTHERLEFT("game_other_player_left", "&c%player% left the game &7(%game_players%/%game_minplayers%)"),
     GAMELEFTERROR("error_game_leave", "&cYou are not in an game"),

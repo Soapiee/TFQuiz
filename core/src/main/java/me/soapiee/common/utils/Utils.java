@@ -12,9 +12,19 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
+    // 1.21.10       ||        26.1.0
+    public static String getMinorVersion() {
+        String version = "v" + Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
+        return version.split("_")[2];
+    }
+
+    public static int getMajorVersion() {
+        return Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
+    }
+
     public static void consoleMsg(String message) {
         String prefix = "[" + Bukkit.getServer().getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getPrefix() + "]";
-        Bukkit.getConsoleSender().sendMessage(prefix + " " + message);
+        Bukkit.getConsoleSender().sendMessage(prefix + " " + addColour(message));
     }
 
     public static String addColour(String message) {

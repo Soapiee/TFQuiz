@@ -53,7 +53,7 @@ public class ReloadConvo extends FixedSetPrompt {
         return Utils.addColour(messageManager.get(Message.RELOADCONVOSTART));
     }
 
-    public void reloadCheck(Conversable sender) {
+    private void reloadCheck(Conversable sender) {
         sender.sendRawMessage(Utils.addColour(messageManager.get(Message.ADMINRELOADINPROGRESS)));
         String reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADSUCCESS));
 
@@ -63,8 +63,7 @@ public class ReloadConvo extends FixedSetPrompt {
             game.setState(GameState.CLOSED);
         }
 
-        boolean errors = false;
-        if (!messageManager.load((CommandSender) sender)) errors = true;
+        boolean errors = !messageManager.load((CommandSender) sender);
         if (!gameManager.reloadAll((CommandSender) sender, playerListener)) errors = true;
 
         if (errors) reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADERROR));

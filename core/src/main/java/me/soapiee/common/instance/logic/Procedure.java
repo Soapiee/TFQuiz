@@ -193,8 +193,7 @@ public class Procedure implements Listener {
         Reward reward = game.getReward();
         HashSet<Player> players = new HashSet<>();
 
-        if (size > 1) players.addAll(game.getPlayingPlayers());
-        else players.add(game.getPlayingPlayers().iterator().next());
+        if (size >= 1) players.addAll(game.getPlayingPlayers());
 
         game.reset(true, false);
 

@@ -139,6 +139,7 @@ public class MessageManager {
 
     public String getWithPlaceholder(Message messageEnum, String string) {
         return get(messageEnum).replace("%player%", string)
+                .replace("%input%", string)
                 .replace("%sign_ID%", string)
                 .replace("%game_ID%", string)
                 .replace("%loc_ID%", string)

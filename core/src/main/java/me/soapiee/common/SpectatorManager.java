@@ -28,6 +28,8 @@ public class SpectatorManager {
                 if (isPaper()) throw new InstantiationException();
             }
 
+            //TODO
+//            provider = (NMSProvider) Class.forName(packageName + "." + providerName + getPlatformID()).newInstance();
             provider = (NMSProvider) Class.forName(packageName + "." + providerName).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  ClassCastException | IllegalArgumentException ex) {
@@ -35,6 +37,14 @@ public class SpectatorManager {
                     "\nAll other features will work as normal");
             provider = new NMS_Unsupported();
         }
+    }
+
+    private String getPlatformID() {
+//        if (isPaper() || isPurpur() || isFolia()) return "_P";
+//        return "_S";
+
+        if (isPaper()) return "_P";
+        return "";
     }
 
     private boolean isPaper() {

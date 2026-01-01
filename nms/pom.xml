@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tfquiz-nms</artifactId>
-    <version>1.0.0</version>
+    <!--    <version>1.4.9</version>-->
     <packaging>pom</packaging>
 
     <parent>
         <groupId>me.soapiee</groupId>
         <artifactId>tfquiz-parent</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
     </parent>
 
     <modules>
