@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <artifactId>tfquiz-plugin</artifactId>
-    <!--    <version>2.50.1</version>-->
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,12 +16,14 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <variant></variant>
     </properties>
 
     <build>
         <directory>../target</directory>
-        <finalName>TFQuiz-${project.parent.version}</finalName>
+        <finalName>TFQuiz${variant}-${project.parent.version}</finalName>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -44,6 +45,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -56,6 +58,7 @@
                     </archive>
                 </configuration>
             </plugin>
+
         </plugins>
         <resources>
             <resource>
@@ -64,6 +67,186 @@
             </resource>
         </resources>
     </build>
+
+    <profiles>
+        <profile>
+            <id>spigot</id>
+            <properties>
+                <variant>-Spigot</variant>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_17_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_18_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_18_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R4</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R4</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R5</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R6</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_21_R7</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>paper</id>
+            <properties>
+                <variant>-Paper</variant>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_16_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_17_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_18_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_18_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_19_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_1_20_R4</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R1</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R2</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R4</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R5</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R6</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_1_21_R7</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
@@ -80,107 +263,6 @@
         <dependency>
             <groupId>me.soapiee</groupId>
             <artifactId>tfquiz-core</artifactId>
-            <!--            <version>2.50.1</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_16_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_16_R2</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_16_R3</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_17_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_18_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_18_R2</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_19_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_19_R2</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_19_R3</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_20_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_20_R2</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_20_R3</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_20_R4</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R1</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R2</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R3</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R4</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R5</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R6</artifactId>
-            <!--            <version>1.4.9</version>-->
-        </dependency>
-        <dependency>
-            <groupId>me.soapiee</groupId>
-            <artifactId>tfquiz-nms_1_21_R7</artifactId>
-            <!--            <version>1.4.9</version>-->
         </dependency>
     </dependencies>
 </project>

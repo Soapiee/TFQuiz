@@ -19,9 +19,22 @@ import java.util.UUID;
 
 class v1_21_R5 implements NMSProvider {
 
+    private ServerPlayer getServerPlayer(Player player) {
+        try {
+            return ((CraftPlayer) player).getHandle();
+        } catch (NoClassDefFoundError e) {
+            Utils.consoleMsg("&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Spigot.");
+            if (Utils.IS_PAPER) Utils.consoleMsg("&c[TFQuiz] Please download the Paper jar instead.");
+
+            return null;
+        }
+    }
+
     @Override
     public boolean setSpectator(Player player) {
-        ServerPlayer p = ((CraftPlayer) player).getHandle();
+        ServerPlayer p = getServerPlayer(player);
+        if (p == null) return false;
+
         ClientboundPlayerInfoUpdatePacket info = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE, p);
 
         ArrayList<ClientboundPlayerInfoUpdatePacket.Entry> list = new ArrayList<>();

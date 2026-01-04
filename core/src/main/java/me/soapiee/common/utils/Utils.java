@@ -10,7 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Utils {
+public final class Utils {
+
+    public static final boolean IS_PAPER = detectPaper();
 
     // 1.21.10       ||        26.1.0
     public static String getMinorVersion() {
@@ -25,6 +27,16 @@ public class Utils {
     public static void consoleMsg(String message) {
         String prefix = "[" + Bukkit.getServer().getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getPrefix() + "]";
         Bukkit.getConsoleSender().sendMessage(prefix + " " + addColour(message));
+    }
+
+    private static boolean detectPaper() {
+        try {
+            Class.forName("com.destroystokyo.paper.ClientOption");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return false;
     }
 
     public static String addColour(String message) {

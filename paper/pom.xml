@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tfquiz-paper</artifactId>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>me.soapiee</groupId>
+        <artifactId>tfquiz-parent</artifactId>
+        <version>1.4.9</version>
+    </parent>
+
+    <modules>
+        <module>paper_1_21_R1</module>
+        <module>paper_1_21_R2</module>
+        <module>paper_1_21_R3</module>
+        <module>paper_1_21_R4</module>
+        <module>paper_1_21_R5</module>
+        <module>paper_1_21_R6</module>
+        <module>paper_1_21_R7</module>
+    </modules>
+</project>

@@ -2,8 +2,6 @@ package me.soapiee.common.versionsupport;
 
 public enum NMSVersion {
 
-    //    v1_14("v1_14_R1"), v1_14_2("v1_14_R1"), v1_14_3("v1_14_R1"), v1_14_4("v1_14_R1"),
-//    v1_15("v1_15_R1"), v1_15_1("v1_15_R1"), v1_15_2("v1_15_R1"),
     v1_16_1("v1_16_R1"),
     v1_16_2("v1_16_R2"), v1_16_3("v1_16_R2"),
     v1_16_4("v1_16_R3"), v1_16_5("v1_16_R3"),
@@ -32,7 +30,7 @@ public enum NMSVersion {
         this.nms = nms;
     }
 
-    public String getPackage() {
+    public String getProvider() {
         return nms;
     }
 }
