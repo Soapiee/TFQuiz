@@ -21,5 +21,5 @@ There are only two **OPTIONAL** dependencies
 2. [Spigot DMs](https://www.spigotmc.org/members/soapie.174947/)
 
 ## Documentation
-- [Wiki]([https://github.com/Soapiee/BiomeMasteryDev/wiki](https://github.com/Soapiee/TFQuizDev/wiki))  
-- [Spigot Page]([https://www.spigotmc.org/](https://www.spigotmc.org/resources/truefalsequiz-1-16-1-21-11.125077/))
+- [Wiki](https://github.com/Soapiee/TFQuiz/wiki)  
+- [Spigot Page](https://www.spigotmc.org/resources/truefalsequiz-1-16-1-21-11.125077/)
