@@ -19,42 +19,20 @@ public class SpectatorManager {
         spectators = new HashSet<>();
 
         try {
+            String version = Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
             String packageName = SpectatorManager.class.getPackage().getName();
-            String version = "v" + Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
-            String providerName = NMSVersion.valueOf(version).getPackage();
+            String providerName = NMSVersion.valueOf("v" + version).getProvider();
+//            Utils.consoleMsg(ChatColor.GOLD + packageName + "." + providerName);
 
-            String[] minorVersion = version.split("_");
-            if (minorVersion.length >= 3 && version.split("_")[2].equalsIgnoreCase("11")) {
-                if (isPaper()) throw new InstantiationException();
-            }
-
-            //TODO
-//            provider = (NMSProvider) Class.forName(packageName + "." + providerName + getPlatformID()).newInstance();
             provider = (NMSProvider) Class.forName(packageName + "." + providerName).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  ClassCastException | IllegalArgumentException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished. Its recommended that you disable it in the config" +
                     "\nAll other features will work as normal");
             provider = new NMS_Unsupported();
+
+            if (main.debugMode()) main.getCustomLogger().logToFile(ex, "");
         }
-    }
-
-    private String getPlatformID() {
-//        if (isPaper() || isPurpur() || isFolia()) return "_P";
-//        return "_S";
-
-        if (isPaper()) return "_P";
-        return "";
-    }
-
-    private boolean isPaper() {
-        try {
-            Class.forName("com.destroystokyo.paper.ClientOption");
-            return true;
-        } catch (ClassNotFoundException ignored) {
-        }
-
-        return false;
     }
 
     public boolean setSpectator(Player player) {
