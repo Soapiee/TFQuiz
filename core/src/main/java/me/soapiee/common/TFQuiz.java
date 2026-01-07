@@ -1,5 +1,6 @@
 package me.soapiee.common;
 
+import lombok.Getter;
 import me.soapiee.common.command.AdminCommand;
 import me.soapiee.common.command.PlayerCommand;
 import me.soapiee.common.hooks.PlaceHolderAPIHook;
@@ -9,34 +10,40 @@ import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.listener.ChatListener;
 import me.soapiee.common.listener.ConnectListener;
 import me.soapiee.common.listener.PlayerListener;
-import me.soapiee.common.manager.GameManager;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.manager.*;
+import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
 import me.soapiee.common.utils.UpdateChecker;
-import me.soapiee.common.utils.Utils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TFQuiz extends JavaPlugin {
 
-    //TODO: Add "addGame" + "removeGame" command functionality
-    //TODO: Right click signs to edit them (in PlayerListener)
+    //TODO: Add "addGame" + "deleteGame" command functionality
     //TODO: Add question categories
     //TODO:
 
-    private GameManager gameManager;
-    private MessageManager messageManager;
-    private SpectatorManager specManager;
-    private VersionManager versionManager;
-    private PlayerCache playerCache;
-    private PlayerListener playerListener;
+    @Getter private MessageManager messageManager;
+    @Getter private SpectatorManager specManager;
+    @Getter private VersionManager versionManager;
+    @Getter private PlayerCache playerCache;
+    @Getter private GameManager gameManager;
+    @Getter private SettingsManager settingsManager;
+    @Getter private QuestionManager questionManager;
+    private InventoryManager inventoryManager;
+    @Getter private GameSignManager gameSignManager;
+    @Getter private SchedulerManager schedulerManager;
+    @Getter private PlayerListener playerListener;
     private VaultHook vaultHook;
     private Logger logger;
+    @Getter private boolean debugMode;
 
     @Override
     public void onEnable() {
@@ -45,18 +52,13 @@ public final class TFQuiz extends JavaPlugin {
         messageManager = new MessageManager(this);
         specManager = new SpectatorManager(this);
         versionManager = new VersionManager(logger);
+        debugMode = getConfig().getBoolean("debug_mode", false);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) new PlaceHolderAPIHook(this).register();
         if (getServer().getPluginManager().getPlugin("Vault") != null) vaultHook = new VaultHook();
         new Metrics(this, 25563);
 
-        if (!getConfig().isConfigurationSection("games") || getConfig().getConfigurationSection("games").getKeys(false).isEmpty()) {
-            Utils.consoleMsg(ChatColor.RED + "Please set up some games in the config.yml");
-//            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        gameManager = new GameManager(this);
+        initiateManagers();
         playerCache = new PlayerCache();
 
         playerListener = new PlayerListener(this);
@@ -71,6 +73,7 @@ public final class TFQuiz extends JavaPlugin {
         updateChecker.updateAlert(this);
     }
 
+
     @Override
     public void onDisable() {
         if (gameManager == null) return;
@@ -82,40 +85,29 @@ public final class TFQuiz extends JavaPlugin {
                 }
                 game.restoreInventory(player);
 
-                if (game.isPhysicalArena()) player.teleport(getGameManager().getLobbySpawn());
+                if (game.isPhysicalArena()) player.teleport(settingsManager.getLobbySpawn());
             }
             if (game.getHologram() != null) game.getHologram().despawn();
 
-            gameManager.killOtherHolos();
+            killOtherHolos(game);
 
-            for (GameSign sign : game.getSigns()) {
-                sign.despawn();
-            }
+            if (game.getSigns() == null) continue;
+            for (GameSign sign : game.getSigns()) sign.despawn();
         }
     }
 
-    public SpectatorManager getSpecManager() {
-        return specManager;
-    }
+    private void initiateManagers() {
+        settingsManager = new SettingsManager(this);
+        questionManager = new QuestionManager(this);
+        if (settingsManager.isSaveInvs()) inventoryManager = new InventoryManager(this);
+        else inventoryManager = null;
+        gameManager = new GameManager(this);
+        gameSignManager = new GameSignManager(this, gameManager);
+        schedulerManager = new SchedulerManager(this);
 
-    public VersionManager getVersionManager() {
-        return versionManager;
-    }
-
-    public GameManager getGameManager() {
-        return gameManager;
-    }
-
-    public PlayerCache getPlayerCache() {
-        return playerCache;
-    }
-
-    public PlayerListener getPlayerListener() {
-        return playerListener;
-    }
-
-    public MessageManager getMessageManager() {
-        return messageManager;
+        gameManager.load(null);
+        gameSignManager.load(Bukkit.getConsoleSender());
+        schedulerManager.startSchedulers();
     }
 
     public VaultHook getVaultHook() {
@@ -127,7 +119,18 @@ public final class TFQuiz extends JavaPlugin {
         return logger;
     }
 
-    public boolean debugMode() {
-        return getConfig().getBoolean("debug_mode", false);
+    public InventoryManager getInventoryManager() {
+        if (!settingsManager.isSaveInvs()) return null;
+        return inventoryManager;
+    }
+
+    private void killOtherHolos(Game game) {
+        if (game.getSpawn() != null) {
+            for (Entity entity : game.getSpawn().getWorld().getEntities()) {
+                if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE)) {
+                    entity.remove();
+                }
+            }
+        }
     }
 }

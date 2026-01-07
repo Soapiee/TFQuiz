@@ -1,5 +1,6 @@
 package me.soapiee.common.instance;
 
+import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.enums.RewardType;
@@ -17,13 +18,13 @@ public class Reward {
 
     private final MessageManager messageManager;
     private VaultHook vaultHook;
-    private final RewardType type;
-    private final String message;
-    private ArrayList<ItemStack> itemList;
-    private ArrayList<String> permissionList;
-    private ArrayList<String> commandsList;
-    private int xpAmount;
-    private double money;
+    @Getter private final RewardType type;
+    @Getter private final String message;
+    @Getter private ArrayList<ItemStack> itemList;
+    @Getter private ArrayList<String> permissionList;
+    @Getter private ArrayList<String> commandsList;
+    @Getter private int xpAmount;
+    @Getter private double moneyAmount;
 
     public Reward(TFQuiz main, RewardType type, String message) {
         this.messageManager = main.getMessageManager();
@@ -35,7 +36,7 @@ public class Reward {
     public Reward(TFQuiz main, RewardType type, String message, double amount) {
         this(main, type, message);
         this.vaultHook = main.getVaultHook();
-        this.money = amount;
+        this.moneyAmount = amount;
     }
 
     //XP Type
@@ -75,7 +76,7 @@ public class Reward {
                 vaultHook.deposit(player, getMoneyAmount());
                 break;
             case EXPERIENCE:
-                player.giveExp(getxpAmount());
+                player.giveExp(getXpAmount());
                 break;
             case ITEM:
                 for (ItemStack item : getItemList()) {
@@ -89,7 +90,7 @@ public class Reward {
                 }
                 break;
             case COMMAND:
-                for (String command : getCommands()) {
+                for (String command : getCommandsList()) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
                 }
                 break;
@@ -97,34 +98,6 @@ public class Reward {
                 break;
         }
         if (getMessage() != null) player.sendMessage(Utils.addColour(getMessage()));
-    }
-
-    public RewardType getType() {
-        return this.type;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public ArrayList<ItemStack> getItemList() {
-        return this.itemList;
-    }
-
-    public ArrayList<String> getCommands() {
-        return this.commandsList;
-    }
-
-    public int getxpAmount() {
-        return this.xpAmount;
-    }
-
-    public ArrayList<String> getPermissionList() {
-        return this.permissionList;
-    }
-
-    public double getMoneyAmount() {
-        return this.money;
     }
 
     @Override
@@ -157,7 +130,8 @@ public class Reward {
                 }
                 break;
             case CURRENCY:
-                builder.append(money).append(vaultHook.getCurrencyName());
+                builder.append(moneyAmount);
+                if (vaultHook != null) builder.append(vaultHook.getCurrencyName());
                 break;
             case EXPERIENCE:
                 builder.append(xpAmount).append(" exp");

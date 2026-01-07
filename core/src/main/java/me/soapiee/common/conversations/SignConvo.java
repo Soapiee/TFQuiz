@@ -2,7 +2,8 @@ package me.soapiee.common.conversations;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.GameManager;
+import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.manager.GameSignManager;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
@@ -15,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
 public class SignConvo extends MessagePrompt {
 
     private final MessageManager messageManager;
-    private final GameManager gameManager;
+    private final GameSignManager gameSignManager;
 
     public SignConvo(TFQuiz main) {
         messageManager = main.getMessageManager();
-        gameManager = main.getGameManager();
+        gameSignManager = main.getGameSignManager();
     }
 
     @Override
@@ -80,8 +81,9 @@ public class SignConvo extends MessagePrompt {
             String text = (String) conversationContext.getSessionData("text");
 
             //update the sign
-            gameManager.getSign(signID).update(lineNo, text);
-            gameManager.saveSign(gameManager.getSign(signID));
+            GameSign gameSign = gameSignManager.getSign(signID);
+            gameSign.update(lineNo, text);
+            gameSignManager.saveNewText(gameSign);
 
             conversationContext.setSessionData("line", null);
             conversationContext.setSessionData("text", null);

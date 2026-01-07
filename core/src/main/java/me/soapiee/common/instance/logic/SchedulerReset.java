@@ -27,7 +27,7 @@ public class SchedulerReset extends BukkitRunnable {
         if (!this.scheduler.isPlayed()) {
             this.game.reset(true, true);
 
-            String message = Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMECLOSEDSCHEDULER, game.getID()));
+            String message = Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMECLOSEDSCHEDULER, game.getIdentifier()));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(message);
             }

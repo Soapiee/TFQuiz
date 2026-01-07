@@ -15,10 +15,12 @@ import java.util.Date;
 
 
 public class Logger {
+    private final TFQuiz main;
     private final File logFile;
-    private final boolean debugMode;
 
     public Logger(TFQuiz main) {
+        this.main = main;
+
         logFile = new File(main.getDataFolder() + File.separator + "logger.log");
         if (!logFile.exists()) {
             try {
@@ -27,8 +29,6 @@ public class Logger {
                 Utils.consoleMsg(ChatColor.RED + "Error creating logger file");
             }
         }
-
-        debugMode = main.getConfig().getBoolean("enabled_debug");
     }
 
     public void logToFile(Exception error, String string) {
@@ -68,22 +68,26 @@ public class Logger {
         if (sender == null) return;
         if (string.isEmpty()) return;
 
-        if (sender instanceof Player)
-            if (((Player) sender).isOnline()) {
-                sender.sendMessage(Utils.addColour(string));
-            }
+        Bukkit.getScheduler().runTaskLater(main, () -> {
+            if (sender instanceof Player)
+                if (((Player) sender).isOnline()) {
+                    sender.sendMessage(Utils.addColour(string));
+                }
+        }, 20L);
     }
 
     public void onlyLogToPlayer(CommandSender sender, String string) {
         if (string.isEmpty()) return;
 
-        if (sender instanceof Player)
-            if (((Player) sender).isOnline()) {
+        Bukkit.getScheduler().runTaskLater(main, () -> {
+            if (sender instanceof Player && ((Player) sender).isOnline()) {
                 sender.sendMessage(Utils.addColour(string));
                 return;
             }
 
-        Utils.consoleMsg(string);
+            Utils.consoleMsg(string);
+        }, 20L);
+
     }
 
     private enum LogType {

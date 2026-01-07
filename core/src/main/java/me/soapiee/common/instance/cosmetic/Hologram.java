@@ -1,5 +1,6 @@
 package me.soapiee.common.instance.cosmetic;
 
+import lombok.Getter;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.Location;
@@ -10,7 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class Hologram {
 
     private final String[] text;
-    private Location spawnPoint;
+    @Getter private Location spawnPoint;
 
     public Hologram(String text) {
         this.text = text.split("\n");
@@ -47,7 +48,7 @@ public class Hologram {
         this.spawnPoint = newLoc;
     }
 
-    public String getLocation() {
+    public String getLocationString() {
         if (spawnPoint == null) return null;
         return "World: " + spawnPoint.getWorld().getName() + " X=" + spawnPoint.getX() + ", Y=" + spawnPoint.getY() + " Z=" + spawnPoint.getZ();
     }

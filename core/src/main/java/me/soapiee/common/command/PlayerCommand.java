@@ -106,7 +106,7 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
                 if (sender instanceof Player && !sender.hasPermission("tfquiz.player.join")) break;
                 if (args[0].equals("join")) {
                     for (Game game : this.main.getGameManager().getGames()) {
-                        results.add(String.valueOf(game.getID()));
+                        results.add(String.valueOf(game.getIdentifier()));
                     }
                 }
                 break;

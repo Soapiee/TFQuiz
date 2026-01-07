@@ -41,7 +41,7 @@ public class GameAddPlayerSub extends AbstractAdminSub {
         int outcome = game.addPlayer(player);
         switch (outcome) {
             case 0:
-                sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERADDED, player.getName(), game.getID()));
+                sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERADDED, player.getName(), game.getIdentifier()));
                 return;
             case 1:
                 message = Message.GAMEINVALIDGAMEMODEOTHER;

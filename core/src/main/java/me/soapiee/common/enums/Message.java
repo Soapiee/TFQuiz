@@ -7,6 +7,9 @@ public enum Message {
     NOPERMISSION("no_permission", "&cYou do not have permission to use this command"),
     PLAYERNOTFOUND("player_not_found", "&cPlayer not found"),
     INVALIDNUMBER("invalid_number_input", "&c%input% is not a valid number"),
+    NOQUESTIONSSET("questions_error", "&cCould not find any questions inside questions.yml"),
+    LOADSETTINGSERROR("settings_error", "&cThe config field &e%field% &cis not set. Defaulting to &e%default_value%"),
+    INVALIDLOBBYSPAWN("lobby_spawn_error", "&cYou must set a lobby spawn point in the config"),
 
     //                    --->    ADMIN COMMAND MESSAGES    <---
     ADMINCMDUSAGE("admin_command_usage",
@@ -189,6 +192,7 @@ public enum Message {
     GAMECCMDUSAGE("game_command_usage", "&cUsage: /game <join | leave | list> <gameID>"),
     GAMEJOINCMDUSAGE("game_join_command_usage", "&cUsage: /game join <gameID>"),
     GAMESPECTATORERROR("game_spectator_error", "&cThere was an error setting you as a spectator. You have been removed from the arena"),
+    GAMECREATEDSUCCESS("game_created", "&aGame &e%game_ID% &awas successfully created"),
 
     //                    --->    SIGN MESSAGES    <---
     SIGNADMINCMDUSAGE("sign_admin_command_usage",
@@ -207,10 +211,14 @@ public enum Message {
     SIGNREMOVED("sign_removed", "&aYou removed an game sign &7(signID: %sign_ID%)"),
     SIGNEDITED("sign_edited", "&aYou sucessfully edited an game sign &7(signID: %sign_ID%)"),
     SIGNINVALIDLINENUM("sign_invalid_line_number", "&cEnter a valid line number (1-4)"),
-    SIGNINVALIDSIGNID("sign_invalid_signID", "&cYou must input a invalid signID"),
+    SIGNINVALIDSIGNID("sign_invalid_signID", "&cYou must input a valid signID"),
     SIGNNOTLOOKINGATGAMESIGN("not_looking_at_game_sign", "&cYou are not looking at an game sign"),
     SIGNNOTLOOKINGATSIGN("not_looking_at_sign", "&cYou are not looking at a sign"),
     SIGNALREADYEXISTS("sign_already_exists", "&cThis sign is already an game sign"),
+    INVALIDSIGNGAME("sign_game_id_error", "&cSkipping sign with ID &e%sign_ID% &cdue to invalid game ID"),
+    INVALIDSIGNMATERIAL("sign_material_error", "&cInvalid sign material for sign &e%sign_ID%&c. Defaulting to OAK_SIGN"),
+    INVALIDSIGNLOCATION("sign_location_error", "&cSkipping sign with ID &e%sign_ID% &cdue to invalid world"),
+    SIGNCREATEDSUCCESS("sign_created", "&aGame sign &e%sign_ID% &awas successfully created"),
 
     SIGNCONVOSTART("sign_convo_start", "&eWelcome to the GameSign text editor."),
     SIGNCONVOLINEPROMPT("sign_convo_line_prompt", "&eWhich line would you like to edit? Options: 1 - 4 &7(Type 'EXIT' to exit the editor)"),
