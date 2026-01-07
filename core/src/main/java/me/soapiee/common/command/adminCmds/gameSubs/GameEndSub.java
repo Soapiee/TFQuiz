@@ -30,13 +30,13 @@ public class GameEndSub extends AbstractAdminSub {
         if (gameHasSchedulder(sender, game, Message.GAMEENDSCHEDULERERROR)) return;
 
         if (!gameIsInProgress(sender, game, null)) {
-            sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCEENDERROR, game.getID()));
+            sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCEENDERROR, game.getIdentifier()));
             return;
         }
 
         if (countdownIsActive(game)) {
             game.reset(false, false);
-            sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, game.getID()));
+            sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, game.getIdentifier()));
             return;
         }
 

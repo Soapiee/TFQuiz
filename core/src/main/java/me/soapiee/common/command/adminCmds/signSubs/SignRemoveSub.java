@@ -41,8 +41,8 @@ public class SignRemoveSub extends AbstractAdminSub {
         if (!isConsole(sender))
             gameSign.getLocation().getWorld().dropItem(gameSign.getLocation(), new ItemStack(gameSign.getMaterial()));
 
-        String signID = gameSign.getID();
-        gameManager.deleteSign(signID);
+        String signID = gameSign.getSignID();
+        gameSignManager.deleteSign(gameSign);
         sendMessage(sender, messageManager.getWithPlaceholder(Message.SIGNREMOVED, signID));
     }
 

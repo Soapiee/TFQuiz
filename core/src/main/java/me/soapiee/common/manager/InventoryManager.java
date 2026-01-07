@@ -29,7 +29,7 @@ public class InventoryManager {
         load();
     }
 
-    public void load() {
+    private void load() {
         if (!file.exists()) {
             main.saveResource("playerInventories.yml", false);
         }

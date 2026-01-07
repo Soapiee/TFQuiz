@@ -37,9 +37,9 @@ public class SignEditSub extends AbstractAdminSub {
         }
 
         sign.update((lineNumber - 1), builder.toString());
-        gameManager.saveSign(sign);
+        gameSignManager.saveNewText(sign);
 
-        sendMessage(sender, messageManager.getWithPlaceholder(Message.SIGNEDITED, sign.getID()));
+        sendMessage(sender, messageManager.getWithPlaceholder(Message.SIGNEDITED, sign.getSignID()));
     }
 
     private int getLine(CommandSender sender, String value) {

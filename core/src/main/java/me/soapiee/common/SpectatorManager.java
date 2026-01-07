@@ -31,7 +31,7 @@ public class SpectatorManager {
                     "\nAll other features will work as normal");
             provider = new NMS_Unsupported();
 
-            if (main.debugMode()) main.getCustomLogger().logToFile(ex, "");
+            if (main.isDebugMode()) main.getCustomLogger().logToFile(ex, "");
         }
     }
 

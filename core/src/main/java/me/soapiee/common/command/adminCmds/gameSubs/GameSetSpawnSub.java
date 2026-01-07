@@ -28,8 +28,8 @@ public class GameSetSpawnSub extends AbstractAdminSub {
         Game game = getGame(sender, args[1]);
         if (game == null) return;
 
-        game.setSpawnLocation(player.getLocation());
-        sendMessage(player, messageManager.getWithPlaceholder(Message.GAMESPAWNSET, game.getID()));
+        game.setSpawn(player.getLocation());
+        sendMessage(player, messageManager.getWithPlaceholder(Message.GAMESPAWNSET, game.getIdentifier()));
     }
 
     @Override
