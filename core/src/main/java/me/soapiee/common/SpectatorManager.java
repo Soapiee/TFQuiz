@@ -1,12 +1,13 @@
 package me.soapiee.common;
 
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.*;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class SpectatorManager {
 
@@ -16,22 +17,22 @@ public class SpectatorManager {
 
     public SpectatorManager(TFQuiz main) {
         this.main = main;
+        SettingsManager settingsManager = main.getSettingsManager();
         spectators = new HashSet<>();
 
         try {
-            String version = Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
+            String version = Utils.VERSION;
             String packageName = SpectatorManager.class.getPackage().getName();
             String providerName = NMSVersion.valueOf("v" + version).getProvider();
-//            Utils.consoleMsg(ChatColor.GOLD + packageName + "." + providerName);
 
             provider = (NMSProvider) Class.forName(packageName + "." + providerName).newInstance();
+            provider.initialise(main);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  ClassCastException | IllegalArgumentException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished. Its recommended that you disable it in the config" +
-                    "\nAll other features will work as normal");
+            main.getCustomLogger().logToFile(ex, main.getMessageManager().get(Message.DISABLESPECWARNING));
             provider = new NMS_Unsupported();
 
-            if (main.isDebugMode()) main.getCustomLogger().logToFile(ex, "");
+            if (settingsManager.isDebugMode()) main.getCustomLogger().logToFile(ex, "");
         }
     }
 

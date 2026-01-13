@@ -1,8 +1,9 @@
 package me.soapiee.common.utils;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.MessageManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,17 +17,19 @@ import java.util.Date;
 
 public class Logger {
     private final TFQuiz main;
+    private final MessageManager messageManager;
     private final File logFile;
 
     public Logger(TFQuiz main) {
         this.main = main;
+        messageManager = main.getMessageManager();
 
         logFile = new File(main.getDataFolder() + File.separator + "logger.log");
         if (!logFile.exists()) {
             try {
                 logFile.createNewFile();
             } catch (IOException e) {
-                Utils.consoleMsg(ChatColor.RED + "Error creating logger file");
+                Utils.consoleMsg(messageManager.get(Message.LOGGERFILEERROR));
             }
         }
     }
@@ -34,6 +37,8 @@ public class Logger {
     public void logToFile(Exception error, String string) {
         LogType logType = (error == null) ? LogType.WARNING : LogType.SEVERE;
         if (!string.isEmpty()) Utils.consoleMsg(string);
+
+        if (logFile == null) return;
 
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(logFile, true), true);
@@ -56,27 +61,17 @@ public class Logger {
             writer.write(System.lineSeparator());
             writer.write(System.lineSeparator());
             writer.close();
-            Utils.consoleMsg(ChatColor.RED + "An error has been added to the logger.log file");
+            Utils.consoleMsg(messageManager.get(Message.LOGGERLOGSUCCESS));
         } catch (IOException e) {
-            Utils.consoleMsg(ChatColor.RED + "There was an error whilst writing to the logger file");
+            Utils.consoleMsg(messageManager.get(Message.LOGGERLOGERROR));
+            e.printStackTrace();
         }
     }
 
     public void logToPlayer(CommandSender sender, Exception error, String string) {
-        if (!string.contains(" successfully created")) logToFile(error, string);
+        if (error != null) logToFile(error, string);
 
         if (sender == null) return;
-        if (string.isEmpty()) return;
-
-        Bukkit.getScheduler().runTaskLater(main, () -> {
-            if (sender instanceof Player)
-                if (((Player) sender).isOnline()) {
-                    sender.sendMessage(Utils.addColour(string));
-                }
-        }, 20L);
-    }
-
-    public void onlyLogToPlayer(CommandSender sender, String string) {
         if (string.isEmpty()) return;
 
         Bukkit.getScheduler().runTaskLater(main, () -> {
@@ -87,7 +82,6 @@ public class Logger {
 
             Utils.consoleMsg(string);
         }, 20L);
-
     }
 
     private enum LogType {

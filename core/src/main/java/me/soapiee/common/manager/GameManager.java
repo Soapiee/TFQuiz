@@ -30,6 +30,7 @@ public class GameManager {
 
     public boolean reload(CommandSender sender) {
         games.clear();
+        gameFactory.reload();
         return (load(sender));
     }
 
@@ -37,7 +38,7 @@ public class GameManager {
         FileConfiguration config = main.getConfig();
 
         if (!config.isConfigurationSection("games") || config.getConfigurationSection("games").getKeys(false).isEmpty()) {
-            customLogger.logToPlayer(sender, null, "&cPlease set up some games in the config.yml");
+            customLogger.logToPlayer(sender, null, messageManager.get(Message.NOGAMESSET));
             return true;
         }
 
@@ -45,7 +46,7 @@ public class GameManager {
             Game game = gameFactory.create(sender, id);
             games.add(game);
 
-            customLogger.onlyLogToPlayer(sender, messageManager.getWithPlaceholder(Message.GAMECREATEDSUCCESS, id));
+            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.GAMECREATEDSUCCESS, id));
         }
 
         return false;

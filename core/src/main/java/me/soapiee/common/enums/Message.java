@@ -6,12 +6,17 @@ public enum Message {
     CONSOLEUSAGEERROR("console_usage_error", "&cYou must be a player to use this command"),
     NOPERMISSION("no_permission", "&cYou do not have permission to use this command"),
     PLAYERNOTFOUND("player_not_found", "&cPlayer not found"),
-    INVALIDNUMBER("invalid_number_input", "&c%input% is not a valid number"),
-    NOQUESTIONSSET("questions_error", "&cCould not find any questions inside questions.yml"),
-    LOADSETTINGSERROR("settings_error", "&cThe config field &e%field% &cis not set. Defaulting to &e%default_value%"),
-    INVALIDLOBBYSPAWN("lobby_spawn_error", "&cYou must set a lobby spawn point in the config"),
 
     //                    --->    ADMIN COMMAND MESSAGES    <---
+    UPDATEAVAILABLE("update_available", "&aThere is an update available for TFQuiz"),
+    UNSUPPORTEDVERSION("unsupported_version", "&cUnsupported version detected. Plugin may not function correctly. Contact the developer to get your version supported"),
+    DISABLESPECWARNING("disable_spectators_warning", "&c[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished." +
+            "\nIts recommended that you disable it in the config. All other features will work as normal"),
+    SPECTATORSYSTEMERROR("spectator_system_error", "&cERROR: The spectator system is not working. Contact the developer"),
+    UNSUPPORTEDPLATFORMSPIGOT("unsupported_platform_spigot", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Spigot."),
+    UNSUPPORTEDPLATFORMPAPER("unsupported_platform_paper", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Paper."),
+    DOWNLOADSPIGOTJAR("download_spigotr_jar", "&c&c[TFQuiz] Please download the Spigot jar instead."),
+    DOWNLOADPAPERJAR("download_paper_jar", "&c[TFQuiz] Please download the Paper jar instead."),
     ADMINCMDUSAGE("admin_command_usage",
             "&#01d54a--------- Admin Help ---------"
                     + "\n#01d54a/tf reload &7- Reloads the plugin"
@@ -33,14 +38,35 @@ public enum Message {
     ADMINRELOADSUCCESS("admin_reload_success", "&aSuccessfully reloaded TFQuiz"),
     ADMINRELOADERROR("admin_reload_error", "&cRan into an error whilst reloading TFQuiz"),
     ADMINRELOADINPROGRESS("admin_reload_inprogress", "&eReloading configuration..."),
-
     RELOADCONVOCANCEL("reload_convo_cancel", "&cYou have cancelled the reload"),
     RELOADCONVOINVALID("reload_convo_invalid", "&cPlease type 'CONFIRM' or 'CANCEL'"),
     RELOADCONVOSTART("reload_convo_start",
             "&cThis will force reset all games, all scheduled games, and return all players to the lobby spawn"
                     + "\n&cType 'confirm' to confirm the reload"
                     + "\n&cThis will time out in 10 seconds"),
-
+    INVALIDNUMBER("invalid_number_input", "&c%input% is not a valid number"),
+    NOGAMESSET("games_error", "&cPlease set up some games in the config.yml"),
+    NOQUESTIONSSET("questions_error", "&cCould not find any questions inside questions.yml"),
+    QUESTIONSFILEERROR("questions_file_error", "&cThe questions.yml could not be loaded"),
+    LOGGERFILEERROR("logger_file_error", "&cThe logger.log file could not be created"),
+    LOGGERLOGSUCCESS("logger_log_success", "&cAn error was added to the logger.log file"),
+    LOGGERLOGERROR("logger_log_error", "&cThe logger.log file could not be created"),
+    INVENTORIESFILEERROR("inventories_file_error", "&cThe playerInventories.yml could not be loaded"),
+    INVENTORIESSAVEERROR("inventories_saving_error", "&cThere was an error saving %player%'s inventory to playerInventories.yml"),
+    INVENTORIESREMOVEERROR("inventories_removing_error", "&cThere was an error removing %player%'s inventory to playerInventories.yml"),
+    MESSAGESFILEERROR("messages_file_error", "&cThe messages.yml could not be loaded"),
+    MESSAGESFIELDERROR("messages_field_error", "&cCould not add new fields to messages.yml"),
+    LOADSETTINGSERROR("settings_error", "&cThe config field &e%field% &cis not set. Defaulting to &e%default_value%"),
+    INVALIDLOBBYSPAWN("lobby_spawn_error", "&cYou must set a lobby spawn point in the config"),
+    INVALIDREWARDTYPE("invalid_reward_type", "&cInvalid reward type for game &e%game_ID%&c. No reward will be given."),
+    INVALIDREWARDMESSAGE("missing_reward_message", "&cThe reward message for game &e%game_ID%&c is missing. No message will be sent to the player."),
+    INVALIDVAULTHOOK("missing_vault_hook", "&cThe reward for game &e%game_ID%&c requires Vault to be installed."),
+    INVALIDREWARDNUMBER("invalid_reward_number", "&cYou must input a number for the reward amount of game &e%game_ID%"),
+    INVALIDREWARDAMOUNT("invalid_reward_amount", "&cThe amount for the reward of game &e%game_ID% &cis to low"),
+    INVALIDREWARD("missing_reward", "&cThere is no reward defined for game &e%game_ID%"),
+    INVALIDREWARDMATERIAL("invalid_reward_material", "&cThe reward for game &e%game_ID%&c has an invalid material"),
+    INVALIDREWARDITEM("invalid_reward_item", "&cThe reward for game &e%game_ID%&c has an invalid item. Follow this format: \"apple, 5\" (material, quantity)"),
+    INVALIDGAMESPAWN("invalid_game_spawn", "&cThe spawn point for game &e%game_ID% &cis invalid."),
     ADMINLISTCMDUSAGE("admin_list_command_usage", "&cUsage: /tf list"),
     ADMINSETLOBBYSPAWNCMDUSAGE("admin_set_lobbyspawn_command_usage", "&cUsage: /tf setspawn"),
     ADMINSETLOBBYSPAWN("admin_lobby_spawn_set", "&aThe Lobby spawn has been set"),
@@ -195,6 +221,7 @@ public enum Message {
     GAMECREATEDSUCCESS("game_created", "&aGame &e%game_ID% &awas successfully created"),
 
     //                    --->    SIGN MESSAGES    <---
+    SIGNSUNSUPPORTEDVERSION("signs_unsupported_version", "Game signs are unsupported on this version. Please remove them"),
     SIGNADMINCMDUSAGE("sign_admin_command_usage",
             "#01d54a--------- Sign Help ---------"
                     + "\n#01d54a/tf sign add <gameID> &7- Adds a new game sign for the specified game"

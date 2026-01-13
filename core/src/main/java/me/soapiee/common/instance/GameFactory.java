@@ -2,12 +2,12 @@ package me.soapiee.common.instance;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.instance.cosmetic.Hologram;
+import me.soapiee.common.instance.rewards.Reward;
+import me.soapiee.common.instance.rewards.RewardFactory;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.utils.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,17 +17,25 @@ import java.util.HashMap;
 public class GameFactory {
 
     private final TFQuiz main;
-    private final FileConfiguration config;
     private final Logger customLogger;
     private final MessageManager messageManager;
-    private final boolean enforce_survival;
+    private final RewardFactory rewardFactory;
+    private FileConfiguration config;
+    private boolean enforce_survival;
 
     public GameFactory(TFQuiz main) {
         this.main = main;
         config = main.getConfig();
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
+        rewardFactory = new RewardFactory(main);
         enforce_survival = config.getBoolean("enforce_survival_mode", true);
+    }
+
+    public void reload() {
+        config = main.getConfig();
+        enforce_survival = config.getBoolean("enforce_survival_mode", true);
+        rewardFactory.reload();
     }
 
     public Game create(CommandSender sender, String configID) {
@@ -43,8 +51,7 @@ public class GameFactory {
         settingsMap.put("broadcast_winners", config.getString(path + "broadcast_winners", "true"));
         settingsMap.put("countdown_seconds", config.getString(path + "countdown_seconds", "10"));
 
-        Reward reward = new Reward(main, RewardType.CURRENCY, "");
-//        Reward reward = rewardFactory.create(sender, configID);
+        Reward reward = rewardFactory.create(sender, configID);
         Game game = new Game(main, settingsMap, reward);
 
         boolean hasArena = Boolean.parseBoolean(settingsMap.get("physical_arena"));
@@ -52,28 +59,6 @@ public class GameFactory {
         createNonArenaOptions(configID, game, hasArena);
 
         return game;
-    }
-
-    private Reward validateReward(CommandSender sender, String configID) {
-        RewardType type = validateType(sender, configID);
-
-        //Refactor rewards system
-        //Make rewardsFactory + Reward interface
-        return new Reward(main, type, "");
-    }
-
-    private RewardType validateType(CommandSender sender, String configID) {
-        String configInput = config.getString("games." + configID + ".reward.type").toUpperCase();
-        RewardType type = RewardType.NONE;
-
-        try {
-            type = RewardType.valueOf(configInput);
-        } catch (IllegalArgumentException error) {
-            customLogger.logToPlayer(sender, error, ChatColor.RED + "Invalid reward type for game "
-                    + ChatColor.YELLOW + configID + ChatColor.RED + ". No reward will be given.");
-        }
-
-        return type;
     }
 
     private void createArenaOptions(CommandSender sender, String configID, Game game, boolean hasArena) {
@@ -102,18 +87,13 @@ public class GameFactory {
     }
 
     private Location validateSpawn(CommandSender sender, String configID) {
-        Location spawnLocation = null;
+        Location spawnLocation;
 
-        if (config.getBoolean("games." + configID + ".arena", false)) {
-            String path = "games." + configID + ".arena_options.spawn_point";
-            spawnLocation = validateLocation(path);
+        String path = "games." + configID + ".arena_options.spawn_point";
+        spawnLocation = validateLocation(path);
 
-            if (spawnLocation == null) {
-                customLogger.logToPlayer(sender, null, ChatColor.RED + "Game number "
-                        + ChatColor.YELLOW + configID + ChatColor.RED
-                        + " could not be created due to invalid spawn location. Edit the config to add coordinates");
-            }
-        }
+        if (spawnLocation == null)
+            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.INVALIDGAMESPAWN, configID));
 
         return spawnLocation;
     }

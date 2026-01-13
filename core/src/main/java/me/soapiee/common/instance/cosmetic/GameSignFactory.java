@@ -1,8 +1,7 @@
-package me.soapiee.common.instance;
+package me.soapiee.common.instance.cosmetic;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.utils.Logger;
 import org.bukkit.Bukkit;

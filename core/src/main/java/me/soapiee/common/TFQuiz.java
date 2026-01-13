@@ -14,7 +14,6 @@ import me.soapiee.common.manager.*;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
-import me.soapiee.common.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -28,6 +27,9 @@ public final class TFQuiz extends JavaPlugin {
 
     //TODO: Add "addGame" + "deleteGame" command functionality
     //TODO: Add question categories
+    //TODO: Make "True or False" in the question, clickable
+    //TODO: Add a instant confirmation flag to /tf reload cmd
+    //TODO: Let users decide the command label
     //TODO:
 
     @Getter private MessageManager messageManager;
@@ -37,25 +39,25 @@ public final class TFQuiz extends JavaPlugin {
     @Getter private GameManager gameManager;
     @Getter private SettingsManager settingsManager;
     @Getter private QuestionManager questionManager;
-    private InventoryManager inventoryManager;
     @Getter private GameSignManager gameSignManager;
     @Getter private SchedulerManager schedulerManager;
+    @Getter private UpdateManager updateManager;
     @Getter private PlayerListener playerListener;
+    private InventoryManager inventoryManager;
     private VaultHook vaultHook;
     private Logger logger;
-    @Getter private boolean debugMode;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        logger = new Logger(this);
         messageManager = new MessageManager(this);
+        logger = new Logger(this);
+        settingsManager = new SettingsManager(this);
         specManager = new SpectatorManager(this);
-        versionManager = new VersionManager(logger);
-        debugMode = getConfig().getBoolean("debug_mode", false);
+        versionManager = new VersionManager(messageManager, logger);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) new PlaceHolderAPIHook(this).register();
-        if (getServer().getPluginManager().getPlugin("Vault") != null) vaultHook = new VaultHook();
+        if (getServer().getPluginManager().getPlugin("Vault") != null) vaultHook = new VaultHook(this);
         new Metrics(this, 25563);
 
         initiateManagers();
@@ -69,8 +71,8 @@ public final class TFQuiz extends JavaPlugin {
         getCommand("tf").setExecutor(new AdminCommand(this));
         getCommand("game").setExecutor(new PlayerCommand(this));
 
-        UpdateChecker updateChecker = new UpdateChecker(this, 125077);
-        updateChecker.updateAlert(this);
+        updateManager = new UpdateManager(this, 125077);
+        updateManager.updateAlert(Bukkit.getConsoleSender());
     }
 
 
@@ -97,7 +99,6 @@ public final class TFQuiz extends JavaPlugin {
     }
 
     private void initiateManagers() {
-        settingsManager = new SettingsManager(this);
         questionManager = new QuestionManager(this);
         if (settingsManager.isSaveInvs()) inventoryManager = new InventoryManager(this);
         else inventoryManager = null;

@@ -5,7 +5,8 @@ import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.logic.Scheduler;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,13 +15,11 @@ import java.io.File;
 public class MessageManager {
 
     private final TFQuiz main;
-    private final Logger logger;
     private final File file;
     private final YamlConfiguration contents;
 
     public MessageManager(TFQuiz main) {
         this.main = main;
-        logger = main.getCustomLogger();
         file = new File(main.getDataFolder(), "messages.yml");
         contents = new YamlConfiguration();
 
@@ -40,18 +39,19 @@ public class MessageManager {
             contents.load(file);
         } catch (Exception ex) {
             if (sender != null) {
-                logger.logToPlayer(sender, ex, "Could not load the messages.yml file");
+                Utils.consoleMsg(get(Message.MESSAGESFILEERROR));
+                Bukkit.getLogger().throwing("Message Manager", "load()", ex);
             }
             return true;
         }
         return false;
     }
 
-    public void save() {
+    private void save() {
         try {
             contents.save(file);
         } catch (Exception ex) {
-            logger.logToFile(ex, "Could not add new fields to messages.yml");
+            main.getCustomLogger().logToFile(ex, get(Message.MESSAGESFIELDERROR));
         }
     }
 
@@ -104,10 +104,6 @@ public class MessageManager {
     }
 
     public String getInfo(Message messageEnum, Game game) {
-//        String holoLoc;
-//        if (game.getHologram().getLocation() == null) holoLoc = "not set";
-//        else holoLoc = "x y z";
-
         Scheduler scheduler = main.getSchedulerManager().getScheduler(game.getIdentifier());
 
         return get(messageEnum).replace("%game_ID%", String.valueOf(game.getIdentifier()))

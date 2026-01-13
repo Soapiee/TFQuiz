@@ -1,6 +1,7 @@
 package me.soapiee.common.manager;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.Logger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,12 +18,14 @@ import java.util.stream.Collectors;
 public class InventoryManager {
     private final TFQuiz main;
     private final Logger logger;
+    private final MessageManager messageManager;
     private final File file;
     private final YamlConfiguration config;
 
     public InventoryManager(TFQuiz main) {
         this.main = main;
         logger = main.getCustomLogger();
+        messageManager = main.getMessageManager();
         file = new File(main.getDataFolder(), "playerInventories.yml");
         config = new YamlConfiguration();
 
@@ -37,7 +40,7 @@ public class InventoryManager {
         try {
             config.load(file);
         } catch (Exception ex) {
-            logger.logToFile(ex, "Could not load playerInventories.yml");
+            logger.logToFile(ex, messageManager.get(Message.INVENTORIESFILEERROR));
         }
     }
 
@@ -64,7 +67,7 @@ public class InventoryManager {
         try {
             config.save(file);
         } catch (Exception ex) {
-            logger.logToFile(ex, "Error saving " + player.getName() + "'s inventory to playerInventories.yml");
+            logger.logToFile(ex, messageManager.getWithPlaceholder(Message.INVENTORIESSAVEERROR, player.getName()));
         }
     }
 
@@ -80,7 +83,7 @@ public class InventoryManager {
         try {
             config.save(file);
         } catch (Exception ex) {
-            logger.logToFile(ex, "Error removing " + player.getName() + "'s inventory from playerInventories.yml");
+            logger.logToFile(ex, messageManager.getWithPlaceholder(Message.INVENTORIESREMOVEERROR, player.getName()));
         }
     }
 }

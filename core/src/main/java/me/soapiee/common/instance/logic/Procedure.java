@@ -4,7 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.Reward;
+import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.manager.GameManager;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.manager.QuestionManager;
@@ -172,7 +172,7 @@ public class Procedure implements Listener {
 
         //if there is a single playing player remaining
         if (game.getPlayingPlayers().size() == 1) {
-            if (!main.isDebugMode()) {
+            if (!main.getSettingsManager().isDebugMode()) {
                 game.announceWinners();
                 Player player = game.getPlayingPlayers().iterator().next();
                 game.reset(true, false);

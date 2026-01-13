@@ -3,8 +3,8 @@ package me.soapiee.common.manager;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.GameSignFactory;
 import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.instance.cosmetic.GameSignFactory;
 import me.soapiee.common.utils.Logger;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -51,7 +51,7 @@ public class GameSignManager {
             if (gameSign == null) continue;
 
             addToMap(game, gameSign);
-            customLogger.onlyLogToPlayer(sender, messageManager.getWithPlaceholder(Message.SIGNCREATEDSUCCESS, signID));
+            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.SIGNCREATEDSUCCESS, signID));
         }
 
         return false;

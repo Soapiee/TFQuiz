@@ -10,6 +10,7 @@ import me.soapiee.common.instance.cosmetic.Hologram;
 import me.soapiee.common.instance.logic.Countdown;
 import me.soapiee.common.instance.logic.Procedure;
 import me.soapiee.common.instance.logic.TeleportTask;
+import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.manager.GameSignManager;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.manager.SchedulerManager;
@@ -18,6 +19,7 @@ import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -71,10 +73,10 @@ public class Game {
         maxRounds = Integer.parseInt(settings.get("max_rounds"));
         countdownSeconds = Integer.parseInt(settings.get("countdown_seconds"));
         this.reward = reward;
-        physicalArena = Boolean.getBoolean(settings.get("physical_arena"));
-        enforceSurvival = Boolean.getBoolean(settings.get("enforce_survival"));
+        physicalArena = Boolean.parseBoolean(settings.get("physical_arena"));
+        enforceSurvival = Boolean.parseBoolean(settings.get("enforce_survival"));
         forceStart = false;
-        broadcastWinners = Boolean.getBoolean(settings.get("broadcast_winners"));
+        broadcastWinners = Boolean.parseBoolean(settings.get("broadcast_winners"));
         procedure = new Procedure(main, this);
         countdown = new Countdown(main, this, countdownSeconds);
     }
@@ -386,6 +388,14 @@ public class Game {
     public void setSpawn(Location location) {
         spawn = location;
 
-        //update the config
+        FileConfiguration config = main.getConfig();
+        config.set("games." + identifier + ".arena_options.spawn_point.world", location.getWorld().getName());
+        config.set("games." + identifier + ".arena_options.spawn_point.x", location.getX());
+        config.set("games." + identifier + ".arena_options.spawn_point.y", location.getY());
+        config.set("games." + identifier + ".arena_options.spawn_point.z", location.getZ());
+        config.set("games." + identifier + ".arena_options.spawn_point.yaw", location.getYaw());
+        config.set("games." + identifier + ".arena_options.spawn_point.pitch", location.getPitch());
+
+        main.saveConfig();
     }
 }

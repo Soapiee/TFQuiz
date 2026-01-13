@@ -19,7 +19,7 @@ public class SpecSub extends AbstractAdminSub {
     // /tf spec <player>
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        if (!main.isDebugMode()) return;
+        if (!settingsManager.isDebugMode()) return;
         if (!checkRequirements(sender, label, args)) return;
 
         Player player = Bukkit.getPlayer(args[1]);

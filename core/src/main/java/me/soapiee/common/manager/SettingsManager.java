@@ -17,6 +17,8 @@ public class SettingsManager {
     private final Logger customLogger;
     private final MessageManager messageManager;
 
+    @Getter private boolean debugMode;
+    @Getter private boolean updateNotif;
     @Getter private Location lobbySpawn;
     @Getter private boolean clearInv;
     @Getter private boolean enforceLobbySpawn;
@@ -46,6 +48,8 @@ public class SettingsManager {
     private boolean load(CommandSender sender) {
         FileConfiguration config = main.getConfig();
 
+        debugMode = config.getBoolean("debug_mode", false);
+        updateNotif = config.getBoolean("update_notification", true);
         disallowedCommands.addAll(config.getStringList("disallowed_commands"));
         clearInv = getConfigValue(sender, "empty_inv_on_arena_join", true);
         enforceLobbySpawn = getConfigValue(sender, "enforce_lobby_spawn", true);

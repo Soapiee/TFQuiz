@@ -66,7 +66,7 @@ games:
     broadcast_winners: true
     reward:
       type: none
-      #      reward: # EXAMPLE
+      #    reward: # EXAMPLE
       #      type: 'command' # Options: permission, currency, experience, item, command, none
       #      reward: 'xp give %player% 100'
       message: You gained some experience for winning

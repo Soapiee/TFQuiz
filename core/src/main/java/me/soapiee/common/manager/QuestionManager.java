@@ -43,7 +43,7 @@ public class QuestionManager {
         try {
             contents = YamlConfiguration.loadConfiguration(file);
         } catch (Exception ex) {
-            customLogger.logToPlayer(sender, ex, "Could not load questions.yml");
+            customLogger.logToPlayer(sender, ex, messageManager.get(Message.QUESTIONSFILEERROR));
             return true;
         }
 
