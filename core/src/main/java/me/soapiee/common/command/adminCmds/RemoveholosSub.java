@@ -3,7 +3,6 @@ package me.soapiee.common.command.adminCmds;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.Keys;
-import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -27,7 +26,7 @@ public class RemoveholosSub extends AbstractAdminSub {
     // /tf removeholos -all
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        if (!main.debugMode()) return;
+        if (!settingsManager.isDebugMode()) return;
         if (isConsole(sender)) return;
         if (!checkRequirements(sender, label, args)) return;
 
@@ -46,7 +45,7 @@ public class RemoveholosSub extends AbstractAdminSub {
         sendMessage(player, messageManager.getWithPlaceholder(Message.ADMINCMDUSAGE, label));
     }
 
-    private void removeAll(Player player){
+    private void removeAll(Player player) {
         int count = 0;
 
         for (Entity entity : Bukkit.getWorld("world").getEntities()) {
@@ -59,7 +58,7 @@ public class RemoveholosSub extends AbstractAdminSub {
         sendMessage(player, "&a" + count + " holograms were removed");
     }
 
-    private void removeNear(Player player){
+    private void removeNear(Player player) {
         int count = 0;
 
         Location loc = player.getLocation();

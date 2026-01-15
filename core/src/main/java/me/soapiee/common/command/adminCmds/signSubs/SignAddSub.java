@@ -38,15 +38,14 @@ public class SignAddSub extends AbstractAdminSub {
 
         if (signAlreadyExist(signBlock, player)) return;
 
-
-        gameManager.saveSign(signBlock, game.getID());
-        sendMessage(player, messageManager.getWithPlaceholder(Message.SIGNADDED, game.getID()));
+        main.getGameSignManager().createSign(signBlock, game);
+        sendMessage(player, messageManager.getWithPlaceholder(Message.SIGNADDED, game.getIdentifier()));
     }
 
     private boolean signAlreadyExist(Sign signBlock, Player player) {
         String dataContainer = signBlock.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING);
 
-        if (dataContainer != null && gameManager.getSign(dataContainer) != null) {
+        if (dataContainer != null && gameSignManager.getSign(dataContainer) != null) {
             sendMessage(player, messageManager.get(Message.SIGNALREADYEXISTS));
             return true;
         }

@@ -1,5 +1,6 @@
 package me.soapiee.common.instance.logic;
 
+import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
@@ -18,29 +19,30 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler extends BukkitRunnable {
 
     private final TFQuiz main;
-    private final Game game;
+    @Getter private final Game game;
     private final int resetDelay;
     private SchedulerReset resetter;
     private final long endTime;
 
-    private boolean played;
+    @Getter private boolean played;
 
-    public Scheduler(TFQuiz main, Game game, int delay, int resetDelay) {
+    public Scheduler(TFQuiz main, Game game) {
         this.main = main;
         this.game = game;
-        this.resetDelay = resetDelay;
+        this.resetDelay = game.getSchedulerResetterDelay();
         this.played = false;
-        this.runTaskLater(main, delay * 20L);
+        int delay = game.getSchedulerDelay();
         this.endTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(delay);
+        this.runTaskLater(main, delay * 20L);
     }
 
     @Override
     public void run() {
         if (game.getState() != GameState.RECRUITING) game.setState(GameState.RECRUITING);
 
-        String message = main.getMessageManager().getWithPlaceholder(Message.GAMEOPENEDSCHEDULER, game.getID());
+        String message = main.getMessageManager().getWithPlaceholder(Message.GAMEOPENEDSCHEDULER, game.getIdentifier());
         TextComponent clickableText = new TextComponent(Utils.addColour(message));
-        clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/game join " + game.getID()));
+        clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/game join " + game.getIdentifier()));
         clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.addColour(main.getMessageManager().get(Message.GAMESOPENSCHEDULERHOVER)))));
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.spigot().sendMessage(clickableText);
@@ -48,10 +50,6 @@ public class Scheduler extends BukkitRunnable {
 
         resetter = new SchedulerReset(main, this, resetDelay);
         cancel();
-    }
-
-    public boolean isPlayed() {
-        return played;
     }
 
     public void setPlayed() {
@@ -62,10 +60,6 @@ public class Scheduler extends BukkitRunnable {
             } catch (IllegalStateException ignored) {
             }
         }
-    }
-
-    public Game getGame() {
-        return game;
     }
 
     public int getRemainingTime() {

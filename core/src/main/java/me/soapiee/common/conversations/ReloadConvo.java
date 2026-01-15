@@ -4,9 +4,9 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.listener.PlayerListener;
 import me.soapiee.common.manager.GameManager;
 import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.manager.SchedulerManager;
 import me.soapiee.common.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -21,15 +21,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class ReloadConvo extends FixedSetPrompt {
 
+    private final TFQuiz main;
     private final MessageManager messageManager;
     private final GameManager gameManager;
-    private final PlayerListener playerListener;
 
     public ReloadConvo(TFQuiz main) {
         super("confirm", "cancel");
+        this.main = main;
         messageManager = main.getMessageManager();
         gameManager = main.getGameManager();
-        playerListener = main.getPlayerListener();
     }
 
     @Override
@@ -57,14 +57,24 @@ public class ReloadConvo extends FixedSetPrompt {
         sender.sendRawMessage(Utils.addColour(messageManager.get(Message.ADMINRELOADINPROGRESS)));
         String reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADSUCCESS));
 
+        SchedulerManager schedulerManager = main.getSchedulerManager();
+        schedulerManager.cancelSchedulers();
+
         for (Game game : gameManager.getGames()) {
             game.reset(true, true);
             if (game.getHologram() != null) game.getHologram().despawn();
             game.setState(GameState.CLOSED);
         }
 
-        boolean errors = !messageManager.load((CommandSender) sender);
-        if (!gameManager.reloadAll((CommandSender) sender, playerListener)) errors = true;
+        CommandSender commandSender = (CommandSender) sender;
+        main.reloadConfig();
+        boolean errors = messageManager.reload(commandSender);
+        if (main.getSettingsManager().reload(commandSender)) errors = true;
+        main.getPlayerListener().setFlags();
+        if (main.getQuestionManager().reload(commandSender)) errors = true;
+        if (gameManager.reload(commandSender)) errors = true;
+        if (main.getGameSignManager().reload(commandSender)) errors = true;
+        schedulerManager.reload();
 
         if (errors) reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADERROR));
 

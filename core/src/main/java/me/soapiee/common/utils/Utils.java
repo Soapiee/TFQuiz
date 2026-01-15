@@ -13,15 +13,24 @@ import java.util.regex.Pattern;
 public final class Utils {
 
     public static final boolean IS_PAPER = detectPaper();
+    public static final String VERSION = getVersion();
 
-    // 1.21.10       ||        26.1.0
-    public static String getMinorVersion() {
-        String version = "v" + Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
-        return version.split("_")[2];
+    public static int getMinorVersion() {
+        String[] parts = VERSION.split("_");
+
+        if (parts[0].equalsIgnoreCase("1")) return Integer.parseInt(parts[2]);
+        return Integer.parseInt(parts[1]);
     }
 
     public static int getMajorVersion() {
-        return Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
+        String[] parts = VERSION.split("_");
+
+        if (parts[0].equalsIgnoreCase("1")) return Integer.parseInt(parts[1]);
+        return Integer.parseInt(parts[0]);
+    }
+
+    public static String getVersion() {
+        return Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
     }
 
     public static void consoleMsg(String message) {
@@ -70,5 +79,19 @@ public final class Utils {
             } catch (NullPointerException ignored) {
             }
         return items > amount;
+    }
+
+    public static String capitalise(String string) {
+        String[] stringParts = string.toLowerCase().split("_");
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(stringParts[0].substring(0, 1).toUpperCase()).append(stringParts[0].substring(1));
+
+        if (stringParts.length > 1) {
+            for (int i = 1; i < stringParts.length; i++) {
+                builder.append(" ").append(stringParts[i].substring(0, 1).toUpperCase()).append(stringParts[i].substring(1));
+            }
+        }
+        return builder.toString();
     }
 }

@@ -6,12 +6,13 @@ import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.manager.GameManager;
+import me.soapiee.common.manager.GameSignManager;
+import me.soapiee.common.manager.SettingsManager;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
@@ -38,38 +39,43 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
 
     private final TFQuiz main;
     private final GameManager gameManager;
-    private boolean falldamage;
-    private boolean pvpdamage;
+    private final SettingsManager settingsManager;
+    private final GameSignManager gameSignManager;
+    private boolean fallDamage;
+    private boolean pvpDamage;
     private boolean hunger;
-    private boolean breakblocks;
-    private boolean placeblocks;
+    private boolean breakBlocks;
+    private boolean placeBlocks;
     private boolean teleport;
     private final ConversationFactory convoFactory;
 
     public PlayerListener(TFQuiz main) {
         this.main = main;
         gameManager = main.getGameManager();
+        settingsManager = main.getSettingsManager();
+        gameSignManager = main.getGameSignManager();
         convoFactory = new ConversationFactory(main)
                 .withEscapeSequence("EXIT")
                 .addConversationAbandonedListener(this);
-        ruleCheck();
+        setFlags();
     }
 
-    public void ruleCheck() { //Called in constructor and when the plugin reloads
-        FileConfiguration config = main.getConfig();
-        falldamage = config.getBoolean("arena_flags.allow_fall_damage");
-        pvpdamage = config.getBoolean("arena_flags.allow_pvp_damage");
-        hunger = config.getBoolean("arena_flags.allow_hunger");
-        breakblocks = config.getBoolean("arena_flags.allow_block_break");
-        placeblocks = config.getBoolean("arena_flags.allow_block_place");
-        teleport = config.getBoolean("arena_flags.allow_teleport");
+    public void setFlags() { //Called in constructor and when the plugin reloads
+        fallDamage = settingsManager.isFallDamage();
+        pvpDamage = settingsManager.isPvpDamage();
+        hunger = settingsManager.isHunger();
+        breakBlocks = settingsManager.isBreakBlocks();
+        placeBlocks = settingsManager.isPlaceBlocks();
+        teleport = settingsManager.isTeleport();
     }
 
     @EventHandler
     public void blockPlace(BlockPlaceEvent event) {
-        if (placeblocks) return;
+        if (placeBlocks) return;
+
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
+
         Game playersGame = gameManager.getGame(player);
         if (playersGame != null && playersGame.isPhysicalArena()) {
             event.setCancelled(true);
@@ -78,10 +84,11 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
 
     @EventHandler
     public void fallDamage(EntityDamageEvent event) {
-        if (falldamage) return;
+        if (fallDamage) return;
         if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
         if (event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
+
+        Player player = (Player) event.getEntity();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
         Game playersGame = gameManager.getGame(player);
@@ -94,9 +101,10 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
 
     @EventHandler
     public void pvpDamage(EntityDamageByEntityEvent event) {
-        if (pvpdamage) return;
+        if (pvpDamage) return;
         if (!(event.getEntity() instanceof Player)) return;
         if (!(event.getDamager() instanceof Player)) return;
+
         Player player = (Player) event.getEntity();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
@@ -109,6 +117,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
     @EventHandler
     public void removeHunger(FoodLevelChangeEvent event) {
         if (hunger) return;
+
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity()).getPlayer();
             if (player.hasPermission("tfquiz.admin.bypassflags")) return;
@@ -124,11 +133,12 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
     public void arenaCommands(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
+
         Game playersGame = gameManager.getGame(player);
         if (gameManager.getGame(player) == null) return;
         if (!playersGame.isPhysicalArena()) return;
 
-        ArrayList<String> disallowedCmds = gameManager.getDisallowedCommands();
+        ArrayList<String> disallowedCmds = settingsManager.getDisallowedCommands();
         if (disallowedCmds.isEmpty()) return;
 
         String cmd = event.getMessage();
@@ -149,13 +159,13 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         if (block.getState() instanceof Sign) {
             Sign signBlock = (Sign) block.getState();
             if (signBlock.getPersistentDataContainer().has(Keys.GAME_SIGN, PersistentDataType.STRING)) {
-                if (gameManager.getSign(signBlock.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING)) == null)
+                if (gameSignManager.getSign(signBlock.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING)) == null)
                     return;
                 event.setCancelled(true);
             }
         }
 
-        if (breakblocks) return;
+        if (breakBlocks) return;
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
         Game playersGame = gameManager.getGame(player);
@@ -178,9 +188,8 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         if (signBlock.getPersistentDataContainer().has(Keys.GAME_SIGN, PersistentDataType.STRING)) {
             Player player = event.getPlayer();
             String signID = signBlock.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING);
-            GameSign gameSign = gameManager.getSign(signID);
+            GameSign gameSign = gameSignManager.getSign(signID);
             if (gameSign == null) return;
-            Game game = gameManager.getGame(signID);
 
             event.setCancelled(true);
 
@@ -201,8 +210,9 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
                 return;
             }
 
+            Game game = gameSign.getGame();
             if (action == Action.LEFT_CLICK_BLOCK) {
-                if (game != null) Bukkit.dispatchCommand(player, "game join " + game.getID());
+                if (game != null) Bukkit.dispatchCommand(player, "game join " + game.getIdentifier());
             }
         }
     }

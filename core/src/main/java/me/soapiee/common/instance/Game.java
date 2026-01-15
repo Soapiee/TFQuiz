@@ -1,5 +1,6 @@
 package me.soapiee.common.instance;
 
+import lombok.Getter;
 import me.soapiee.common.SpectatorManager;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
@@ -9,103 +10,118 @@ import me.soapiee.common.instance.cosmetic.Hologram;
 import me.soapiee.common.instance.logic.Countdown;
 import me.soapiee.common.instance.logic.Procedure;
 import me.soapiee.common.instance.logic.TeleportTask;
+import me.soapiee.common.instance.rewards.Reward;
+import me.soapiee.common.manager.GameSignManager;
 import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.manager.SchedulerManager;
+import me.soapiee.common.manager.SettingsManager;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 public class Game {
 
-    private final GameSpecs specs;
     private final TFQuiz main;
     private final MessageManager messageManager;
     private final SpectatorManager specManager;
+    private final SchedulerManager schedulerManager;
+    private final SettingsManager settingsManager;
+    private final GameSignManager gameSignManager;
 
-    private GameState state;
-    private final boolean physicalArena;
+    //Required options
+    @Getter private GameState state;
+    @Getter private final int identifier, maxPlayers, minPlayers, maxRounds, countdownSeconds;
+    @Getter private final Reward reward;
+    @Getter private boolean physicalArena;
     private final boolean enforceSurvival;
     private boolean forceStart;
-    private boolean broadcastWinners;
-    private Location spawn;
-    private Hologram hologram;
-    private final ArrayList<GameSign> signs = new ArrayList<>();
+    @Getter private final boolean broadcastWinners;
 
-    private final HashSet<Player> playingPlayers;
-    private final HashMap<UUID, ItemStack[]> inventories;
-    private final HashSet<Player> spectators;
-    private final HashSet<Player> allPlayers;
-    private Countdown countdown;
+    //Arena options
+    @Getter private String descType;
+    @Getter private boolean allowSpectators;
+    @Getter private Location spawn;
+    @Getter private Hologram hologram;
+
+    //Non-arena options
+    @Getter private int schedulerDelay, schedulerResetterDelay;
+
+    @Getter private final HashSet<Player> playingPlayers = new HashSet<>(), allPlayers = new HashSet<>();
+    private final HashMap<UUID, ItemStack[]> inventories = new HashMap<>();
+    private final HashSet<Player> spectators = new HashSet<>();
+    @Getter private Countdown countdown;
     private Procedure procedure;
 
-    public Game(TFQuiz main, GameSpecs specs) {
-        this.specs = specs;
+    public Game(TFQuiz main, Map<String, String> settings, Reward reward) {
         this.main = main;
-        this.messageManager = main.getMessageManager();
-        this.specManager = main.getSpecManager();
+        messageManager = main.getMessageManager();
+        specManager = main.getSpecManager();
+        settingsManager = main.getSettingsManager();
+        gameSignManager = main.getGameSignManager();
+        schedulerManager = main.getSchedulerManager();
 
-        this.state = specs.getInitialState();
-        this.physicalArena = specs.isPhysicalArena();
-        this.forceStart = false;
-        this.broadcastWinners = specs.broadcastWinners();
-        this.enforceSurvival = specs.enforceSurvival();
+        identifier = Integer.parseInt(settings.get("identifier"));
+        state = GameState.valueOf(settings.get("initial_state").toUpperCase());
+        maxPlayers = Integer.parseInt(settings.get("max_players"));
+        minPlayers = Integer.parseInt(settings.get("min_players"));
+        maxRounds = Integer.parseInt(settings.get("max_rounds"));
+        countdownSeconds = Integer.parseInt(settings.get("countdown_seconds"));
+        this.reward = reward;
+        physicalArena = Boolean.parseBoolean(settings.get("physical_arena"));
+        enforceSurvival = Boolean.parseBoolean(settings.get("enforce_survival"));
+        forceStart = false;
+        broadcastWinners = Boolean.parseBoolean(settings.get("broadcast_winners"));
+        procedure = new Procedure(main, this);
+        countdown = new Countdown(main, this, countdownSeconds);
+    }
 
-        this.allPlayers = new HashSet<>();
-        this.playingPlayers = new HashSet<>();
-        this.inventories = new HashMap<>();
-        this.countdown = new Countdown(this.main, this, specs.getCountdownSeconds());
-        this.spectators = new HashSet<>();
+    public void setUpArenaOptions(String descType, boolean allowSpectators, Location spawn, Hologram hologram) {
+        this.descType = descType;
+        this.allowSpectators = allowSpectators;
+        this.spawn = spawn;
+        this.hologram = hologram;
 
-        this.procedure = new Procedure(this.main, this);
+        if (physicalArena && spawn == null) physicalArena = false;
+    }
 
-
-        if (this.physicalArena) {
-            this.spawn = specs.getSpawn();
-            this.hologram = new Hologram(this.messageManager.get(Message.GAMEHOLODESC));
-            if (specs.getHoloLocation() != null) {
-                this.getHologram().setLocation(specs.getHoloLocation());
-                this.getHologram().spawn();
-            }
-        } else {
-            this.spawn = null;
-
-        }
+    public void setUpNonArenaOptions(int schedulerDelay, int resetDelay) {
+        this.schedulerDelay = physicalArena ? -1 : schedulerDelay;
+        this.schedulerResetterDelay = physicalArena ? -1 : resetDelay;
     }
 
     public void announceWinners() {
-        int size = this.getPlayingPlayers().size();
+        int size = playingPlayers.size();
 
         //If there are no playing players left (does not include spectators)
         if (size == 0) {
             if (!broadcastWinners)
-                this.sendMessage(this.messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, this.getID()));
+                sendMessage(messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, identifier));
             else
-                Bukkit.broadcastMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, this.getID())));
+                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, identifier)));
             return;
         }
 
         //If there is 1 player remaining (does not include spectators)
         if (size == 1) {
-            Player player = this.getPlayingPlayers().iterator().next();
+            Player player = playingPlayers.iterator().next();
 
             if (!broadcastWinners)
-                this.sendMessage(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), this.getID()));
+                sendMessage(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), identifier));
             else
-                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), this.getID())));
+                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), identifier)));
             return;
         }
 
         StringBuilder winners = new StringBuilder();
         int i = 0;
 
-        for (Player player : this.getPlayingPlayers()) {
+        for (Player player : playingPlayers) {
             if (i == size - 1) {
                 winners.append(" and ").append(player.getName());
                 break;
@@ -118,309 +134,221 @@ public class Game {
         }
 
         if (!broadcastWinners)
-            this.sendMessage(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), this.getID()));
+            sendMessage(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), identifier));
         else
-            Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), this.getID())));
+            Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), identifier)));
     }
 
     public void start() {
-        if (this.getHologram() != null) this.getHologram().despawn();
+        if (getHologram() != null) getHologram().despawn();
 
-        if (this.main.getGameManager().getScheduler(this.getID()) != null) {
-            this.main.getGameManager().getScheduler(this.getID()).setPlayed();
-        }
+        if (schedulerManager.getScheduler(identifier) != null) schedulerManager.getScheduler(identifier).setPlayed();
 
-        this.procedure.start();
+        procedure.start();
     }
 
     public void reset(boolean kickPlayers, boolean removedMessage) {
         if (kickPlayers) {
-            for (Player player : this.getAllPlayers()) {
+            for (Player player : getAllPlayers()) {
                 if (removedMessage)
-                    player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVEDTARGET, this.getID())));
+                    player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVEDTARGET, getIdentifier())));
 
-                if (this.physicalArena) {
-                    if (this.isSpectator(player)) {
-                        this.removeSpectator(player);
+                if (physicalArena) {
+                    if (isSpectator(player)) {
+                        removeSpectator(player);
                     }
 
-                    new TeleportTask(player, this.main.getGameManager().getLobbySpawn()).runTaskLater(main, 1);
+                    new TeleportTask(player, settingsManager.getLobbySpawn()).runTaskLater(main, 1);
 
-                    if (this.main.getGameManager().getClearInvSetting()) restoreInventory(player);
+                    if (settingsManager.isClearInv()) restoreInventory(player);
                 }
             }
 
-            this.allPlayers.clear();
-            this.playingPlayers.clear();
+            allPlayers.clear();
+            playingPlayers.clear();
         }
-        this.forceStart = false;
-        this.sendTitle("", "");
-        if (this.getHologram() != null) this.getHologram().despawn();
+        forceStart = false;
+        sendTitle("", "");
+        if (getHologram() != null) getHologram().despawn();
 
-        if (this.countdown != null) {
+        if (countdown != null) {
             try {
-                this.countdown.cancel();
+                countdown.cancel();
             } catch (IllegalStateException ignored) {
             }
         }
-        this.countdown = new Countdown(this.main, this, this.specs.getCountdownSeconds());
+        countdown = new Countdown(main, this, countdownSeconds);
 
-        if (this.main.getGameManager().getScheduler(this.getID()) != null) {
-            this.main.getGameManager().newScheduler(this.getID(), this.specs.getSchedulerDelay(), this.specs.getSchedulerResetterDelay());
-            this.setState(GameState.CLOSED);
-        } else this.setState(GameState.RECRUITING);
+        if (schedulerManager.getScheduler(identifier) != null) {
+            schedulerManager.newScheduler(this);
+            setState(GameState.CLOSED);
+        } else setState(GameState.RECRUITING);
 
-        this.procedure.onReset();
-        this.procedure.unregister();
-        this.procedure = new Procedure(this.main, this);
+        procedure.onReset();
+        procedure.unregister();
+        procedure = new Procedure(main, this);
 
-        if (!this.specs.getDescType().equalsIgnoreCase("chat")) {
-            if (specs.getHoloLocation() != null) {
-                this.getHologram().spawn();
+        if (!descType.equalsIgnoreCase("chat")) {
+            if (hologram.getSpawnPoint() != null) {
+                getHologram().spawn();
             }
         }
     }
 
     public int addPlayer(Player player) {
-        if (this.state == GameState.CLOSED || this.state == GameState.LIVE) return 2;
-        if (this.enforceSurvival) if (player.getGameMode() != GameMode.SURVIVAL) return 1;
-        if (this.allPlayers.size() == this.getMaxPlayers()) return 3;
+        if (state == GameState.CLOSED || state == GameState.LIVE) return 2;
+        if (enforceSurvival) if (player.getGameMode() != GameMode.SURVIVAL) return 1;
+        if (allPlayers.size() == getMaxPlayers()) return 3;
 
-        this.allPlayers.add(player);
-        this.playingPlayers.add(player);
+        allPlayers.add(player);
+        playingPlayers.add(player);
 
-        player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
-        this.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), player);
+        player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
+        sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), player);
 
-        if (this.physicalArena) {
-            new TeleportTask(player, this.spawn).runTaskLater(main, 1);
-            this.saveInventory(player);
+        if (physicalArena) {
+            new TeleportTask(player, spawn).runTaskLater(main, 1);
+            saveInventory(player);
         }
 
-        if (!this.specs.getDescType().equalsIgnoreCase("hologram")) {
-            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEDESC)));
+        if (!descType.equalsIgnoreCase("hologram")) {
+            player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEDESC)));
         }
 
-        if (this.state == GameState.RECRUITING && this.allPlayers.size() >= this.getMinPlayers()) {
-            this.countdown.start();
+        if (state == GameState.RECRUITING && allPlayers.size() >= getMinPlayers()) {
+            countdown.start();
         } else { //so the sign isnt updated when the player joins AND when the game state changes
-            this.updateSigns();
+            updateSigns();
         }
         return 0;
     }
 
     public void removePlayer(Player player) {
-        this.allPlayers.remove(player);
-        this.playingPlayers.remove(player);
+        allPlayers.remove(player);
+        playingPlayers.remove(player);
         player.sendTitle("", "", 0, 20, 0);
 
-        if (this.physicalArena) {
-            new TeleportTask(player, this.main.getGameManager().getLobbySpawn()).runTaskLater(main, 1);
+        if (physicalArena) {
+            new TeleportTask(player, settingsManager.getLobbySpawn()).runTaskLater(main, 1);
 
-            if (this.isSpectator(player)) {
-                this.removeSpectator(player);
+            if (isSpectator(player)) {
+                removeSpectator(player);
             }
 
-            this.restoreInventory(player);
+            restoreInventory(player);
         }
 
-        if (this.state != GameState.LIVE)
-            this.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERLEFT, this, player.getName())));
+        if (state != GameState.LIVE)
+            sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOTHERLEFT, this, player.getName())));
 
 
-        if (this.allPlayers.size() < this.getMinPlayers()) {
-            if (this.state == GameState.COUNTDOWN) {
+        if (allPlayers.size() < getMinPlayers()) {
+            if (state == GameState.COUNTDOWN) {
 
-                if (getForceStart() && !this.allPlayers.isEmpty()) {
-                    this.updateSigns();
+                if (forceStart && !allPlayers.isEmpty()) {
+                    updateSigns();
                     return;
                 }
 
-                if (!getForceStart()) {
-                    this.sendMessage(this.messageManager.get(Message.GAMENOTENOUGH));
+                if (!forceStart) {
+                    sendMessage(messageManager.get(Message.GAMENOTENOUGH));
                 }
 
-                if (this.countdown != null) {
+                if (countdown != null) {
                     try {
-                        this.countdown.cancel();
+                        countdown.cancel();
                     } catch (IllegalStateException ignored) {
                     }
                 }
-                this.countdown = new Countdown(this.main, this, this.specs.getCountdownSeconds());
-                this.setState(GameState.RECRUITING);
+                countdown = new Countdown(main, this, countdownSeconds);
+                setState(GameState.RECRUITING);
                 return;
             }
         }
-        this.updateSigns();
-    }
-
-    public boolean getForceStart() {
-        return forceStart;
+        updateSigns();
     }
 
     public void forceStart() {
-        this.forceStart = true;
+        forceStart = true;
     }
 
     public void sendMessage(String message) {
-        for (Player player : this.allPlayers) {
+        for (Player player : allPlayers) {
             Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
         }
     }
 
     public void sendMessage(String message, Player excludingPlayer) {
-        for (Player player : this.allPlayers) {
+        for (Player player : allPlayers) {
             if (player == excludingPlayer) continue;
             Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
         }
     }
 
     public void sendTitle(String title, String subtitle) {
-        for (Player player : this.playingPlayers) {
+        for (Player player : playingPlayers) {
             Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
             Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
         }
     }
 
     public void end() {
-        this.procedure.setCommandEnd();
-    }
-
-    public int getID() {
-        return specs.getId();
-    }
-
-    public GameState getState() {
-        return this.state;
+        procedure.setCommandEnd();
     }
 
     public String getStateDescription() {
-        return this.messageManager.get(this.state);
+        return messageManager.get(state);
     }
 
     public void setState(GameState state) {
         this.state = state;
 
-        if (!this.signs.isEmpty()) {
-            for (GameSign sign : this.signs) {
-                sign.update(this.getStateDescription());
+        if (getSigns() != null && !getSigns().isEmpty()) {
+            for (GameSign sign : getSigns()) {
+                sign.update(getStateDescription());
             }
         }
-    }
-
-    public String getDescType() {
-        return specs.getDescType();
-    }
-
-    public boolean isPhysicalArena() {
-        return specs.isPhysicalArena();
-    }
-
-    public boolean doesBroadcast() {
-        return broadcastWinners;
-    }
-
-    public HashSet<Player> getAllPlayers() {
-        return this.allPlayers;
-    }
-
-    public HashSet<Player> getPlayingPlayers() {
-        return this.playingPlayers;
-    }
-
-    public int getMaxPlayers() {
-        return specs.getMaxPlayers();
-    }
-
-    public int getMinPlayers() {
-        return specs.getMinPlayers();
-    }
-
-    public int getMaxRounds() {
-        return specs.getMaxRounds();
-    }
-
-    public Reward getReward() {
-        return specs.getReward();
-    }
-
-    public Hologram getHologram() {
-        return this.hologram;
-    }
-
-    public Countdown getCountdown() {
-        return this.countdown;
-    }
-
-    public void updateHologramSpawn(Location loc) {
-        this.specs.updateHoloLocation(loc);
     }
 
     public void addSpectator(Player player) {
-        if (!this.specManager.setSpectator(player)) {
-            this.removePlayer(player);
-            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMESPECTATORERROR)));
+        if (!specManager.setSpectator(player)) {
+            removePlayer(player);
+            player.sendMessage(Utils.addColour(messageManager.get(Message.GAMESPECTATORERROR)));
             return;
         }
 
-        this.spectators.add(player);
-        this.playingPlayers.remove(player);
-        this.updateSigns();
+        spectators.add(player);
+        playingPlayers.remove(player);
+        updateSigns();
     }
 
     public void removeSpectator(Player player) {
-        this.spectators.remove(player);
+        spectators.remove(player);
 
-        if (player.isOnline()) this.specManager.unSetSpectator(player);
+        if (player.isOnline()) specManager.unSetSpectator(player);
     }
 
     public boolean isSpectator(Player player) {
-        return this.spectators.contains(player);
-    }
-
-    public boolean allowsSpectators() {
-        return specs.getAllowSpectators();
+        return spectators.contains(player);
     }
 
     public void removePlayingPlayer(Player player) {
-        this.playingPlayers.remove(player);
+        playingPlayers.remove(player);
     }
 
     public void updateSigns() {
-        if (!this.signs.isEmpty()) {
+        if (getSigns() != null && !getSigns().isEmpty()) {
             for (GameSign sign : getSigns()) {
-                sign.update(this.playingPlayers.size());
+                sign.update(playingPlayers.size());
             }
         }
     }
 
-    public void addSign(GameSign sign) {
-        this.signs.add(sign);
-    }
-
-    public void removeSign(String signID) {
-        this.getSign(signID).despawn();
-        this.signs.remove(this.getSign(signID));
-    }
-
-    public ArrayList<GameSign> getSigns() {
-        return this.signs;
-    }
-
-    public GameSign getSign(String signID) {
-        for (GameSign sign : this.signs) {
-            if (sign.getID().equals(signID)) {
-                return sign;
-            }
-        }
-        return null;
-    }
-
-    public void saveInventory(Player player) {
+    private void saveInventory(Player player) {
         ItemStack[] inv = player.getInventory().getContents();
 
-        if (this.main.getGameManager().getClearInvSetting()) {
-            this.inventories.put(player.getUniqueId(), inv);
+        if (settingsManager.isClearInv()) {
+            inventories.put(player.getUniqueId(), inv);
 //            player.getInventory().clear(); //Broken in 1.21.6 spigot
 
             for (int i = 0; i < 41; i++) {
@@ -428,37 +356,46 @@ public class Game {
             }
         }
 
-        if (this.main.getGameManager().getInventoryManager() != null) {
-            this.main.getGameManager().getInventoryManager().savePlayer(player, inv);
+        if (main.getInventoryManager() != null) {
+            main.getInventoryManager().savePlayer(player, inv);
         }
     }
 
-    public void restoreInventory(Player player) {
-        if (!this.inventories.containsKey(player.getUniqueId())) return;
+    public ArrayList<GameSign> getSigns() {
+        return (gameSignManager.getSigns(this) == null) ? null : gameSignManager.getSigns(this);
+    }
 
-//        player.getInventory().setContents(this.inventories.get(player.getUniqueId()));  //Broken in 1.21.6 spigot
+    public void restoreInventory(Player player) {
+        if (!inventories.containsKey(player.getUniqueId())) return;
+
+//        player.getInventory().setContents(inventories.get(player.getUniqueId()));  //Broken in 1.21.6 spigot
 
         ItemStack[] savedInv = inventories.get(player.getUniqueId());
         for (int i = 0; i < 41; i++) {
             player.getInventory().setItem(i, savedInv[i]);
         }
 
-        this.inventories.remove(player.getUniqueId());
+        inventories.remove(player.getUniqueId());
 
-        if (this.main.getGameManager().getInventoryManager() != null)
-            this.main.getGameManager().getInventoryManager().removePlayer(player);
-    }
-
-    public void setSpawnLocation(Location location) {
-        this.spawn = location;
-        this.specs.updateSpawn(location);
-    }
-
-    public Location getSpawn() {
-        return this.spawn;
+        if (main.getInventoryManager() != null)
+            main.getInventoryManager().removePlayer(player);
     }
 
     public String getSpawnString() {
         return "World: " + spawn.getWorld().getName() + " X=" + Math.round(spawn.getX()) + ", Y=" + Math.round(spawn.getY()) + ", Z=" + Math.round(spawn.getZ());
+    }
+
+    public void setSpawn(Location location) {
+        spawn = location;
+
+        FileConfiguration config = main.getConfig();
+        config.set("games." + identifier + ".arena_options.spawn_point.world", location.getWorld().getName());
+        config.set("games." + identifier + ".arena_options.spawn_point.x", location.getX());
+        config.set("games." + identifier + ".arena_options.spawn_point.y", location.getY());
+        config.set("games." + identifier + ".arena_options.spawn_point.z", location.getZ());
+        config.set("games." + identifier + ".arena_options.spawn_point.yaw", location.getYaw());
+        config.set("games." + identifier + ".arena_options.spawn_point.pitch", location.getPitch());
+
+        main.saveConfig();
     }
 }

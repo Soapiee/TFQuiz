@@ -35,7 +35,7 @@ public class GameRemovePlayerSub extends AbstractAdminSub {
 
         if (!gameContainsPlayer(sender, player, game)) return;
 
-        int gameID = game.getID();
+        int gameID = game.getIdentifier();
         sendMessage(player, messageManager.getWithPlaceholder(Message.FORCEDGAMELEAVE, gameID));
         game.removePlayer(player);
         sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVED, player.getName(), gameID));

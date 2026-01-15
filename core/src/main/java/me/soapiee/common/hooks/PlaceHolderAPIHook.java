@@ -39,7 +39,7 @@ public class PlaceHolderAPIHook extends PlaceholderExpansion {
             if (identifier.equalsIgnoreCase("gameID")) {
                 Game game = main.getGameManager().getGame(player);
                 if (game == null) return "null";
-                else return String.valueOf(game.getID());
+                else return String.valueOf(game.getIdentifier());
             }
             if (identifier.equalsIgnoreCase("in_game")) {
                 return main.getGameManager().getGame(player) == null ? "false" : "true";

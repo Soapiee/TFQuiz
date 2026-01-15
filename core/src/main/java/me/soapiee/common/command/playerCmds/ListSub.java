@@ -34,7 +34,7 @@ public class ListSub extends AbstractPlayerSub {
             String messageFormat = messageManager.getWithPlaceholder(Message.GAMELIST, game);
             builder.append("", ComponentBuilder.FormatRetention.NONE)
                     .append("\n")
-                    .append(getComponentMsg(messageFormat, game.getID()));
+                    .append(getComponentMsg(messageFormat, game.getIdentifier()));
         }
 
         player.spigot().sendMessage(builder.create());
