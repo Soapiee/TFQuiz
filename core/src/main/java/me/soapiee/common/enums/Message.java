@@ -11,11 +11,11 @@ public enum Message {
     UPDATEAVAILABLE("update_available", "&aThere is an update available for TFQuiz"),
     UNSUPPORTEDVERSION("unsupported_version", "&cUnsupported version detected. Plugin may not function correctly. Contact the developer to get your version supported"),
     DISABLESPECWARNING("disable_spectators_warning", "&c[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished." +
-            "\nIts recommended that you disable it in the config. All other features will work as normal"),
+            "\n&cIts recommended that you disable it in the config. All other features will work as normal"),
     SPECTATORSYSTEMERROR("spectator_system_error", "&cERROR: The spectator system is not working. Contact the developer"),
     UNSUPPORTEDPLATFORMSPIGOT("unsupported_platform_spigot", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Spigot."),
     UNSUPPORTEDPLATFORMPAPER("unsupported_platform_paper", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Paper."),
-    DOWNLOADSPIGOTJAR("download_spigotr_jar", "&c&c[TFQuiz] Please download the Spigot jar instead."),
+    DOWNLOADSPIGOTJAR("download_spigotr_jar", "&c[TFQuiz] Please download the Spigot jar instead."),
     DOWNLOADPAPERJAR("download_paper_jar", "&c[TFQuiz] Please download the Paper jar instead."),
     ADMINCMDUSAGE("admin_command_usage",
             "&#01d54a--------- Admin Help ---------"
