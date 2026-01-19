@@ -3,7 +3,7 @@ package me.soapiee.common.manager;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class SettingsManager {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
 
     @Getter private boolean debugMode;

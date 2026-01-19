@@ -2,7 +2,7 @@ package me.soapiee.common;
 
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.VersionProvider;
 import me.soapiee.common.versionsupport.Version_Unsupported;
@@ -12,7 +12,7 @@ public class VersionManager {
 
     private VersionProvider provider;
 
-    public VersionManager(MessageManager messageManager, Logger customLogger) {
+    public VersionManager(MessageManager messageManager, CustomLogger customLogger) {
         try {
             String packageName = VersionManager.class.getPackage().getName();
             int version = Utils.getMajorVersion();

@@ -12,8 +12,8 @@ import me.soapiee.common.listener.ChatListener;
 import me.soapiee.common.listener.ConnectListener;
 import me.soapiee.common.listener.PlayerListener;
 import me.soapiee.common.manager.*;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Keys;
-import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
 import me.soapiee.common.utils.Utils;
 import org.bstats.bukkit.Metrics;
@@ -47,16 +47,16 @@ public final class TFQuiz extends JavaPlugin {
     @Getter private PlayerListener playerListener;
     private InventoryManager inventoryManager;
     private VaultHook vaultHook;
-    private Logger logger;
+    private CustomLogger customLogger;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         messageManager = new MessageManager(this);
-        logger = new Logger(this);
+        customLogger = new CustomLogger(this);
         settingsManager = new SettingsManager(this);
         specManager = new SpectatorManager(this);
-        versionManager = new VersionManager(messageManager, logger);
+        versionManager = new VersionManager(messageManager, customLogger);
 
 
         registerHooks();
@@ -132,8 +132,8 @@ public final class TFQuiz extends JavaPlugin {
         else return vaultHook;
     }
 
-    public Logger getCustomLogger() {
-        return logger;
+    public CustomLogger getCustomLogger() {
+        return customLogger;
     }
 
     public InventoryManager getInventoryManager() {

@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.logic.Question;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class QuestionManager {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
 
     private final File file;

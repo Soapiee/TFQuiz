@@ -5,7 +5,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.GameFactory;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ import java.util.List;
 public class GameManager {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
     @Getter private final List<Game> games = new ArrayList<>();
     private final GameFactory gameFactory;

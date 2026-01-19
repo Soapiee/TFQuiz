@@ -2,7 +2,7 @@ package me.soapiee.common;
 
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 class v1_19_R1 implements NMSProvider {
 
-    private Logger customLogger;
+    private CustomLogger customLogger;
     private MessageManager messageManager;
 
     @Override

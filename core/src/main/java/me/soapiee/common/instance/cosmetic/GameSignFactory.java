@@ -3,7 +3,7 @@ package me.soapiee.common.instance.cosmetic;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class GameSignFactory {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
 
     public GameSignFactory(TFQuiz main) {

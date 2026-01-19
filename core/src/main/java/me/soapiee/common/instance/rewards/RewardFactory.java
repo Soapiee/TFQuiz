@@ -6,7 +6,7 @@ import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.rewards.types.*;
 import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class RewardFactory {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
     private final VaultHook vaultHook;
     private FileConfiguration config;

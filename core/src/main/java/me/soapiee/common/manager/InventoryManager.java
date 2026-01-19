@@ -2,7 +2,7 @@ package me.soapiee.common.manager;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class InventoryManager {
     private final TFQuiz main;
-    private final Logger logger;
+    private final CustomLogger logger;
     private final MessageManager messageManager;
     private final File file;
     private final YamlConfiguration config;

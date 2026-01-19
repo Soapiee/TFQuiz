@@ -6,7 +6,7 @@ import me.soapiee.common.instance.cosmetic.Hologram;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.instance.rewards.RewardFactory;
 import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class GameFactory {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
     private final RewardFactory rewardFactory;
     private FileConfiguration config;
