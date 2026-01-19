@@ -3,6 +3,7 @@ package me.soapiee.common;
 import lombok.Getter;
 import me.soapiee.common.command.AdminCommand;
 import me.soapiee.common.command.PlayerCommand;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.hooks.PlaceHolderAPIHook;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.Game;
@@ -14,6 +15,7 @@ import me.soapiee.common.manager.*;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
+import me.soapiee.common.utils.Utils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -56,8 +58,8 @@ public final class TFQuiz extends JavaPlugin {
         specManager = new SpectatorManager(this);
         versionManager = new VersionManager(messageManager, logger);
 
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) new PlaceHolderAPIHook(this).register();
-        if (getServer().getPluginManager().getPlugin("Vault") != null) vaultHook = new VaultHook(this);
+
+        registerHooks();
         new Metrics(this, 25563);
 
         initiateManagers();
@@ -74,7 +76,6 @@ public final class TFQuiz extends JavaPlugin {
         updateManager = new UpdateManager(this, 125077);
         updateManager.updateAlert(Bukkit.getConsoleSender());
     }
-
 
     @Override
     public void onDisable() {
@@ -109,6 +110,21 @@ public final class TFQuiz extends JavaPlugin {
         gameManager.load(null);
         gameSignManager.load(Bukkit.getConsoleSender());
         schedulerManager.startSchedulers();
+    }
+
+    private void registerHooks() {
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceHolderAPIHook(this).register();
+            Utils.consoleMsg(messageManager.get(Message.HOOKEDPLACEHOLDERAPI));
+        }
+
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            vaultHook = new VaultHook(this);
+            Utils.consoleMsg(messageManager.get(Message.HOOKEDVAULT));
+        } else {
+            vaultHook = null;
+            Utils.consoleMsg(messageManager.get(Message.HOOKEDVAULTERROR));
+        }
     }
 
     public VaultHook getVaultHook() {

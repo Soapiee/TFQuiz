@@ -45,13 +45,13 @@ public class VaultHook {
     }
 
     public String deposit(OfflinePlayer target, double amount) {
-        if (!hasEconomyPlugin()) return messageManager.get(Message.INVALIDVAULTHOOK);
+        if (!hasEconomyPlugin()) return messageManager.get(Message.MISSINGVAULTHOOK);
 
         return economy.depositPlayer(target, amount).errorMessage;
     }
 
     public String getCurrencyName() {
-        if (!hasEconomyPlugin()) return messageManager.get(Message.INVALIDVAULTHOOK);
+        if (!hasEconomyPlugin()) return messageManager.get(Message.MISSINGVAULTHOOK);
 
 
         return economy.currencyNamePlural();

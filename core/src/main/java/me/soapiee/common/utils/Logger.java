@@ -49,9 +49,9 @@ public class Logger {
             writer.write(System.lineSeparator());
             writer.write(time + " [" + logType.name() + "] " + string);
             writer.write(System.lineSeparator());
-            writer.write("TFQuiz Version: " + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
+            writer.write(messageManager.get(Message.PLUGINVERSIONSTRING) + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
             writer.write(System.lineSeparator());
-            writer.write("Server Version: " + Bukkit.getBukkitVersion());
+            writer.write(messageManager.get(Message.SERVERVERSIONSTRING) + Bukkit.getBukkitVersion());
             writer.write(System.lineSeparator());
             if (error != null) {
                 writer.write(System.lineSeparator());

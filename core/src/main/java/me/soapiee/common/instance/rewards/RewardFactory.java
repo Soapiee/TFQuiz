@@ -63,7 +63,7 @@ public class RewardFactory {
 
     private Reward createCurrencyReward(CommandSender sender, String path, String gameID) {
         if (vaultHook == null) {
-            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.INVALIDVAULTHOOK, gameID));
+            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.MISSINGVAULTHOOK, gameID));
             return createNullReward();
         }
 
@@ -135,7 +135,7 @@ public class RewardFactory {
 
     private Reward createPermissionReward(CommandSender sender, String path, String gameID) {
         if (vaultHook == null) {
-            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.INVALIDVAULTHOOK, gameID));
+            customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.MISSINGVAULTHOOK, gameID));
             return createNullReward();
         }
 
