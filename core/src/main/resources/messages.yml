@@ -6,6 +6,9 @@
 console_usage_error: "&cYou must be a player to use this command"
 no_permission: "&cYou do not have permission to use this command"
 player_not_found: "&cPlayer not found"
+hooked_placeholderapi: "&aHooked into PlaceholderAPI"
+hooked_vault: "&aHooked into Vault"
+hooked_vault_error: "&cError hooking into Vault"
 
 # # # #                --->    ADMIN COMMAND MESSAGES    <---                # # # #
 update_available: "&aThere is an update available for TFQuiz"
@@ -16,7 +19,7 @@ disable_spectators_warning:
 spectator_system_error: "&cERROR: The spectator system is not working. Contact the developer"
 unsupported_platform_spigot: "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Spigot."
 unsupported_platform_paper: "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Paper."
-download_spigotr_jar: "&c[TFQuiz] Please download the Spigot jar instead."
+download_spigot_jar: "&c[TFQuiz] Please download the Spigot jar instead."
 download_paper_jar: "&c[TFQuiz] Please download the Paper jar instead."
 admin_command_usage:
   - "#01d54a--------- Admin Help ---------"
@@ -50,6 +53,8 @@ questions_file_error: "&cThe questions.yml could not be loaded"
 logger_file_error: "&cThe logger.log file could not be created"
 logger_log_success: "&cAn error was added to the logger.log file"
 logger_log_error: "&cThe logger.log file could not be created"
+logger_plugin_version_string: "BiomeMastery Version: "
+logger_server_version_string: "Server Version: "
 inventories_file_error: "&cThe playerInventories.yml could not be loaded"
 inventories_saving_error: "&cThere was an error saving %player%'s inventory to playerInventories.yml"
 inventories_removing_error: "&cThere was an error removing %player%'s inventory to playerInventories.yml"

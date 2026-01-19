@@ -1,5 +1,7 @@
 package me.soapiee.common.enums;
 
+import lombok.Getter;
+
 public enum Message {
 
     //                    --->    GENERAL MESSAGES    <---
@@ -18,7 +20,7 @@ public enum Message {
     SPECTATORSYSTEMERROR("spectator_system_error", "&cERROR: The spectator system is not working. Contact the developer"),
     UNSUPPORTEDPLATFORMSPIGOT("unsupported_platform_spigot", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Spigot."),
     UNSUPPORTEDPLATFORMPAPER("unsupported_platform_paper", "&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Paper."),
-    DOWNLOADSPIGOTJAR("download_spigotr_jar", "&c[TFQuiz] Please download the Spigot jar instead."),
+    DOWNLOADSPIGOTJAR("download_spigot_jar", "&c[TFQuiz] Please download the Spigot jar instead."),
     DOWNLOADPAPERJAR("download_paper_jar", "&c[TFQuiz] Please download the Paper jar instead."),
     ADMINCMDUSAGE("admin_command_usage",
             "&#01d54a--------- Admin Help ---------"
@@ -257,16 +259,12 @@ public enum Message {
     SIGNCONVOLINEINVALID("sign_convo_line_invalid", "&cInput must be between 1 and 4"),
     SIGNCONVOTEXTPROMPT("sign_convo_text_prompt", "&ePlease state the text you want to put on line &6&l%line_number%");
 
-    public final String path;
+    @Getter public final String path;
     private final String defaultText;
 
     Message(String path, String defaultText) {
         this.path = path;
         this.defaultText = defaultText;
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public String getDefault() {
