@@ -1,6 +1,6 @@
 name: ${project.parent.name}
 main: me.soapiee.common.TFQuiz
-version: 1.4.9
+version: 1.5.0
 author: Soapiee
 prefix: TFQuiz
 
@@ -30,11 +30,15 @@ permissions:
       tfquiz.admin.signs: true
       tfquiz.admin: true
       tfquiz.admin.bypassflags: true
+      tfquiz.admin.notification: true
   tfquiz.admin.signs:
     description: Allows access to /tf sign
     default: op
   tfquiz.admin.bypassflags:
     description: Allows users to bypass the game flags
+    default: op
+  tfquiz.admin.notification:
+    description: The user will be sent a notification if there is an update available
     default: op
   tfquiz.reload:
     description: Allows access to /tf reload

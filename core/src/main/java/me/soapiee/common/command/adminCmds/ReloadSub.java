@@ -1,5 +1,6 @@
 package me.soapiee.common.command.adminCmds;
 
+import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.conversations.ReloadConvo;
 import me.soapiee.common.enums.GameState;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class ReloadSub extends AbstractAdminSub {
 
-    private final String IDENTIFIER = "reload";
+    @Getter private final String IDENTIFIER = "reload";
     private final ConversationFactory convoFactory;
 
     public ReloadSub(TFQuiz main) {
@@ -57,14 +58,22 @@ public class ReloadSub extends AbstractAdminSub {
         sendMessage(sender, messageManager.get(Message.ADMINRELOADINPROGRESS));
         String reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADSUCCESS));
 
+        schedulerManager.cancelSchedulers();
+
         for (Game game : gameManager.getGames()) {
             game.reset(true, true);
             if (game.getHologram() != null) game.getHologram().despawn();
             game.setState(GameState.CLOSED);
         }
 
-        boolean errors = !messageManager.load(sender);
-        if (!gameManager.reloadAll(sender, main.getPlayerListener())) errors = true;
+        main.reloadConfig();
+        boolean errors = messageManager.reload(sender);
+        if (settingsManager.reload(sender)) errors = true;
+        main.getPlayerListener().setFlags();
+        if (main.getQuestionManager().reload(sender)) errors = true;
+        if (gameManager.reload(sender)) errors = true;
+        if (gameSignManager.reload(sender)) errors = true;
+        schedulerManager.reload();
 
         if (errors) reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADERROR));
 
@@ -74,9 +83,5 @@ public class ReloadSub extends AbstractAdminSub {
     @Override
     public List<String> getTabCompletions(String[] args) {
         return new ArrayList<>();
-    }
-
-    public String getIDENTIFIER() {
-        return IDENTIFIER;
     }
 }

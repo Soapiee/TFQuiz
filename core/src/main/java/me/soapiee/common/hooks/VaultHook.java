@@ -1,5 +1,8 @@
 package me.soapiee.common.hooks;
 
+import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.MessageManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -10,8 +13,11 @@ public class VaultHook {
 
     private static Economy economy = null;
     private static Permission permissions = null;
+    private static MessageManager messageManager;
 
-    public VaultHook() {
+    public VaultHook(TFQuiz main) {
+        messageManager = main.getMessageManager();
+
         this.setupEconomy();
         this.setupPermissions();
     }
@@ -39,21 +45,20 @@ public class VaultHook {
     }
 
     public String deposit(OfflinePlayer target, double amount) {
-        if (!hasEconomyPlugin())
-            throw new UnsupportedOperationException("Vault Economy not found. You need to install vault for this reward type to work properly");
+        if (!hasEconomyPlugin()) return messageManager.get(Message.MISSINGVAULTHOOK);
 
         return economy.depositPlayer(target, amount).errorMessage;
     }
 
     public String getCurrencyName() {
-        if (!hasEconomyPlugin()) return null;
+        if (!hasEconomyPlugin()) return messageManager.get(Message.MISSINGVAULTHOOK);
+
 
         return economy.currencyNamePlural();
     }
 
     public Boolean setPermission(OfflinePlayer target, String permission) {
-        if (!hasPermissionPlugin())
-            throw new UnsupportedOperationException("Vault Permission Plugin not found. You need to install vault for this reward type to work properly");
+        if (!hasPermissionPlugin()) return false;
 
         return permissions.playerAdd(null, target, permission);
     }

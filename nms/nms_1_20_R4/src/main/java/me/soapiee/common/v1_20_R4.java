@@ -1,13 +1,14 @@
 package me.soapiee.common;
 
-import me.soapiee.common.utils.Utils;
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.utils.Logger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -18,6 +19,15 @@ import java.util.HashSet;
 import java.util.UUID;
 
 class v1_20_R4 implements NMSProvider {
+
+    private Logger customLogger;
+    private MessageManager messageManager;
+
+    @Override
+    public void initialise(TFQuiz main) {
+        customLogger = main.getCustomLogger();
+        messageManager = main.getMessageManager();
+    }
 
     @Override
     public boolean setSpectator(Player player) {
@@ -41,7 +51,8 @@ class v1_20_R4 implements NMSProvider {
             packetField.set(info, list);
             player.setGameMode(GameMode.SPECTATOR);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            Utils.consoleMsg(ChatColor.RED + "ERROR: The spectator system is not working. Contact the developer");
+            customLogger.logToFile(e, messageManager.get(Message.SPECTATORSYSTEMERROR));
+
             return false;
         }
 

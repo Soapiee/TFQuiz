@@ -1,11 +1,12 @@
 package me.soapiee.common;
 
 import com.mojang.authlib.GameProfile;
-import me.soapiee.common.utils.Utils;
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.utils.Logger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -18,8 +19,18 @@ import java.util.HashSet;
 import java.util.UUID;
 
 class v1_16_R3 implements NMSProvider {
+
     private final String packetClassString = "net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo";
     private final String packetDataClassString = "net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo$PlayerInfoData";
+
+    private Logger customLogger;
+    private MessageManager messageManager;
+
+    @Override
+    public void initialise(TFQuiz main) {
+        customLogger = main.getCustomLogger();
+        messageManager = main.getMessageManager();
+    }
 
     @Override
     public boolean setSpectator(Player player) {
@@ -58,7 +69,8 @@ class v1_16_R3 implements NMSProvider {
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
                  InstantiationException |
                  ClassNotFoundException e) {
-            Utils.consoleMsg(ChatColor.RED + "ERROR: The spectator system is not working. Contact the developer");
+            customLogger.logToFile(e, messageManager.get(Message.SPECTATORSYSTEMERROR));
+
             return false;
         }
 

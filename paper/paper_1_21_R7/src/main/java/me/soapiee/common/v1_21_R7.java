@@ -1,5 +1,8 @@
 package me.soapiee.common;
 
+import me.soapiee.common.enums.Message;
+import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
@@ -18,12 +21,22 @@ import java.util.UUID;
 
 class v1_21_R7 implements NMSProvider {
 
+    private Logger customLogger;
+    private MessageManager messageManager;
+
+    @Override
+    public void initialise(TFQuiz main) {
+        customLogger = main.getCustomLogger();
+        messageManager = main.getMessageManager();
+    }
+
     private ServerPlayer getServerPlayer(Player player) {
         try {
             return ((CraftPlayer) player).getHandle();
         } catch (NoClassDefFoundError e) {
-            Utils.consoleMsg("&c[TFQuiz] Incorrect server platform detected. This plugin is designed to be ran on Paper.");
-            if (!Utils.IS_PAPER) Utils.consoleMsg("&c[TFQuiz] Please download the Spigot jar instead.");
+            customLogger.logToFile(null, messageManager.get(Message.UNSUPPORTEDPLATFORMPAPER));
+            if (!Utils.IS_PAPER)
+                customLogger.logToPlayer(Bukkit.getConsoleSender(), null, messageManager.get(Message.DOWNLOADSPIGOTJAR));
 
             return null;
         }
@@ -56,7 +69,7 @@ class v1_21_R7 implements NMSProvider {
             player.setGameMode(GameMode.SPECTATOR);
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            Utils.consoleMsg("&cERROR: The spectator system is not working. Contact the developer");
+            customLogger.logToFile(e, messageManager.get(Message.SPECTATORSYSTEMERROR));
             return false;
         }
 

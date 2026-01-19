@@ -16,18 +16,18 @@ public class ChatListener implements Listener {
     private final GameManager gameManager;
 
     public ChatListener(TFQuiz main) {
-        this.gameManager = main.getGameManager();
+        gameManager = main.getGameManager();
     }
 
     @EventHandler
     public void arenaChat(AsyncPlayerChatEvent event) {
-        Game sendersGame = this.gameManager.getGame(event.getPlayer());
+        Game sendersGame = gameManager.getGame(event.getPlayer());
 
         Set<Player> recipients = event.getRecipients();
 
         if (sendersGame == null) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Game recipientGame = this.gameManager.getGame(player);
+                Game recipientGame = gameManager.getGame(player);
                 if (recipientGame != null && (recipientGame.isPhysicalArena())) recipients.remove(player);
             }
         }
@@ -35,7 +35,7 @@ public class ChatListener implements Listener {
         if (sendersGame != null) {
             if (!sendersGame.isPhysicalArena()) return;
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Game recipientGame = this.gameManager.getGame(player);
+                Game recipientGame = gameManager.getGame(player);
                 if (recipientGame == null || recipientGame != sendersGame) recipients.remove(player);
             }
         }

@@ -154,7 +154,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("game") && sender.hasPermission("tfquiz.admin.*")) {
                     for (Game game : gameManager.getGames()) {
-                        results.add(String.valueOf(game.getID()));
+                        results.add(String.valueOf(game.getIdentifier()));
                     }
                 }
                 break;
