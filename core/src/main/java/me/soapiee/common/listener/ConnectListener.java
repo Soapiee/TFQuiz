@@ -1,7 +1,7 @@
 package me.soapiee.common.listener;
 
-import me.soapiee.common.SpectatorManager;
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.VersionManager;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.manager.GameManager;
 import me.soapiee.common.manager.SettingsManager;
@@ -20,14 +20,14 @@ public class ConnectListener implements Listener {
     private final GameManager gameManager;
     private final SettingsManager settingsManager;
     private final PlayerCache playerCache;
-    private final SpectatorManager specManager;
+    private final VersionManager specManager;
 
     public ConnectListener(TFQuiz main) {
         this.main = main;
         gameManager = main.getGameManager();
         settingsManager = main.getSettingsManager();
         playerCache = main.getPlayerCache();
-        specManager = main.getSpecManager();
+        specManager = main.getVersionManager();
     }
 
     @EventHandler

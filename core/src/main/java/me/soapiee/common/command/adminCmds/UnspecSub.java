@@ -25,7 +25,7 @@ public class UnspecSub extends AbstractAdminSub {
         Player player = Bukkit.getPlayer(args[1]);
         if (player == null) return;
 
-        main.getSpecManager().unSetSpectator(player);
+        main.getVersionManager().unSetSpectator(player);
     }
 
     @Override

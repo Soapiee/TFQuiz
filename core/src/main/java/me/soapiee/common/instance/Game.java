@@ -1,8 +1,8 @@
 package me.soapiee.common.instance;
 
 import lombok.Getter;
-import me.soapiee.common.SpectatorManager;
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.VersionManager;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.cosmetic.GameSign;
@@ -29,7 +29,7 @@ public class Game {
 
     private final TFQuiz main;
     private final MessageManager messageManager;
-    private final SpectatorManager specManager;
+    private final VersionManager specManager;
     private final SchedulerManager schedulerManager;
     private final SettingsManager settingsManager;
     private final GameSignManager gameSignManager;
@@ -61,7 +61,7 @@ public class Game {
     public Game(TFQuiz main, Map<String, String> settings, Reward reward) {
         this.main = main;
         messageManager = main.getMessageManager();
-        specManager = main.getSpecManager();
+        specManager = main.getVersionManager();
         settingsManager = main.getSettingsManager();
         gameSignManager = main.getGameSignManager();
         schedulerManager = main.getSchedulerManager();

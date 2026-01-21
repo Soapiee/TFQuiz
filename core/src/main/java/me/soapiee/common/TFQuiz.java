@@ -35,7 +35,6 @@ public final class TFQuiz extends JavaPlugin {
     //TODO:
 
     @Getter private MessageManager messageManager;
-    @Getter private SpectatorManager specManager;
     @Getter private VersionManager versionManager;
     @Getter private PlayerCache playerCache;
     @Getter private GameManager gameManager;
@@ -47,7 +46,7 @@ public final class TFQuiz extends JavaPlugin {
     @Getter private PlayerListener playerListener;
     private InventoryManager inventoryManager;
     private VaultHook vaultHook;
-    private CustomLogger customLogger;
+    @Getter private CustomLogger customLogger;
 
     @Override
     public void onEnable() {
@@ -55,9 +54,7 @@ public final class TFQuiz extends JavaPlugin {
         messageManager = new MessageManager(this);
         customLogger = new CustomLogger(this);
         settingsManager = new SettingsManager(this);
-        specManager = new SpectatorManager(this);
-        versionManager = new VersionManager(messageManager, customLogger);
-
+        versionManager = new VersionManager(this);
 
         registerHooks();
         new Metrics(this, 25563);
@@ -130,10 +127,6 @@ public final class TFQuiz extends JavaPlugin {
     public VaultHook getVaultHook() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) return null;
         else return vaultHook;
-    }
-
-    public CustomLogger getCustomLogger() {
-        return customLogger;
     }
 
     public InventoryManager getInventoryManager() {
