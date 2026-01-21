@@ -24,7 +24,7 @@ public class SetspawnSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
-        if (isConsole(sender)) return;
+        if (isConsole(sender, true)) return;
 
         Player player = (Player) sender;
         settingsManager.setLobbySpawn(player.getLocation());

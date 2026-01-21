@@ -26,7 +26,7 @@ public class SignListSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
-        if (isConsole(sender)) {
+        if (isConsole(sender, false)) {
             sendConsoleList(sender);
         } else {
             Player player = (Player) sender;
@@ -62,7 +62,7 @@ public class SignListSub extends AbstractAdminSub {
 
         for (Game game : gameManager.getGames()) {
             if (game.getSigns() == null) continue;
-            
+
             for (GameSign sign : game.getSigns()) {
                 String messageFormat = messageManager.getWithPlaceholder(Message.SIGNLISTFORMAT, sign.getSignID(), game.getIdentifier());
                 builder.append("\n")

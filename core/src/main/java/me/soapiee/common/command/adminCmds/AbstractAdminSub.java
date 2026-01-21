@@ -86,9 +86,9 @@ public abstract class AbstractAdminSub implements SubCmd {
         return !(args.length > MAX_ARGS);
     }
 
-    protected boolean isConsole(CommandSender sender) {
+    protected boolean isConsole(CommandSender sender, boolean sendErrorMsg) {
         if (sender instanceof ConsoleCommandSender) {
-            sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
+            if (sendErrorMsg) sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
             return true;
         }
 

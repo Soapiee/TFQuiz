@@ -22,7 +22,7 @@ public class SignTeleportSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
-        if (isConsole(sender)) return;
+        if (isConsole(sender, true)) return;
 
         GameSign sign = getSign(sender, args[2]);
         if (sign == null) return;
