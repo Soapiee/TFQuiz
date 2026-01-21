@@ -2,7 +2,7 @@ package me.soapiee.common.utils;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

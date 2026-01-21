@@ -1,4 +1,4 @@
-package me.soapiee.common.manager;
+package me.soapiee.common.managers;
 
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;

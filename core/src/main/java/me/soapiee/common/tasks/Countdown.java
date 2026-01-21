@@ -1,10 +1,11 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.tasks;
 
+import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Countdown extends BukkitRunnable {
@@ -12,7 +13,7 @@ public class Countdown extends BukkitRunnable {
     private final TFQuiz main;
     private final Game game;
     private final MessageManager messageManager;
-    private int totalSeconds;
+    @Getter private final int totalSeconds;
     private int countdownSeconds;
 
     public Countdown(TFQuiz main, Game game, int countdownSeconds) {
@@ -46,10 +47,6 @@ public class Countdown extends BukkitRunnable {
             this.game.sendTitle(this.messageManager.getWithPlaceholder(Message.GAMECOUNTDOWNTITLEPREFIX, this.countdownSeconds),
                     this.messageManager.getWithPlaceholder(Message.GAMECOUNTDOWNTITLESUFFIX, this.countdownSeconds));
         }
-    }
-
-    public int getTotalSeconds() {
-        return this.totalSeconds;
     }
 
     public int getSeconds() {

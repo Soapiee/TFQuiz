@@ -3,7 +3,7 @@ package me.soapiee.common.command.adminCmds;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.managers.SettingsManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

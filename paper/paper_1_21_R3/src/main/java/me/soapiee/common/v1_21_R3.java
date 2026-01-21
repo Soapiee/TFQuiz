@@ -1,7 +1,7 @@
 package me.soapiee.common;
 
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.NMSProvider;

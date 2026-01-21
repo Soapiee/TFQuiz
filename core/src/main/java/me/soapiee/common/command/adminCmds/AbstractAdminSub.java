@@ -6,7 +6,7 @@ import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.manager.*;
+import me.soapiee.common.managers.*;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

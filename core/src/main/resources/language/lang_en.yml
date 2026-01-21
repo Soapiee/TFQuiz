@@ -1,5 +1,5 @@
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- ##
-##                                  Custom Messages File                             ##
+##                                  English Language File                            ##
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- ##
 
 # # # #                --->    GENERAL MESSAGES    <---                # # # #
@@ -58,8 +58,9 @@ logger_server_version_string: "Server Version: "
 inventories_file_error: "&cThe playerInventories.yml could not be loaded"
 inventories_saving_error: "&cThere was an error saving %player%'s inventory to playerInventories.yml"
 inventories_removing_error: "&cThere was an error removing %player%'s inventory to playerInventories.yml"
-messages_file_error: "&cThe messages.yml could not be loaded"
-messages_field_error: "&cCould not add new fields to messages.yml"
+language_file_error: "&cThe language file could not be loaded"
+language_field_error: "&cCould not add new fields to the language file"
+invalid_language: "&cAn invalid language has been configured. Defaulting to \"lang_en\""
 settings_error: "&cThe config field &e%field% &cis not set. Defaulting to &e%default_value%"
 lobby_spawn_error: "&cYou must set a lobby spawn point in the config"
 invalid_reward_type: "&cInvalid reward type for game &e%game_ID%&c. No reward will be given."

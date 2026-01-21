@@ -1,10 +1,10 @@
-package me.soapiee.common.listener;
+package me.soapiee.common.listeners;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.VersionManager;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.GameManager;
-import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.SettingsManager;
 import me.soapiee.common.utils.PlayerCache;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

@@ -6,7 +6,7 @@ import me.soapiee.common.command.playerCmds.LeaveSub;
 import me.soapiee.common.command.playerCmds.ListSub;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;

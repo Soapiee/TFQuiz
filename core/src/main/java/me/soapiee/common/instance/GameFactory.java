@@ -5,7 +5,7 @@ import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.cosmetic.Hologram;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.instance.rewards.RewardFactory;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

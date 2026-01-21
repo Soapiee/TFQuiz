@@ -5,7 +5,7 @@ import me.soapiee.common.enums.Message;
 import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.rewards.types.*;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

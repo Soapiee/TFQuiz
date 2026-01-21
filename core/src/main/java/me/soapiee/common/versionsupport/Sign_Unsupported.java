@@ -1,7 +1,7 @@
 package me.soapiee.common.versionsupport;
 
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.block.Sign;
 

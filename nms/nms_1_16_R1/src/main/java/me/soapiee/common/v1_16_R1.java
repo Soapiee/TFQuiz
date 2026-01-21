@@ -2,7 +2,7 @@ package me.soapiee.common;
 
 import com.mojang.authlib.GameProfile;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.server.v1_16_R1.*;

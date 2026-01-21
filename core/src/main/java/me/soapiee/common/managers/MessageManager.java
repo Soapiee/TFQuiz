@@ -1,11 +1,11 @@
-package me.soapiee.common.manager;
+package me.soapiee.common.managers;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
+import me.soapiee.common.enums.Languages;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.logic.Scheduler;
-import me.soapiee.common.utils.Utils;
+import me.soapiee.common.tasks.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,10 +17,12 @@ public class MessageManager {
     private final TFQuiz main;
     private final File file;
     private final YamlConfiguration contents;
+    private final String language;
 
     public MessageManager(TFQuiz main) {
         this.main = main;
-        file = new File(main.getDataFolder(), "messages.yml");
+        language = validateLanguage();
+        file = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
         contents = new YamlConfiguration();
 
         load(null);
@@ -32,14 +34,14 @@ public class MessageManager {
 
     private boolean load(CommandSender sender) {
         if (!file.exists()) {
-            main.saveResource("messages.yml", false);
+            main.saveResource("language" + File.separator + language + ".yml", false);
         }
 
         try {
             contents.load(file);
         } catch (Exception ex) {
             if (sender != null) {
-                Utils.consoleMsg(get(Message.MESSAGESFILEERROR));
+//                Utils.consoleMsg(get(Message.LANGUAGEFILEERROR));
                 Bukkit.getLogger().throwing("Message Manager", "load()", ex);
             }
             return true;
@@ -51,8 +53,22 @@ public class MessageManager {
         try {
             contents.save(file);
         } catch (Exception ex) {
-            main.getCustomLogger().logToFile(ex, get(Message.MESSAGESFIELDERROR));
+            main.getCustomLogger().logToFile(ex, get(Message.LANGUAGEFIELDERROR));
         }
+    }
+
+    private String validateLanguage() {
+        String configString = main.getConfig().getString("language", "null");
+
+        Languages lang;
+        try {
+            lang = Languages.valueOf(configString.toUpperCase());
+        } catch (IllegalArgumentException error) {
+//            Utils.consoleMsg(get(Message.INVALIDLANGUAGE));
+            lang = Languages.LANG_EN;
+        }
+
+        return lang.toString().toLowerCase();
     }
 
     public String get(Message messageEnum) {

@@ -1,8 +1,8 @@
-package me.soapiee.common.listener;
+package me.soapiee.common.listeners;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.GameManager;
+import me.soapiee.common.managers.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

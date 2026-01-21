@@ -1,4 +1,4 @@
-package me.soapiee.common.manager;
+package me.soapiee.common.managers;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;

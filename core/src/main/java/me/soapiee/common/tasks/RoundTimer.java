@@ -1,9 +1,10 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.tasks;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.instance.logic.Procedure;
+import me.soapiee.common.managers.MessageManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class RoundTimer extends BukkitRunnable {
