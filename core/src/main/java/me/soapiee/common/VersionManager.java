@@ -10,6 +10,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class VersionManager {
@@ -20,14 +21,13 @@ public class VersionManager {
     private final NMSProvider NMSProvider;
     private final SignProvider signProvider;
 
-    private final HashSet<UUID> spectators;
+    private final Set<UUID> spectators = new HashSet<>();
 
     public VersionManager(TFQuiz main) {
         this.main = main;
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
 
-        spectators = new HashSet<>();
         NMSProvider = getNMSProvider();
         signProvider = getSignProvider();
     }

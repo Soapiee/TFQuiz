@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.UUID;
+
 public class ConnectListener implements Listener {
 
     private final TFQuiz main;
@@ -54,16 +56,17 @@ public class ConnectListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
 
-        Game game = gameManager.getGame(player);
+        Game game = gameManager.getGame(uuid);
         if (game != null) {
-            if (game.isSpectator(player)) {
+            if (game.isSpectator(uuid)) {
                 player.setGameMode(GameMode.SURVIVAL);
             }
             if (game.isPhysicalArena()) {
                 player.teleport(settingsManager.getLobbySpawn());
             }
-            game.removePlayer(player);
+            game.removePlayer(uuid);
         }
     }
 }

@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 public final class TFQuiz extends JavaPlugin {
 
     //TODO: Add "addGame" + "deleteGame" command functionality
@@ -79,8 +81,11 @@ public final class TFQuiz extends JavaPlugin {
         if (gameManager == null) return;
 
         for (Game game : gameManager.getGames()) {
-            for (Player player : game.getAllPlayers()) {
-                if (game.isSpectator(player)) {
+            for (UUID uuid : game.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) continue;
+
+                if (game.isSpectator(uuid)) {
                     player.setGameMode(GameMode.SURVIVAL);
                 }
                 game.restoreInventory(player);
@@ -91,8 +96,8 @@ public final class TFQuiz extends JavaPlugin {
 
             killOtherHolos(game);
 
-            if (game.getSigns() == null) continue;
-            for (GameSign sign : game.getSigns()) sign.despawn();
+            if (!game.getSigns().isEmpty())
+                for (GameSign sign : game.getSigns()) sign.despawn();
         }
     }
 

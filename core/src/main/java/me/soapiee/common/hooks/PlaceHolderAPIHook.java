@@ -35,27 +35,39 @@ public class PlaceHolderAPIHook extends PlaceholderExpansion {
     public @Nullable String onRequest(OfflinePlayer offlinePlayer, @NotNull String identifier) {
         if (offlinePlayer != null && offlinePlayer.isOnline()) {
             Player player = offlinePlayer.getPlayer();
+            Game game = main.getGameManager().getGame(player.getUniqueId());
 
-            if (identifier.equalsIgnoreCase("gameID")) {
-                Game game = main.getGameManager().getGame(player);
-                if (game == null) return "null";
-                else return String.valueOf(game.getIdentifier());
-            }
-            if (identifier.equalsIgnoreCase("in_game")) {
-                return main.getGameManager().getGame(player) == null ? "false" : "true";
-            }
-            if (identifier.equalsIgnoreCase("gamestate")) {
-                Game game = main.getGameManager().getGame(player);
-                if (game == null) return "null";
-                return game.getStateDescription();
-            }
-            if (identifier.equalsIgnoreCase("countdown")) {
-                Game game = main.getGameManager().getGame(player);
-                if (game == null) return "null";
-                if (game.getCountdown() == null) return "null";
-                return String.valueOf(game.getCountdown().getSeconds());
+            switch (identifier.toLowerCase()) {
+                case "gameid":
+                    return gameIDPlaceholder(game);
+                case "in_game":
+                    return inGamePlaceholder(game);
+                case "gamestate":
+                    return gameStatePlaceholder(game);
+                case "countdown":
+                    return countdownPlaceholder(game);
             }
         }
         return null;
+    }
+
+    private String gameIDPlaceholder(Game game) {
+        if (game == null) return "null";
+        else return String.valueOf(game.getIdentifier());
+    }
+
+    private String inGamePlaceholder(Game game) {
+        return game == null ? "false" : "true";
+    }
+
+    private String gameStatePlaceholder(Game game) {
+        if (game == null) return "null";
+        return game.getStateDescription();
+    }
+
+    private String countdownPlaceholder(Game game) {
+        if (game == null) return "null";
+        if (game.getCountdown() == null) return "null";
+        return String.valueOf(game.getCountdown().getSeconds());
     }
 }

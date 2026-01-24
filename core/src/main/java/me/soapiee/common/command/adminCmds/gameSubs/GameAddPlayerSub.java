@@ -2,6 +2,7 @@ package me.soapiee.common.command.adminCmds.gameSubs;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
+import me.soapiee.common.enums.AddPlayerResult;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import org.bukkit.Bukkit;
@@ -38,18 +39,19 @@ public class GameAddPlayerSub extends AbstractAdminSub {
         if (playerIsInAGame(sender, player)) return;
 
         Message message;
-        int outcome = game.addPlayer(player);
+        AddPlayerResult outcome = game.addPlayer(player.getUniqueId());
         switch (outcome) {
-            case 0:
+            case SUCCESS:
                 sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERADDED, player.getName(), game.getIdentifier()));
+                sendMessage(player, messageManager.getWithPlaceholder(Message.GAMEJOIN, game));
                 return;
-            case 1:
+            case NOT_SURVIVAL:
                 message = Message.GAMEINVALIDGAMEMODEOTHER;
                 break;
-            case 2:
+            case GAME_CLOSED:
                 message = Message.GAMEINVALIDSTATE;
                 break;
-            case 3:
+            case GAME_FULL:
             default:
                 message = Message.GAMEFULL;
         }
@@ -58,7 +60,7 @@ public class GameAddPlayerSub extends AbstractAdminSub {
     }
 
     private boolean playerIsInAGame(CommandSender sender, Player player) {
-        if (gameManager.getGame(player) != null) {
+        if (gameManager.getGame(player.getUniqueId()) != null) {
             sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERALREADYINGAME, player.getName()));
             return true;
         }

@@ -41,7 +41,7 @@ public class SignListSub extends AbstractAdminSub {
         builder.append(TextComponent.fromLegacyText(header));
 
         for (Game game : gameManager.getGames()) {
-            if (game.getSigns() == null) continue;
+            if (game.getSigns().isEmpty()) continue;
 
             for (GameSign sign : game.getSigns()) {
                 String messageFormat = messageManager.getWithPlaceholder(Message.SIGNLISTFORMAT, sign.getSignID(), game.getIdentifier());
@@ -61,7 +61,7 @@ public class SignListSub extends AbstractAdminSub {
         builder.append(Utils.addColour(header));
 
         for (Game game : gameManager.getGames()) {
-            if (game.getSigns() == null) continue;
+            if (game.getSigns().isEmpty()) continue;
 
             for (GameSign sign : game.getSigns()) {
                 String messageFormat = messageManager.getWithPlaceholder(Message.SIGNLISTFORMAT, sign.getSignID(), game.getIdentifier());

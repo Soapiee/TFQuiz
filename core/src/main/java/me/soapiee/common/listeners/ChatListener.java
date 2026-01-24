@@ -21,13 +21,13 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void arenaChat(AsyncPlayerChatEvent event) {
-        Game sendersGame = gameManager.getGame(event.getPlayer());
+        Game sendersGame = gameManager.getGame(event.getPlayer().getUniqueId());
 
         Set<Player> recipients = event.getRecipients();
 
         if (sendersGame == null) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Game recipientGame = gameManager.getGame(player);
+                Game recipientGame = gameManager.getGame(player.getUniqueId());
                 if (recipientGame != null && (recipientGame.isPhysicalArena())) recipients.remove(player);
             }
         }
@@ -35,7 +35,7 @@ public class ChatListener implements Listener {
         if (sendersGame != null) {
             if (!sendersGame.isPhysicalArena()) return;
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Game recipientGame = gameManager.getGame(player);
+                Game recipientGame = gameManager.getGame(player.getUniqueId());
                 if (recipientGame == null || recipientGame != sendersGame) recipients.remove(player);
             }
         }

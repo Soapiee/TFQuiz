@@ -3,11 +3,13 @@ package me.soapiee.common.instance;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.VersionManager;
+import me.soapiee.common.enums.AddPlayerResult;
+import me.soapiee.common.enums.DescriptionType;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.instance.cosmetic.Hologram;
-import me.soapiee.common.instance.logic.Procedure;
+import me.soapiee.common.instance.logic.GameLifecycle;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.managers.GameSignManager;
 import me.soapiee.common.managers.MessageManager;
@@ -44,7 +46,7 @@ public class Game {
     @Getter private final boolean broadcastWinners;
 
     //Arena options
-    @Getter private String descType;
+    @Getter private DescriptionType descType;
     @Getter private boolean allowSpectators;
     @Getter private Location spawn;
     @Getter private Hologram hologram;
@@ -52,11 +54,11 @@ public class Game {
     //Non-arena options
     @Getter private int schedulerDelay, schedulerResetterDelay;
 
-    @Getter private final HashSet<Player> playingPlayers = new HashSet<>(), allPlayers = new HashSet<>();
-    private final HashMap<UUID, ItemStack[]> inventories = new HashMap<>();
-    private final HashSet<Player> spectators = new HashSet<>();
+    @Getter private final Set<UUID> playingPlayers = new HashSet<>(), allPlayers = new HashSet<>();
+    private final Map<UUID, ItemStack[]> inventories = new HashMap<>();
+    private final Set<UUID> spectators = new HashSet<>();
     @Getter private Countdown countdown;
-    private Procedure procedure;
+    private GameLifecycle gameLifecycle;
 
     public Game(TFQuiz main, Map<String, String> settings, Reward reward) {
         this.main = main;
@@ -77,11 +79,11 @@ public class Game {
         enforceSurvival = Boolean.parseBoolean(settings.get("enforce_survival"));
         forceStart = false;
         broadcastWinners = Boolean.parseBoolean(settings.get("broadcast_winners"));
-        procedure = new Procedure(main, this);
+        gameLifecycle = new GameLifecycle(main, this);
         countdown = new Countdown(main, this, countdownSeconds);
     }
 
-    public void setUpArenaOptions(String descType, boolean allowSpectators, Location spawn, Hologram hologram) {
+    public void setUpArenaOptions(DescriptionType descType, boolean allowSpectators, Location spawn, Hologram hologram) {
         this.descType = descType;
         this.allowSpectators = allowSpectators;
         this.spawn = spawn;
@@ -109,24 +111,24 @@ public class Game {
 
         //If there is 1 player remaining (does not include spectators)
         if (size == 1) {
-            Player player = playingPlayers.iterator().next();
+            UUID uuid = playingPlayers.iterator().next();
 
             if (!broadcastWinners)
-                sendMessage(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), identifier));
+                sendMessage(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, Bukkit.getPlayer(uuid).getName(), identifier));
             else
-                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), identifier)));
+                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, Bukkit.getPlayer(uuid).getName(), identifier)));
             return;
         }
 
         StringBuilder winners = new StringBuilder();
         int i = 0;
 
-        for (Player player : playingPlayers) {
+        for (UUID uuid : playingPlayers) {
             if (i == size - 1) {
-                winners.append(" and ").append(player.getName());
+                winners.append(" and ").append(Bukkit.getPlayer(uuid).getName());
                 break;
             }
-            winners.append(player.getName());
+            winners.append(Bukkit.getPlayer(uuid).getName());
             if (i > size - 2) {
                 winners.append(", ");
             }
@@ -144,17 +146,20 @@ public class Game {
 
         if (schedulerManager.getScheduler(identifier) != null) schedulerManager.getScheduler(identifier).setPlayed();
 
-        procedure.start();
+        gameLifecycle.start();
     }
 
     public void reset(boolean kickPlayers, boolean removedMessage) {
         if (kickPlayers) {
-            for (Player player : getAllPlayers()) {
+            for (UUID uuid : getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) continue;
+
                 if (removedMessage)
                     player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVEDTARGET, getIdentifier())));
 
                 if (physicalArena) {
-                    if (isSpectator(player)) {
+                    if (isSpectator(uuid)) {
                         removeSpectator(player);
                     }
 
@@ -184,54 +189,60 @@ public class Game {
             setState(GameState.CLOSED);
         } else setState(GameState.RECRUITING);
 
-        procedure.onReset();
-        procedure.unregister();
-        procedure = new Procedure(main, this);
+        gameLifecycle.onReset();
+        gameLifecycle.unregister();
+        gameLifecycle = new GameLifecycle(main, this);
 
-        if (!descType.equalsIgnoreCase("chat")) {
+        if (descType != DescriptionType.CHAT) {
             if (hologram.getSpawnPoint() != null) {
                 getHologram().spawn();
             }
         }
     }
 
-    public int addPlayer(Player player) {
-        if (state == GameState.CLOSED || state == GameState.LIVE) return 2;
-        if (enforceSurvival) if (player.getGameMode() != GameMode.SURVIVAL) return 1;
-        if (allPlayers.size() == getMaxPlayers()) return 3;
+    public AddPlayerResult addPlayer(UUID uuid) {
+        if (state == GameState.CLOSED || state == GameState.LIVE) return AddPlayerResult.GAME_CLOSED;
 
-        allPlayers.add(player);
-        playingPlayers.add(player);
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return AddPlayerResult.PLAYER_NOT_FOUND;
 
-        player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
-        sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), player);
+        if (enforceSurvival) if (player.getGameMode() != GameMode.SURVIVAL) return AddPlayerResult.NOT_SURVIVAL;
+        if (allPlayers.size() == getMaxPlayers()) return AddPlayerResult.GAME_FULL;
+
+        allPlayers.add(uuid);
+        playingPlayers.add(uuid);
+
+//        player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
+        sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), uuid);
 
         if (physicalArena) {
             new TeleportTask(player, spawn).runTaskLater(main, 1);
             saveInventory(player);
         }
 
-        if (!descType.equalsIgnoreCase("hologram")) {
+        if (descType != DescriptionType.HOLOGRAM)
             player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEDESC)));
-        }
 
         if (state == GameState.RECRUITING && allPlayers.size() >= getMinPlayers()) {
             countdown.start();
         } else { //so the sign isnt updated when the player joins AND when the game state changes
             updateSigns();
         }
-        return 0;
+
+        return AddPlayerResult.SUCCESS;
     }
 
-    public void removePlayer(Player player) {
-        allPlayers.remove(player);
-        playingPlayers.remove(player);
+    public void removePlayer(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        allPlayers.remove(uuid);
+        playingPlayers.remove(uuid);
         player.sendTitle("", "", 0, 20, 0);
 
         if (physicalArena) {
             new TeleportTask(player, settingsManager.getLobbySpawn()).runTaskLater(main, 1);
 
-            if (isSpectator(player)) {
+            if (isSpectator(uuid)) {
                 removeSpectator(player);
             }
 
@@ -273,27 +284,29 @@ public class Game {
     }
 
     public void sendMessage(String message) {
-        for (Player player : allPlayers) {
-            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
+        for (UUID uuid : allPlayers) {
+            Bukkit.getPlayer(uuid).sendMessage(Utils.addColour(message));
         }
     }
 
-    public void sendMessage(String message, Player excludingPlayer) {
-        for (Player player : allPlayers) {
-            if (player == excludingPlayer) continue;
-            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
+    // Test excluding player UUID comparison
+    public void sendMessage(String message, UUID excludingPlayer) {
+        for (UUID uuid : allPlayers) {
+            if (uuid == excludingPlayer) continue;
+            Bukkit.getPlayer(uuid).sendMessage(Utils.addColour(message));
         }
     }
 
+    // Why is the title sent twice?
     public void sendTitle(String title, String subtitle) {
-        for (Player player : playingPlayers) {
-            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
-            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
+        for (UUID uuid : playingPlayers) {
+            Bukkit.getPlayer(uuid).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
+//            player.sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
         }
     }
 
     public void end() {
-        procedure.setCommandEnd();
+        gameLifecycle.setCommandEnd();
     }
 
     public String getStateDescription() {
@@ -303,45 +316,40 @@ public class Game {
     public void setState(GameState state) {
         this.state = state;
 
-        if (getSigns() != null && !getSigns().isEmpty()) {
-            for (GameSign sign : getSigns()) {
-                sign.update(getStateDescription());
-            }
-        }
+        if (!getSigns().isEmpty())
+            for (GameSign sign : getSigns()) sign.update(getStateDescription());
     }
 
     public void addSpectator(Player player) {
+        UUID uuid = player.getUniqueId();
         if (!specManager.setSpectator(player)) {
-            removePlayer(player);
+            removePlayer(uuid);
             player.sendMessage(Utils.addColour(messageManager.get(Message.GAMESPECTATORERROR)));
             return;
         }
 
-        spectators.add(player);
-        playingPlayers.remove(player);
+        spectators.add(uuid);
+        playingPlayers.remove(uuid);
         updateSigns();
     }
 
     public void removeSpectator(Player player) {
-        spectators.remove(player);
+        spectators.remove(player.getUniqueId());
 
         if (player.isOnline()) specManager.unSetSpectator(player);
     }
 
-    public boolean isSpectator(Player player) {
-        return spectators.contains(player);
+    public boolean isSpectator(UUID uuid) {
+        return spectators.contains(uuid);
     }
 
-    public void removePlayingPlayer(Player player) {
-        playingPlayers.remove(player);
+    public void removePlayingPlayer(UUID uuid) {
+        playingPlayers.remove(uuid);
     }
 
     public void updateSigns() {
-        if (getSigns() != null && !getSigns().isEmpty()) {
-            for (GameSign sign : getSigns()) {
-                sign.update(playingPlayers.size());
-            }
-        }
+        if (!getSigns().isEmpty())
+            for (GameSign sign : getSigns()) sign.update(playingPlayers.size());
     }
 
     private void saveInventory(Player player) {
@@ -361,8 +369,8 @@ public class Game {
         }
     }
 
-    public ArrayList<GameSign> getSigns() {
-        return (gameSignManager.getSigns(this) == null) ? null : gameSignManager.getSigns(this);
+    public List<GameSign> getSigns() {
+        return (gameSignManager.getSigns(this) == null) ? Collections.emptyList() : gameSignManager.getSigns(this);
     }
 
     public void restoreInventory(Player player) {

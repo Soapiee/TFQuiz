@@ -17,11 +17,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
-public class Procedure implements Listener {
+public class GameLifecycle implements Listener {
 
     private final Game game;
     private final TFQuiz main;
@@ -31,18 +29,18 @@ public class Procedure implements Listener {
     private boolean commandEnd;
     private boolean canAnswer;
 
-    private final ArrayList<Question> trueQuestions;
-    private final ArrayList<Question> falseQuestions;
+    private final List<Question> trueQuestions = new ArrayList<>();
+    private final List<Question> falseQuestions = new ArrayList<>();
     private String correctionMessage;
     private final int maxRounds;
 
-    private final ArrayList<Player> toEliminate;
+    private final List<UUID> toEliminate = new ArrayList<>();
     private boolean correctAnswer;
-    private final ArrayList<Player> answeredCorrectly;
+    private final List<UUID> answeredCorrectly = new ArrayList<>();
     private RoundTimer timer;
     private int roundCount;
 
-    public Procedure(TFQuiz main, Game game) {
+    public GameLifecycle(TFQuiz main, Game game) {
         this.main = main;
         this.game = game;
         messageManager = main.getMessageManager();
@@ -53,12 +51,7 @@ public class Procedure implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, main);
 
-        trueQuestions = new ArrayList<>();
-        falseQuestions = new ArrayList<>();
         maxRounds = game.getMaxRounds();
-
-        toEliminate = new ArrayList<>();
-        answeredCorrectly = new ArrayList<>();
         roundCount = 0;
     }
 
@@ -114,26 +107,28 @@ public class Procedure implements Listener {
 
     public void eliminateStage() {
         if (!toEliminate.isEmpty()) {
-            for (Player player : toEliminate) {
-                if (gameManager.getGame(player) == game) {
+            for (UUID uuid : toEliminate) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (gameManager.getGame(uuid) == game) {
                     player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEELIMMESSAGE)));
                     if (answeredCorrectly.isEmpty()) {
                         // If all players have/are to be eliminated,
                         // theres no point running NMS. However this code needs to run in order to run a winners message to the last people in the game
-                        game.removePlayingPlayer(player);
+                        game.removePlayingPlayer(uuid);
                         continue;
                     }
                     if (game.isAllowSpectators()) {
                         game.addSpectator(player);
                         continue;
                     }
-                    game.removePlayer(player);
+                    game.removePlayer(uuid);
                 }
             }
         }
         if (!answeredCorrectly.isEmpty()) {
-            for (Player player : answeredCorrectly) {
-                if (gameManager.getGame(player) == game) {
+            for (UUID uuid : answeredCorrectly) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (gameManager.getGame(uuid) == game) {
                     player.sendMessage(Utils.addColour(messageManager.get(Message.GAMECONTINUEDMESSAGE)));
                 }
             }
@@ -175,9 +170,9 @@ public class Procedure implements Listener {
         if (game.getPlayingPlayers().size() == 1) {
             if (!main.getSettingsManager().isDebugMode()) {
                 game.announceWinners();
-                Player player = game.getPlayingPlayers().iterator().next();
                 game.reset(true, false);
-                game.getReward().give(player);
+                UUID uuid = game.getPlayingPlayers().iterator().next();
+                game.getReward().give(Bukkit.getPlayer(uuid));
                 return true;
             }
         }
@@ -198,14 +193,14 @@ public class Procedure implements Listener {
 
         int size = game.getPlayingPlayers().size();
         Reward reward = game.getReward();
-        HashSet<Player> players = new HashSet<>();
+        Set<UUID> players = new HashSet<>();
 
         if (size >= 1) players.addAll(game.getPlayingPlayers());
 
         game.reset(true, false);
 
-        for (Player player : players) {
-            reward.give(player);
+        for (UUID uuid : players) {
+            reward.give(Bukkit.getPlayer(uuid));
         }
     }
 
@@ -232,20 +227,21 @@ public class Procedure implements Listener {
     public void onPlayerAnswer(AsyncPlayerChatEvent event) {
         if (!canAnswer) return;
         Player player = event.getPlayer();
-        if (!game.getPlayingPlayers().contains(player) && game.getState() == GameState.LIVE) return;
+        UUID uuid = player.getUniqueId();
+        if (!game.getPlayingPlayers().contains(uuid) && game.getState() == GameState.LIVE) return;
 
         String answer = event.getMessage();
 
         if (answer.equalsIgnoreCase("true") || answer.equalsIgnoreCase("false")) {
             if (answer.equalsIgnoreCase(String.valueOf(correctAnswer))) {
-                if (!answeredCorrectly.contains(player)) {
-                    answeredCorrectly.add(player);
-                    toEliminate.remove(player);
+                if (!answeredCorrectly.contains(uuid)) {
+                    answeredCorrectly.add(uuid);
+                    toEliminate.remove(uuid);
                 }
             } else {
-                if (!toEliminate.contains(player)) {
-                    toEliminate.add(player);
-                    answeredCorrectly.remove(player);
+                if (!toEliminate.contains(uuid)) {
+                    toEliminate.add(uuid);
+                    answeredCorrectly.remove(uuid);
                 }
             }
         }

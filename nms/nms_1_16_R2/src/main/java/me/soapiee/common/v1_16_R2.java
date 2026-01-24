@@ -15,7 +15,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 class v1_16_R2 implements NMSProvider {
@@ -95,7 +95,7 @@ class v1_16_R2 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
         EntityPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {

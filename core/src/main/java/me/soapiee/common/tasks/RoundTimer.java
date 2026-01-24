@@ -3,7 +3,7 @@ package me.soapiee.common.tasks;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.logic.Procedure;
+import me.soapiee.common.instance.logic.GameLifecycle;
 import me.soapiee.common.managers.MessageManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -11,15 +11,15 @@ public class RoundTimer extends BukkitRunnable {
 
     private final TFQuiz main;
     private final Game game;
-    private final Procedure procedure;
+    private final GameLifecycle gameLifecycle;
     private final MessageManager messageManager;
     private int countdownSeconds;
 
-    public RoundTimer(TFQuiz main, Game game, Procedure procedure, int countdownSeconds) {
+    public RoundTimer(TFQuiz main, Game game, GameLifecycle gameLifecycle, int countdownSeconds) {
         this.main = main;
         this.game = game;
-        this.procedure = procedure;
-        this.messageManager = main.getMessageManager();
+        this.gameLifecycle = gameLifecycle;
+        messageManager = main.getMessageManager();
         this.countdownSeconds = countdownSeconds;
     }
 
@@ -29,23 +29,23 @@ public class RoundTimer extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (this.countdownSeconds == 0) {
-            this.game.sendTitle("", "");
-            this.procedure.revealOutcomeStage();
+        if (countdownSeconds == 0) {
+            game.sendTitle("", "");
+            gameLifecycle.revealOutcomeStage();
         }
 
-        if (this.countdownSeconds == -5) {
+        if (countdownSeconds == -5) {
             cancel();
-            this.procedure.eliminateStage();
+            gameLifecycle.eliminateStage();
             return;
         }
 
-        if (this.countdownSeconds > 0) {
-            if (this.countdownSeconds <= 3) {
-                this.game.sendMessage(this.messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWN, this.countdownSeconds));
+        if (countdownSeconds > 0) {
+            if (countdownSeconds <= 3) {
+                game.sendMessage(messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWN, countdownSeconds));
             }
-            this.game.sendTitle(this.messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWNTITLEPREFIX, this.countdownSeconds),
-                    this.messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWNTITLESUFFIX, this.countdownSeconds));
+            game.sendTitle(messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWNTITLEPREFIX, countdownSeconds),
+                    messageManager.getWithPlaceholder(Message.GAMEROUNDCOUNTDOWNTITLESUFFIX, countdownSeconds));
         }
 //        DEBUG:
 //        Utils.consoleMsg(ChatColor.DARK_PURPLE.toString() + this.countdownSeconds);

@@ -8,10 +8,10 @@ import me.soapiee.common.instance.GameFactory;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GameManager {
 
@@ -19,12 +19,14 @@ public class GameManager {
     private final CustomLogger customLogger;
     private final MessageManager messageManager;
     @Getter private final List<Game> games = new ArrayList<>();
+    @Getter private final GamePlayerManager gamePlayerManager;
     private final GameFactory gameFactory;
 
     public GameManager(TFQuiz main) {
         this.main = main;
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
+        gamePlayerManager = new GamePlayerManager();
         gameFactory = new GameFactory(main);
     }
 
@@ -52,9 +54,9 @@ public class GameManager {
         return false;
     }
 
-    public Game getGame(Player player) {
+    public Game getGame(UUID uuid) {
         for (Game game : games) {
-            if (game.getAllPlayers().contains(player)) {
+            if (game.getAllPlayers().contains(uuid)) {
                 return game;
             }
         }

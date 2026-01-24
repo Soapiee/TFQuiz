@@ -93,7 +93,7 @@ class v1_21_R6 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
         ServerPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {
