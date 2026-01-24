@@ -1,12 +1,13 @@
 package me.soapiee.common.instance;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.DescriptionType;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.cosmetic.Hologram;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.instance.rewards.RewardFactory;
-import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 public class GameFactory {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
     private final RewardFactory rewardFactory;
     private FileConfiguration config;
@@ -63,12 +64,12 @@ public class GameFactory {
 
     private void createArenaOptions(CommandSender sender, String configID, Game game, boolean hasArena) {
         if (!hasArena) {
-            game.setUpArenaOptions("chat", false, null, null);
+            game.setUpArenaOptions(DescriptionType.CHAT, false, null, null);
             return;
         }
 
         String path = "games." + configID + ".arena_options.";
-        String descriptionType = config.getString(path + "desc_option", "chat");
+        DescriptionType descriptionType = validateDescriptionType(configID);
         boolean allowSpecs = config.getBoolean(path + ".spectators", false);
         Location spawn = validateSpawn(sender, configID);
         Hologram holo = validateHologram(configID);
@@ -96,6 +97,19 @@ public class GameFactory {
             customLogger.logToPlayer(sender, null, messageManager.getWithPlaceholder(Message.INVALIDGAMESPAWN, configID));
 
         return spawnLocation;
+    }
+
+    private DescriptionType validateDescriptionType(String configID) {
+        String configString = config.getString("games." + configID + ".arena_options.desc_option", "chat");
+        DescriptionType descType;
+
+        try {
+            descType = DescriptionType.valueOf(configString.toUpperCase());
+        } catch (IllegalArgumentException error) {
+            descType = DescriptionType.CHAT;
+        }
+
+        return descType;
     }
 
     private Hologram validateHologram(String configID) {

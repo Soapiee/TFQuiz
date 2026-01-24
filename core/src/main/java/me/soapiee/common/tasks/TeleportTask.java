@@ -1,4 +1,4 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

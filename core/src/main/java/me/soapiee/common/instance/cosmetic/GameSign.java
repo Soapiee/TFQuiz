@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GameSign {
 
-    private final VersionManager versionManager;
+    private final VersionManager spectatorManager;
     @Getter private final Game game;
     @Getter private final String signID;
     @Getter private final Material material;
@@ -28,7 +28,7 @@ public class GameSign {
     private Sign signBlock;
 
     public GameSign(TFQuiz main, HashMap<String, String> dataValues, Location location, HashMap<Integer, String> text) {
-        versionManager = main.getVersionManager();
+        spectatorManager = main.getVersionManager();
         signID = dataValues.get("sign_ID");
         game = main.getGameManager().getGame(Integer.parseInt(dataValues.get("game_ID")));
 
@@ -71,7 +71,7 @@ public class GameSign {
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
             }
 
-            versionManager.setText(signBlock, i, line);
+            spectatorManager.setText(signBlock, i, line);
             i++;
         }
         signBlock.update();
@@ -89,7 +89,7 @@ public class GameSign {
                         .replace("%game_ID%", String.valueOf(game.getIdentifier()))
                         .replace("%game_players%", String.valueOf(game.getPlayingPlayers().size()))
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
-                versionManager.setText(signBlock, key - 1, line);
+                spectatorManager.setText(signBlock, key - 1, line);
             }
         }
         signBlock.update();
@@ -103,7 +103,7 @@ public class GameSign {
                         .replace("%game_state%", game.getStateDescription())
                         .replace("%game_players%", String.valueOf(playerCount))
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
-                versionManager.setText(signBlock, key - 1, line);
+                spectatorManager.setText(signBlock, key - 1, line);
             }
         }
         signBlock.update();
@@ -118,7 +118,7 @@ public class GameSign {
                     .replace("%game_players%", String.valueOf(game.getPlayingPlayers().size()))
                     .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
         }
-        versionManager.setText(signBlock, lineIndex, line);
+        spectatorManager.setText(signBlock, lineIndex, line);
 
         signBlock.update();
     }

@@ -2,7 +2,7 @@ package me.soapiee.common.utils;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,12 +15,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Logger {
+public class CustomLogger {
     private final TFQuiz main;
     private final MessageManager messageManager;
     private final File logFile;
 
-    public Logger(TFQuiz main) {
+    public CustomLogger(TFQuiz main) {
         this.main = main;
         messageManager = main.getMessageManager();
 

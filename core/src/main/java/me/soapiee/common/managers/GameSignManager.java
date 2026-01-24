@@ -1,11 +1,11 @@
-package me.soapiee.common.manager;
+package me.soapiee.common.managers;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.instance.cosmetic.GameSignFactory;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class GameSignManager {
 
     private final TFQuiz main;
-    private final Logger customLogger;
+    private final CustomLogger customLogger;
     private final MessageManager messageManager;
     private final GameManager gameManager;
     private final GameSignFactory gameSignFactory;

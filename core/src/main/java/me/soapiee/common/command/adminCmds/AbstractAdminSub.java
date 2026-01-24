@@ -6,7 +6,7 @@ import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.manager.*;
+import me.soapiee.common.managers.*;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -86,9 +86,9 @@ public abstract class AbstractAdminSub implements SubCmd {
         return !(args.length > MAX_ARGS);
     }
 
-    protected boolean isConsole(CommandSender sender) {
+    protected boolean isConsole(CommandSender sender, boolean sendErrorMsg) {
         if (sender instanceof ConsoleCommandSender) {
-            sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
+            if (sendErrorMsg) sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
             return true;
         }
 

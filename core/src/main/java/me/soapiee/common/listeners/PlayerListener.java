@@ -1,13 +1,13 @@
-package me.soapiee.common.listener;
+package me.soapiee.common.listeners;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.conversations.SignConvo;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.manager.GameManager;
-import me.soapiee.common.manager.GameSignManager;
-import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.GameSignManager;
+import me.soapiee.common.managers.SettingsManager;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
@@ -76,7 +76,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
-        Game playersGame = gameManager.getGame(player);
+        Game playersGame = gameManager.getGame(player.getUniqueId());
         if (playersGame != null && playersGame.isPhysicalArena()) {
             event.setCancelled(true);
         }
@@ -91,7 +91,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         Player player = (Player) event.getEntity();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
-        Game playersGame = gameManager.getGame(player);
+        Game playersGame = gameManager.getGame(player.getUniqueId());
         if (playersGame != null) {
             if (!playersGame.isPhysicalArena()) return;
             event.setCancelled(true);
@@ -108,7 +108,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         Player player = (Player) event.getEntity();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
-        Game playersGame = gameManager.getGame(player);
+        Game playersGame = gameManager.getGame(player.getUniqueId());
         if (playersGame != null && playersGame.isPhysicalArena()) {
             event.setCancelled(true);
         }
@@ -122,7 +122,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
             Player player = ((Player) event.getEntity()).getPlayer();
             if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
-            Game playersGame = gameManager.getGame(player);
+            Game playersGame = gameManager.getGame(player.getUniqueId());
             if (playersGame != null && playersGame.isPhysicalArena()) {
                 event.setCancelled(true);
             }
@@ -134,8 +134,8 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
 
-        Game playersGame = gameManager.getGame(player);
-        if (gameManager.getGame(player) == null) return;
+        Game playersGame = gameManager.getGame(player.getUniqueId());
+        if (playersGame == null) return;
         if (!playersGame.isPhysicalArena()) return;
 
         ArrayList<String> disallowedCmds = settingsManager.getDisallowedCommands();
@@ -168,7 +168,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         if (breakBlocks) return;
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
-        Game playersGame = gameManager.getGame(player);
+        Game playersGame = gameManager.getGame(player.getUniqueId());
         if (playersGame != null && playersGame.isPhysicalArena()) {
             event.setCancelled(true);
         }
@@ -248,8 +248,9 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         if (teleport) return;
         Player player = event.getPlayer();
         if (player.hasPermission("tfquiz.admin.bypassflags")) return;
-        if (gameManager.getGame(player) == null) return;
-        if (!gameManager.getGame(player).isPhysicalArena()) return;
+        Game playersGame = gameManager.getGame(player.getUniqueId());
+        if (playersGame == null) return;
+        if (!playersGame.isPhysicalArena()) return;
 
         switch (event.getCause()) {
             case CHORUS_FRUIT:

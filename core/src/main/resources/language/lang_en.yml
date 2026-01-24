@@ -1,5 +1,5 @@
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- ##
-##                                  Custom Messages File                             ##
+##                                  English Language File                            ##
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- ##
 
 # # # #                --->    GENERAL MESSAGES    <---                # # # #
@@ -58,8 +58,9 @@ logger_server_version_string: "Server Version: "
 inventories_file_error: "&cThe playerInventories.yml could not be loaded"
 inventories_saving_error: "&cThere was an error saving %player%'s inventory to playerInventories.yml"
 inventories_removing_error: "&cThere was an error removing %player%'s inventory to playerInventories.yml"
-messages_file_error: "&cThe messages.yml could not be loaded"
-messages_field_error: "&cCould not add new fields to messages.yml"
+language_file_error: "&cThe language file could not be loaded"
+language_field_error: "&cCould not add new fields to the language file"
+invalid_language: "&cAn invalid language has been configured. Defaulting to \"lang_en\""
 settings_error: "&cThe config field &e%field% &cis not set. Defaulting to &e%default_value%"
 lobby_spawn_error: "&cYou must set a lobby spawn point in the config"
 invalid_reward_type: "&cInvalid reward type for game &e%game_ID%&c. No reward will be given."
@@ -244,7 +245,7 @@ sign_edit_command_usage: "#01d54a/tf sign edit <line> \"new text..\""
 sign_added: "&aYou added a new game sign &7(to game : %game_ID%)"
 sign_removed: "&aYou removed a game sign &7(signID: %sign_ID%)"
 sign_edited: "&aYou successfully edited a game sign &7(signID: %sign_ID%)"
-sign_invalid_line_number_error: "&cEnter a valid line number (1-4)"
+sign_invalid_line_number: "&cEnter a valid line number (1-4)"
 sign_invalid_signID_error: "&cYou must input a invalid signID. &7(Use /sign list to view all loaded signs"
 not_looking_at_game_sign: "&cYou are not looking at a game sign"
 not_looking_at_sign: "&cYou are not looking at a sign"

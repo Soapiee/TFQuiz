@@ -1,4 +1,4 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.tasks;
 
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;

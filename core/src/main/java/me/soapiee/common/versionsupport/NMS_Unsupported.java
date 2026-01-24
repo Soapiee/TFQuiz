@@ -19,7 +19,7 @@ public class NMS_Unsupported implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
 
     }
 }

@@ -1,8 +1,8 @@
-package me.soapiee.common.manager;
+package me.soapiee.common.managers;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.logic.Scheduler;
+import me.soapiee.common.tasks.Scheduler;
 
 import java.util.HashMap;
 

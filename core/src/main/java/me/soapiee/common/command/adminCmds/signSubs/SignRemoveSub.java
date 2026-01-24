@@ -30,7 +30,7 @@ public class SignRemoveSub extends AbstractAdminSub {
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
 
-        if (isConsole(sender) && (args.length == 2)) {
+        if (isConsole(sender, false) && (args.length == 2)) {
             sendMessage(sender, messageManager.get(Message.SIGNINVALIDSIGNID));
             return;
         }
@@ -38,7 +38,7 @@ public class SignRemoveSub extends AbstractAdminSub {
         GameSign gameSign = getGameSign(sender, args);
         if (gameSign == null) return;
 
-        if (!isConsole(sender))
+        if (!isConsole(sender, false))
             gameSign.getLocation().getWorld().dropItem(gameSign.getLocation(), new ItemStack(gameSign.getMaterial()));
 
         String signID = gameSign.getSignID();

@@ -1,9 +1,9 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.tasks;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.MessageManager;
+import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

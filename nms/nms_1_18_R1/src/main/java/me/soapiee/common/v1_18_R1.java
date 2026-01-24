@@ -1,8 +1,8 @@
 package me.soapiee.common;
 
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 class v1_18_R1 implements NMSProvider {
 
-    private Logger customLogger;
+    private CustomLogger customLogger;
     private MessageManager messageManager;
 
     @Override
@@ -74,7 +74,7 @@ class v1_18_R1 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
         ServerPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {

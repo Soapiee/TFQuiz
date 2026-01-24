@@ -8,12 +8,12 @@ import me.soapiee.common.hooks.PlaceHolderAPIHook;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.listener.ChatListener;
-import me.soapiee.common.listener.ConnectListener;
-import me.soapiee.common.listener.PlayerListener;
-import me.soapiee.common.manager.*;
+import me.soapiee.common.listeners.ChatListener;
+import me.soapiee.common.listeners.ConnectListener;
+import me.soapiee.common.listeners.PlayerListener;
+import me.soapiee.common.managers.*;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Keys;
-import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
 import me.soapiee.common.utils.Utils;
 import org.bstats.bukkit.Metrics;
@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 public final class TFQuiz extends JavaPlugin {
 
     //TODO: Add "addGame" + "deleteGame" command functionality
@@ -35,7 +37,6 @@ public final class TFQuiz extends JavaPlugin {
     //TODO:
 
     @Getter private MessageManager messageManager;
-    @Getter private SpectatorManager specManager;
     @Getter private VersionManager versionManager;
     @Getter private PlayerCache playerCache;
     @Getter private GameManager gameManager;
@@ -47,17 +48,15 @@ public final class TFQuiz extends JavaPlugin {
     @Getter private PlayerListener playerListener;
     private InventoryManager inventoryManager;
     private VaultHook vaultHook;
-    private Logger logger;
+    @Getter private CustomLogger customLogger;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         messageManager = new MessageManager(this);
-        logger = new Logger(this);
+        customLogger = new CustomLogger(this);
         settingsManager = new SettingsManager(this);
-        specManager = new SpectatorManager(this);
-        versionManager = new VersionManager(messageManager, logger);
-
+        versionManager = new VersionManager(this);
 
         registerHooks();
         new Metrics(this, 25563);
@@ -82,8 +81,11 @@ public final class TFQuiz extends JavaPlugin {
         if (gameManager == null) return;
 
         for (Game game : gameManager.getGames()) {
-            for (Player player : game.getAllPlayers()) {
-                if (game.isSpectator(player)) {
+            for (UUID uuid : game.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) continue;
+
+                if (game.isSpectator(uuid)) {
                     player.setGameMode(GameMode.SURVIVAL);
                 }
                 game.restoreInventory(player);
@@ -94,8 +96,8 @@ public final class TFQuiz extends JavaPlugin {
 
             killOtherHolos(game);
 
-            if (game.getSigns() == null) continue;
-            for (GameSign sign : game.getSigns()) sign.despawn();
+            if (!game.getSigns().isEmpty())
+                for (GameSign sign : game.getSigns()) sign.despawn();
         }
     }
 
@@ -130,10 +132,6 @@ public final class TFQuiz extends JavaPlugin {
     public VaultHook getVaultHook() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) return null;
         else return vaultHook;
-    }
-
-    public Logger getCustomLogger() {
-        return logger;
     }
 
     public InventoryManager getInventoryManager() {

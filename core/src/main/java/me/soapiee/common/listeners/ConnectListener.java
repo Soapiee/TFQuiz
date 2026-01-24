@@ -1,10 +1,10 @@
-package me.soapiee.common.listener;
+package me.soapiee.common.listeners;
 
-import me.soapiee.common.SpectatorManager;
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.VersionManager;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.manager.GameManager;
-import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.SettingsManager;
 import me.soapiee.common.utils.PlayerCache;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,20 +14,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.UUID;
+
 public class ConnectListener implements Listener {
 
     private final TFQuiz main;
     private final GameManager gameManager;
     private final SettingsManager settingsManager;
     private final PlayerCache playerCache;
-    private final SpectatorManager specManager;
+    private final VersionManager specManager;
 
     public ConnectListener(TFQuiz main) {
         this.main = main;
         gameManager = main.getGameManager();
         settingsManager = main.getSettingsManager();
         playerCache = main.getPlayerCache();
-        specManager = main.getSpecManager();
+        specManager = main.getVersionManager();
     }
 
     @EventHandler
@@ -54,16 +56,17 @@ public class ConnectListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
 
-        Game game = gameManager.getGame(player);
+        Game game = gameManager.getGame(uuid);
         if (game != null) {
-            if (game.isSpectator(player)) {
+            if (game.isSpectator(uuid)) {
                 player.setGameMode(GameMode.SURVIVAL);
             }
             if (game.isPhysicalArena()) {
                 player.teleport(settingsManager.getLobbySpawn());
             }
-            game.removePlayer(player);
+            game.removePlayer(uuid);
         }
     }
 }
