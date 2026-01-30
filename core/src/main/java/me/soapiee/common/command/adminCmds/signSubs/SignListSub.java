@@ -4,7 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.utils.Utils;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;

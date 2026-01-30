@@ -4,6 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
+import me.soapiee.common.instance.Hologram;
 import me.soapiee.common.managers.GameManager;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.managers.SchedulerManager;
@@ -61,8 +62,9 @@ public class ReloadConvo extends FixedSetPrompt {
         schedulerManager.cancelSchedulers();
 
         for (Game game : gameManager.getGames()) {
-            game.reset(true, true);
-            if (game.getHologram() != null) game.getHologram().despawn();
+            game.getLifeCycleHandler().reset(true, true);
+            Hologram hologram = game.getArenaHandler().getHologram();
+            if (hologram.getSpawnPoint() != null) hologram.despawn();
             game.setState(GameState.CLOSED);
         }
 

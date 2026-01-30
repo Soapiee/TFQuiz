@@ -9,10 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InventoryManager {
@@ -22,6 +19,10 @@ public class InventoryManager {
     private final File file;
     private final YamlConfiguration config;
 
+    private final Map<UUID, ItemStack[]> inventories = new HashMap<>();
+    private final boolean saveInventories;
+    private final boolean clearInventories;
+
     public InventoryManager(TFQuiz main) {
         this.main = main;
         logger = main.getCustomLogger();
@@ -30,6 +31,10 @@ public class InventoryManager {
         config = new YamlConfiguration();
 
         load();
+
+        SettingsManager settingsManager = main.getSettingsManager();
+        saveInventories = settingsManager.isSaveInvs();
+        clearInventories = settingsManager.isClearInv();
     }
 
     private void load() {
@@ -44,7 +49,8 @@ public class InventoryManager {
         }
     }
 
-    public void savePlayer(Player player, ItemStack[] inv) {
+    //TODO: Async
+    public void saveToFile(Player player, ItemStack[] inv) {
         String section = player.getUniqueId().toString();
         ArrayList<String> materials = new ArrayList<>();
         Date date = new Date();
@@ -56,11 +62,11 @@ public class InventoryManager {
 
         if (config.isConfigurationSection(section)) {
             int nextSlot = config.getConfigurationSection(section).getKeys(false).size() + 1;
-            config.set(section + "." + nextSlot + ".occured", format.format(date));
+            config.set(section + "." + nextSlot + ".occurred", format.format(date));
             config.set(section + "." + nextSlot + ".items", materials);
         } else {
             config.createSection(player.getUniqueId().toString());
-            config.set(section + ".1.occured", format.format(date));
+            config.set(section + ".1.occurred", format.format(date));
             config.set(section + ".1.items", materials);
         }
 
@@ -71,7 +77,8 @@ public class InventoryManager {
         }
     }
 
-    public void removePlayer(Player player) {
+    //TODO: Async
+    public void removeFromFile(Player player) {
         String section = player.getUniqueId().toString();
         if (!config.isConfigurationSection(section)) return;
 
@@ -85,5 +92,33 @@ public class InventoryManager {
         } catch (Exception ex) {
             logger.logToFile(ex, messageManager.getWithPlaceholder(Message.INVENTORIESREMOVEERROR, player.getName()));
         }
+    }
+
+    public void saveInventory(Player player) {
+        if (!clearInventories && !saveInventories) return;
+
+        ItemStack[] inv = player.getInventory().getContents();
+
+        if (clearInventories) {
+            inventories.put(player.getUniqueId(), inv);
+
+//            player.getInventory().clear(); //Broken in 1.21.6 spigot
+            for (int i = 0; i < 41; i++) player.getInventory().clear(i);
+        }
+
+        if (saveInventories) saveToFile(player, inv);
+    }
+
+    public void restoreInventory(Player player) {
+        if (!inventories.containsKey(player.getUniqueId())) return;
+
+//        player.getInventory().setContents(inventories.get(player.getUniqueId()));  //Broken in 1.21.6 spigot
+        ItemStack[] savedInv = inventories.get(player.getUniqueId());
+        for (int i = 0; i < 41; i++) {
+            player.getInventory().setItem(i, savedInv[i]);
+        }
+
+        inventories.remove(player.getUniqueId());
+        if (saveInventories) removeFromFile(player);
     }
 }

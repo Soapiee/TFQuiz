@@ -3,7 +3,7 @@ package me.soapiee.common.command.adminCmds.signSubs;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.block.Block;

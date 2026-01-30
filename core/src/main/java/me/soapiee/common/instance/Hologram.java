@@ -1,4 +1,4 @@
-package me.soapiee.common.instance.cosmetic;
+package me.soapiee.common.instance;
 
 import lombok.Getter;
 import me.soapiee.common.utils.Keys;
@@ -18,26 +18,26 @@ public class Hologram {
     }
 
     public void spawn() {
-        if (this.spawnPoint == null) return;
-        this.despawn();
+        if (spawnPoint == null) return;
+        despawn();
 
-        for (String line : this.text) {
-            ArmorStand armourStand = this.spawnPoint.getWorld().spawn(this.spawnPoint, ArmorStand.class);
+        for (String line : text) {
+            ArmorStand armourStand = this.spawnPoint.getWorld().spawn(spawnPoint, ArmorStand.class);
             armourStand.setVisible(false);
             armourStand.setGravity(false);
             armourStand.setInvulnerable(true);
             armourStand.getPersistentDataContainer().set(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE, (byte) 1);
             armourStand.setCustomNameVisible(true);
             armourStand.setCustomName(Utils.addColour(line));
-            this.spawnPoint.subtract(0, 0.25, 0);
+            spawnPoint.subtract(0, 0.25, 0);
         }
-        double change = 0.25 * this.text.length;
-        this.spawnPoint.add(0, change, 0);
+        double change = 0.25 * text.length;
+        spawnPoint.add(0, change, 0);
     }
 
     public void despawn() {
-        if (this.spawnPoint == null) return;
-        for (Entity entity : this.spawnPoint.getWorld().getNearbyEntities(this.spawnPoint, 5, 5, 5)) {
+        if (spawnPoint == null) return;
+        for (Entity entity : spawnPoint.getWorld().getNearbyEntities(spawnPoint, 5, 5, 5)) {
             if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE)) {
                 entity.remove();
             }
@@ -45,7 +45,7 @@ public class Hologram {
     }
 
     public void setLocation(Location newLoc) {
-        this.spawnPoint = newLoc;
+        spawnPoint = newLoc;
     }
 
     public String getLocationString() {

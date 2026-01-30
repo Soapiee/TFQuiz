@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
 
 class v1_17_R1 implements NMSProvider {

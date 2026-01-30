@@ -3,7 +3,7 @@ package me.soapiee.common.managers;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.instance.logic.Question;
+import me.soapiee.common.instance.Question;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,6 +31,8 @@ public class QuestionManager {
     }
 
     public boolean reload(CommandSender sender) {
+        trueQuestions.clear();
+        falseQuestions.clear();
         return load(sender);
     }
 

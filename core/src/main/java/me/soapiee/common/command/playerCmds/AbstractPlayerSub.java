@@ -5,6 +5,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.SubCmd;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,7 @@ public abstract class AbstractPlayerSub implements SubCmd {
     protected final TFQuiz main;
     protected final MessageManager messageManager;
     protected final GameManager gameManager;
+    protected final GamePlayerManager gamePlayerManager;
 
     protected final String PERMISSION;
     protected final int MIN_ARGS;
@@ -24,6 +26,7 @@ public abstract class AbstractPlayerSub implements SubCmd {
         this.main = main;
         this.messageManager = main.getMessageManager();
         this.gameManager = main.getGameManager();
+        this.gamePlayerManager = main.getGamePlayerManager();
 
         this.PERMISSION = PERMISSION;
         this.MIN_ARGS = MIN_ARGS;

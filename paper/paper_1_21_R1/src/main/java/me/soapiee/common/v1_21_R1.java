@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 class v1_21_R1 implements NMSProvider {
@@ -91,7 +91,7 @@ class v1_21_R1 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(org.bukkit.entity.Player player, HashSet<UUID> spectators) {
+    public void updateTab(org.bukkit.entity.Player player, Set<UUID> spectators) {
         ServerPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {

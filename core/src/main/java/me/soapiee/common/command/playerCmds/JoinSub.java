@@ -37,7 +37,7 @@ public class JoinSub extends AbstractPlayerSub {
         Game gameToJoin = validateGame(player, gameID);
         if (gameToJoin == null) return;
 
-        AddPlayerResult result = gameToJoin.addPlayer(uuid);
+        AddPlayerResult result = gameToJoin.getPlayerHandler().addPlayer(uuid);
         switch (result) {
             case NOT_SURVIVAL:
                 sendMessage(player, messageManager.get(Message.GAMEINVALIDGAMEMODE));

@@ -2,7 +2,7 @@ package me.soapiee.common.conversations;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.managers.GameSignManager;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.Keys;

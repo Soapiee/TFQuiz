@@ -47,8 +47,8 @@ public class SchedulerManager {
         schedulers.clear();
     }
 
-    public boolean hasScheduler(Game game) {
-        return schedulers.containsKey(game.getIdentifier());
+    public boolean hasScheduler(int gameID) {
+        return schedulers.containsKey(gameID);
     }
 
     public Scheduler getScheduler(int gameID) {

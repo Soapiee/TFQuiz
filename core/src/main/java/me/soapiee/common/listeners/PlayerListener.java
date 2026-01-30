@@ -4,7 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.conversations.SignConvo;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.cosmetic.GameSign;
+import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.managers.GameManager;
 import me.soapiee.common.managers.GameSignManager;
 import me.soapiee.common.managers.SettingsManager;

@@ -37,12 +37,12 @@ public class GameRemovePlayerSub extends AbstractAdminSub {
 
         int gameID = game.getIdentifier();
         sendMessage(player, messageManager.getWithPlaceholder(Message.FORCEDGAMELEAVE, gameID));
-        game.removePlayer(player);
+        game.getPlayerHandler().removePlayer(player.getUniqueId());
         sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVED, player.getName(), gameID));
     }
 
     private boolean gameContainsPlayer(CommandSender sender, Player player, Game game) {
-        if (!game.getAllPlayers().contains(player)) {
+        if (!gamePlayerManager.getAllPlayers(game.getIdentifier()).contains(player.getUniqueId())) {
             sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEPLAYERNOTINGAME, player.getName()));
             return false;
         }

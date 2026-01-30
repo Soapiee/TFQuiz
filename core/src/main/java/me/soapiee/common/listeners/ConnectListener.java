@@ -4,6 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.VersionManager;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.managers.SettingsManager;
 import me.soapiee.common.utils.PlayerCache;
 import org.bukkit.Bukkit;
@@ -22,14 +23,14 @@ public class ConnectListener implements Listener {
     private final GameManager gameManager;
     private final SettingsManager settingsManager;
     private final PlayerCache playerCache;
-    private final VersionManager specManager;
+    private final VersionManager versionManager;
 
     public ConnectListener(TFQuiz main) {
         this.main = main;
         gameManager = main.getGameManager();
         settingsManager = main.getSettingsManager();
         playerCache = main.getPlayerCache();
-        specManager = main.getVersionManager();
+        versionManager = main.getVersionManager();
     }
 
     @EventHandler
@@ -38,7 +39,7 @@ public class ConnectListener implements Listener {
 
         if (settingsManager.isEnforceLobbySpawn()) player.teleport(settingsManager.getLobbySpawn());
 
-        if (specManager.spectatorsExist()) specManager.updateTab(player);
+        if (versionManager.spectatorsExist()) versionManager.updateTab(player);
 
         if (!player.hasPlayedBefore()) playerCache.addOfflinePlayer(player);
 
@@ -60,13 +61,12 @@ public class ConnectListener implements Listener {
 
         Game game = gameManager.getGame(uuid);
         if (game != null) {
-            if (game.isSpectator(uuid)) {
-                player.setGameMode(GameMode.SURVIVAL);
-            }
-            if (game.isPhysicalArena()) {
-                player.teleport(settingsManager.getLobbySpawn());
-            }
-            game.removePlayer(uuid);
+            GamePlayerManager gamePlayerManager = main.getGamePlayerManager();
+            if (gamePlayerManager.isSpectator(game.getIdentifier(), uuid)) player.setGameMode(GameMode.SURVIVAL);
+
+            if (game.isPhysicalArena()) player.teleport(settingsManager.getLobbySpawn());
+
+            game.getPlayerHandler().removePlayer(uuid);
         }
     }
 }

@@ -3,8 +3,8 @@ package me.soapiee.common.managers;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.factories.GameFactory;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.GameFactory;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,14 +19,14 @@ public class GameManager {
     private final CustomLogger customLogger;
     private final MessageManager messageManager;
     @Getter private final List<Game> games = new ArrayList<>();
-    @Getter private final GamePlayerManager gamePlayerManager;
+    private final GamePlayerManager gamePlayerManager;
     private final GameFactory gameFactory;
 
     public GameManager(TFQuiz main) {
         this.main = main;
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
-        gamePlayerManager = new GamePlayerManager();
+        gamePlayerManager = main.getGamePlayerManager();
         gameFactory = new GameFactory(main);
     }
 
@@ -56,7 +56,7 @@ public class GameManager {
 
     public Game getGame(UUID uuid) {
         for (Game game : games) {
-            if (game.getAllPlayers().contains(uuid)) {
+            if (gamePlayerManager.getAllPlayers(game.getIdentifier()).contains(uuid)) {
                 return game;
             }
         }

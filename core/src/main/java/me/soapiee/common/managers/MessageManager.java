@@ -4,6 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Languages;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.tasks.Scheduler;
 import org.bukkit.Bukkit;
@@ -112,8 +113,9 @@ public class MessageManager {
     }
 
     public String getWithPlaceholder(Message messageEnum, Game game) {
-        return get(messageEnum).replace("%game_ID%", String.valueOf(game.getIdentifier()))
-                .replace("%game_players%", String.valueOf(game.getAllPlayers().size()))
+        int gameID = game.getIdentifier();
+        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
+                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
                 .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
                 .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
                 .replace("%game_status%", game.getStateDescription());
@@ -121,12 +123,14 @@ public class MessageManager {
 
     public String getInfo(Message messageEnum, Game game) {
         Scheduler scheduler = main.getSchedulerManager().getScheduler(game.getIdentifier());
+        int gameID = game.getIdentifier();
+        ArenaHandler arenaHandler = game.getArenaHandler();
 
-        return get(messageEnum).replace("%game_ID%", String.valueOf(game.getIdentifier()))
-                .replace("%game_players%", String.valueOf(game.getAllPlayers().size()))
+        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
+                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
                 .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
                 .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
-                .replace("%game_countdown%", String.valueOf(game.getCountdown().getTotalSeconds()))
+                .replace("%game_countdown%", String.valueOf(game.getLifeCycleHandler().getCountdown().getTotalSeconds()))
                 .replace("%game_maxrounds%", String.valueOf(game.getMaxRounds()))
                 .replace("%game_doesbroadcast%", String.valueOf(game.isBroadcastWinners()))
                 .replace("%game_reward%", game.getReward().toString())
@@ -135,20 +139,19 @@ public class MessageManager {
                         (scheduler == null) ? "false" : "true")
                 .replace("%game_schedulerseconds%",
                         (scheduler == null) ? "" : String.valueOf(scheduler.getRemainingTime()))
-                .replace("%game_desc%", game.getDescType())
-                .replace("%game_doesspectators%", String.valueOf(game.isAllowSpectators()))
+                .replace("%game_desc%", arenaHandler.getDescString())
+                .replace("%game_doesspectators%", String.valueOf(arenaHandler.isAllowSpectators()))
                 .replace("%game_holocoordinates%",
-                        (game.getHologram() == null || game.getHologram().getLocationString() == null) ? "not set"
-                                : game.getHologram().getLocationString())
-                .replace("%game_spawncoordinates%",
-                        (game.getSpawn() == null) ? "not set"
-                                : game.getSpawnString())
+                        (arenaHandler.getHologram().getSpawnPoint() == null) ? "not set"
+                                : arenaHandler.getHologram().getLocationString())
+                .replace("%game_spawncoordinates%", arenaHandler.getSpawnString())
                 .replace("%game_status%", game.getStateDescription());
     }
 
     public String getWithPlaceholder(Message messageEnum, Game game, String string) {
-        return get(messageEnum).replace("%game_ID%", String.valueOf(game.getIdentifier()))
-                .replace("%game_players%", String.valueOf(game.getAllPlayers().size()))
+        int gameID = game.getIdentifier();
+        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
+                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
                 .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
                 .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
                 .replace("%player%", string)

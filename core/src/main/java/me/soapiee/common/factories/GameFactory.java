@@ -1,11 +1,12 @@
-package me.soapiee.common.instance;
+package me.soapiee.common.factories;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.DescriptionType;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.instance.cosmetic.Hologram;
+import me.soapiee.common.handlers.ArenaHandler;
+import me.soapiee.common.instance.Game;
+import me.soapiee.common.instance.Hologram;
 import me.soapiee.common.instance.rewards.Reward;
-import me.soapiee.common.instance.rewards.RewardFactory;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.Bukkit;
@@ -22,7 +23,6 @@ public class GameFactory {
     private final MessageManager messageManager;
     private final RewardFactory rewardFactory;
     private FileConfiguration config;
-    private boolean enforce_survival;
 
     public GameFactory(TFQuiz main) {
         this.main = main;
@@ -30,12 +30,10 @@ public class GameFactory {
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
         rewardFactory = new RewardFactory(main);
-        enforce_survival = config.getBoolean("enforce_survival_mode", true);
     }
 
     public void reload() {
         config = main.getConfig();
-        enforce_survival = config.getBoolean("enforce_survival_mode", true);
         rewardFactory.reload();
     }
 
@@ -48,32 +46,28 @@ public class GameFactory {
         settingsMap.put("min_players", config.getString(path + "minimum_players", "1"));
         settingsMap.put("max_rounds", config.getString(path + "maximum_rounds", "10"));
         settingsMap.put("physical_arena", config.getString(path + "arena", "false"));
-        settingsMap.put("enforce_survival", String.valueOf(enforce_survival));
         settingsMap.put("broadcast_winners", config.getString(path + "broadcast_winners", "true"));
         settingsMap.put("countdown_seconds", config.getString(path + "countdown_seconds", "10"));
 
         Reward reward = rewardFactory.create(sender, configID);
         Game game = new Game(main, settingsMap, reward);
+        main.getGamePlayerManager().addGame(game.getIdentifier());
 
         boolean hasArena = Boolean.parseBoolean(settingsMap.get("physical_arena"));
-        createArenaOptions(sender, configID, game, hasArena);
+        if (hasArena) setupArenaHandler(sender, configID, game);
         createNonArenaOptions(configID, game, hasArena);
 
         return game;
     }
 
-    private void createArenaOptions(CommandSender sender, String configID, Game game, boolean hasArena) {
-        if (!hasArena) {
-            game.setUpArenaOptions(DescriptionType.CHAT, false, null, null);
-            return;
-        }
-
-        String path = "games." + configID + ".arena_options.";
-        DescriptionType descriptionType = validateDescriptionType(configID);
-        boolean allowSpecs = config.getBoolean(path + ".spectators", false);
-        Location spawn = validateSpawn(sender, configID);
-        Hologram holo = validateHologram(configID);
-        game.setUpArenaOptions(descriptionType, allowSpecs, spawn, holo);
+    private void setupArenaHandler(CommandSender sender, String configID, Game game) {
+        ArenaHandler arenaHandler = game.getArenaHandler();
+        arenaHandler.setDescType(validateDescriptionType(configID));
+        arenaHandler.setAllowSpectators(config.getBoolean("games." + configID + ".arena_options.spectators", false));
+        arenaHandler.setSpawn(validateSpawn(sender, configID));
+        Hologram hologram = arenaHandler.getHologram();
+        hologram.setLocation(validateHologramSpawn(configID));
+        hologram.spawn();
     }
 
     private void createNonArenaOptions(String configID, Game game, boolean hasArena) {
@@ -112,16 +106,8 @@ public class GameFactory {
         return descType;
     }
 
-    private Hologram validateHologram(String configID) {
-        Hologram hologram = new Hologram(messageManager.get(Message.GAMEHOLODESC));
-
-        if (config.getBoolean("games." + configID + ".arena", false)) {
-            String path = "games." + configID + ".arena_options.holo_location";
-            Location spawnLocation = validateLocation(path);
-            if (spawnLocation != null) hologram.setLocation(spawnLocation);
-        }
-
-        return hologram;
+    private Location validateHologramSpawn(String configID) {
+        return validateLocation("games." + configID + ".arena_options.holo_location");
     }
 
     private Location validateLocation(String path) {

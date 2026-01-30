@@ -1,15 +1,16 @@
-package me.soapiee.common.instance.logic;
+package me.soapiee.common.handlers;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.EndGameResult;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.rewards.Reward;
+import me.soapiee.common.instance.Question;
 import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.managers.QuestionManager;
 import me.soapiee.common.tasks.RoundTimer;
-import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,12 +20,16 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.*;
 
-public class GameLifecycle implements Listener {
+public class LiveGameHandler implements Listener {
 
     private final Game game;
+    private final int gameID;
     private final TFQuiz main;
     private final MessageManager messageManager;
     private final GameManager gameManager;
+    private final GamePlayerManager playerManager;
+    private final GamePlayerHandler playerHandler;
+    private final GameMessageHandler messageHandler;
     private final QuestionManager questionManager;
     private boolean commandEnd;
     private boolean canAnswer;
@@ -40,11 +45,15 @@ public class GameLifecycle implements Listener {
     private RoundTimer timer;
     private int roundCount;
 
-    public GameLifecycle(TFQuiz main, Game game) {
+    public LiveGameHandler(TFQuiz main, Game game) {
         this.main = main;
         this.game = game;
+        gameID = game.getIdentifier();
         messageManager = main.getMessageManager();
         gameManager = main.getGameManager();
+        playerManager = main.getGamePlayerManager();
+        playerHandler = game.getPlayerHandler();
+        messageHandler = game.getMessageHandler();
         questionManager = main.getQuestionManager();
         commandEnd = false;
         canAnswer = false;
@@ -55,22 +64,23 @@ public class GameLifecycle implements Listener {
         roundCount = 0;
     }
 
-    public void start() {
-        game.setState(GameState.LIVE);
-        game.sendMessage(messageManager.get(Message.GAMESTARTED));
+    public void generateQuestions() {
         trueQuestions.addAll(questionManager.getTrueQuestions());
         falseQuestions.addAll(questionManager.getFalseQuestions());
-        stageOne();
     }
 
-    public void stageOne() {
-        //Stage 1: Asks question
+    public void startNewRound() {
         roundCount++;
         toEliminate.clear();
         answeredCorrectly.clear();
-        toEliminate.addAll(game.getPlayingPlayers());
+        toEliminate.addAll(playerManager.getPlayingPlayers(gameID));
         canAnswer = true;
 
+        askQuestion();
+        startRoundTimer();
+    }
+
+    private Question getQuestion() {
         int randomNumber = new Random().nextInt(2); //random number between 0 and 1
 
         Question question;
@@ -87,128 +97,73 @@ public class GameLifecycle implements Listener {
         }
         correctionMessage = question.getCorrectionMessage();
 
-        game.sendMessage(messageManager.getWithPlaceholder(Message.GAMEPROMPT, question.getQuestion()));
-        stageTwo();
+        return question;
     }
 
-    public void stageTwo() {
-        //Stage 2: count down
+    private void askQuestion() {
+        messageHandler.sendMessageToAll(messageManager.getWithPlaceholder(Message.GAMEPROMPT, getQuestion().toString()));
+    }
+
+    private void startRoundTimer() {
         timer = new RoundTimer(main, game, this, 10);
         timer.start();
     }
 
-    public void revealOutcomeStage() {
+    public void revealOutcome() {
         canAnswer = false;
+
         if (correctAnswer)
-            game.sendMessage(messageManager.getWithPlaceholder(Message.GAMETRUEOUTCOME, correctionMessage));
+            messageHandler.sendMessageToAll(messageManager.getWithPlaceholder(Message.GAMETRUEOUTCOME, correctionMessage));
         else
-            game.sendMessage(messageManager.getWithPlaceholder(Message.GAMEFALSEOUTCOME, correctionMessage));
+            messageHandler.sendMessageToAll(messageManager.getWithPlaceholder(Message.GAMEFALSEOUTCOME, correctionMessage));
     }
 
-    public void eliminateStage() {
+    public void eliminatePlayers() {
         if (!toEliminate.isEmpty()) {
             for (UUID uuid : toEliminate) {
                 Player player = Bukkit.getPlayer(uuid);
+                if (player == null) continue;
+
                 if (gameManager.getGame(uuid) == game) {
-                    player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEELIMMESSAGE)));
+                    messageHandler.eliminated(player);
+
                     if (answeredCorrectly.isEmpty()) {
                         // If all players have/are to be eliminated,
                         // theres no point running NMS. However this code needs to run in order to run a winners message to the last people in the game
-                        game.removePlayingPlayer(uuid);
+                        playerHandler.eliminate(uuid);
                         continue;
                     }
-                    if (game.isAllowSpectators()) {
-                        game.addSpectator(player);
-                        continue;
-                    }
-                    game.removePlayer(uuid);
+
+                    if (game.getArenaHandler().isAllowSpectators())
+                        playerHandler.setSpectator(player);
+                    else
+                        playerHandler.removePlayer(uuid);
                 }
             }
         }
+
         if (!answeredCorrectly.isEmpty()) {
             for (UUID uuid : answeredCorrectly) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (gameManager.getGame(uuid) == game) {
-                    player.sendMessage(Utils.addColour(messageManager.get(Message.GAMECONTINUEDMESSAGE)));
+                    messageHandler.survived(player);
                 }
             }
         }
-
-        //Start stage one again
-        if (!hasEnded()) {
-            stageOne();
-        }
     }
 
-    public boolean hasEnded() {
-        //Stage 4: end runnables and do checks
-        if (timer != null && (!timer.isCancelled())) {
-            timer.cancel();
-        }
+    public EndGameResult shouldEnd() {
+        Set<UUID> playingPlayer = playerManager.getPlayingPlayers(gameID);
+        if (playingPlayer.isEmpty()) return EndGameResult.NO_WINNERS_END;
+        if (falseQuestions.isEmpty() || trueQuestions.isEmpty() || roundCount >= maxRounds)
+            return EndGameResult.WINNERS_END;
+        if (playingPlayer.size() == 1 && (!main.getSettingsManager().isDebugMode())) return EndGameResult.WINNERS_END;
+        if (commandEnd) return EndGameResult.WINNERS_END;
 
-        //if the game was force ended via admin command
-        if (commandEnd) {
-            forceEnd();
-            return true;
-        }
-
-        //if the game has no players (including spectators)
-        if (game.getAllPlayers().isEmpty()) {
-            game.announceWinners();
-            game.reset(false, false);
-            return true;
-        }
-
-        //if the game has no playing players (but has spectators)
-        if (game.getPlayingPlayers().isEmpty()) {
-            game.announceWinners();
-            game.reset(true, false);
-            return true;
-        }
-
-        //if there is a single playing player remaining
-        if (game.getPlayingPlayers().size() == 1) {
-            if (!main.getSettingsManager().isDebugMode()) {
-                game.announceWinners();
-                game.reset(true, false);
-                UUID uuid = game.getPlayingPlayers().iterator().next();
-                game.getReward().give(Bukkit.getPlayer(uuid));
-                return true;
-            }
-        }
-
-        //if there are no unique questions left to ask, or the maximum amount of rounds was reached
-        if (falseQuestions.isEmpty() || trueQuestions.isEmpty() || roundCount >= maxRounds) {
-            forceEnd();
-            return true;
-        }
-
-        //Start stage one again
-        return false;
+        return EndGameResult.NEW_ROUND;
     }
 
-    public void forceEnd() {
-        //The game must be ended, regardless of how many players are left
-        game.announceWinners();
-
-        int size = game.getPlayingPlayers().size();
-        Reward reward = game.getReward();
-        Set<UUID> players = new HashSet<>();
-
-        if (size >= 1) players.addAll(game.getPlayingPlayers());
-
-        game.reset(true, false);
-
-        for (UUID uuid : players) {
-            reward.give(Bukkit.getPlayer(uuid));
-        }
-    }
-
-    public void unregister() {
-        HandlerList.unregisterAll(this);
-    }
-
-    public void onReset() {
+    public void cancelTimer() {
         if (timer != null) {
             try {
                 timer.cancel();
@@ -221,14 +176,19 @@ public class GameLifecycle implements Listener {
         commandEnd = true;
     }
 
+    public void unregister() {
+        HandlerList.unregisterAll(this);
+    }
+
     // !*!*!*!*!*!*!*!*!*!*!                            EVENTS                            !*!*!*!*!*!*!*!*!*!*!
     //                     ----------------------------------------------------------------
+
     @EventHandler
     public void onPlayerAnswer(AsyncPlayerChatEvent event) {
         if (!canAnswer) return;
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (!game.getPlayingPlayers().contains(uuid) && game.getState() == GameState.LIVE) return;
+        if (!playerManager.getPlayingPlayers(gameID).contains(uuid) && game.getState() == GameState.LIVE) return;
 
         String answer = event.getMessage();
 

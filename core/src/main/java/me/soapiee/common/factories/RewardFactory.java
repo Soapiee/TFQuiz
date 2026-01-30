@@ -1,9 +1,10 @@
-package me.soapiee.common.instance.rewards;
+package me.soapiee.common.factories;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.hooks.VaultHook;
+import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.instance.rewards.types.*;
 import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;

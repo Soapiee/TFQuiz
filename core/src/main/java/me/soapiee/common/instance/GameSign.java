@@ -1,9 +1,10 @@
-package me.soapiee.common.instance.cosmetic;
+package me.soapiee.common.instance;
 
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.VersionManager;
-import me.soapiee.common.instance.Game;
+import me.soapiee.common.managers.GameManager;
+import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.utils.Keys;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,8 +20,10 @@ import java.util.List;
 
 public class GameSign {
 
-    private final VersionManager spectatorManager;
+    private final VersionManager versionManager;
+    private final GamePlayerManager gamePlayerManager;
     @Getter private final Game game;
+    private final int gameID;
     @Getter private final String signID;
     @Getter private final Material material;
     @Getter private final Location location;
@@ -28,9 +31,12 @@ public class GameSign {
     private Sign signBlock;
 
     public GameSign(TFQuiz main, HashMap<String, String> dataValues, Location location, HashMap<Integer, String> text) {
-        spectatorManager = main.getVersionManager();
+        versionManager = main.getVersionManager();
+        GameManager gameManager = main.getGameManager();
+        gamePlayerManager = main.getGamePlayerManager();
         signID = dataValues.get("sign_ID");
-        game = main.getGameManager().getGame(Integer.parseInt(dataValues.get("game_ID")));
+        gameID = Integer.parseInt(dataValues.get("game_ID"));
+        game = gameManager.getGame(gameID);
 
         this.location = location;
         material = Material.matchMaterial(dataValues.get("material"));
@@ -65,13 +71,13 @@ public class GameSign {
         int i = 0;
         for (String line : text.values()) {
             if (line.contains("%")) {
-                line = line.replace("%game_ID%", String.valueOf(game.getIdentifier()))
+                line = line.replace("%game_ID%", String.valueOf(gameID))
                         .replace("%game_state%", game.getStateDescription())
-                        .replace("%game_players%", String.valueOf(game.getPlayingPlayers().size()))
+                        .replace("%game_players%", String.valueOf(gamePlayerManager.getPlayingPlayers(gameID).size()))
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
             }
 
-            spectatorManager.setText(signBlock, i, line);
+            versionManager.setText(signBlock, i, line);
             i++;
         }
         signBlock.update();
@@ -86,10 +92,10 @@ public class GameSign {
             String line = text.get(key);
             if (line.contains("%")) {
                 line = line.replace("%game_state%", state)
-                        .replace("%game_ID%", String.valueOf(game.getIdentifier()))
-                        .replace("%game_players%", String.valueOf(game.getPlayingPlayers().size()))
+                        .replace("%game_ID%", String.valueOf(gameID))
+                        .replace("%game_players%", String.valueOf(gamePlayerManager.getPlayingPlayers(gameID).size()))
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
-                spectatorManager.setText(signBlock, key - 1, line);
+                versionManager.setText(signBlock, key - 1, line);
             }
         }
         signBlock.update();
@@ -99,11 +105,11 @@ public class GameSign {
         for (int key : text.keySet()) {
             String line = text.get(key);
             if (line.contains("%")) {
-                line = line.replace("%game_ID%", String.valueOf(game.getIdentifier()))
+                line = line.replace("%game_ID%", String.valueOf(gameID))
                         .replace("%game_state%", game.getStateDescription())
                         .replace("%game_players%", String.valueOf(playerCount))
                         .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
-                spectatorManager.setText(signBlock, key - 1, line);
+                versionManager.setText(signBlock, key - 1, line);
             }
         }
         signBlock.update();
@@ -113,12 +119,12 @@ public class GameSign {
         text.put(lineIndex + 1, line);
 
         if (line.contains("%")) {
-            line = line.replace("%game_ID%", String.valueOf(game.getIdentifier()))
+            line = line.replace("%game_ID%", String.valueOf(gameID))
                     .replace("%game_state%", game.getStateDescription())
-                    .replace("%game_players%", String.valueOf(game.getPlayingPlayers().size()))
+                    .replace("%game_players%", String.valueOf(gamePlayerManager.getPlayingPlayers(gameID).size()))
                     .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
         }
-        spectatorManager.setText(signBlock, lineIndex, line);
+        versionManager.setText(signBlock, lineIndex, line);
 
         signBlock.update();
     }

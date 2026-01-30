@@ -2,9 +2,9 @@ package me.soapiee.common.managers;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.factories.GameSignFactory;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.instance.cosmetic.GameSignFactory;
+import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.utils.CustomLogger;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;

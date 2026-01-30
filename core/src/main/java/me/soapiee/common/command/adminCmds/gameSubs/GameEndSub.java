@@ -4,6 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.handlers.LifeCycleHandler;
 import me.soapiee.common.instance.Game;
 import org.bukkit.command.CommandSender;
 
@@ -34,18 +35,20 @@ public class GameEndSub extends AbstractAdminSub {
             return;
         }
 
+        LifeCycleHandler lifeCycleHandler = game.getLifeCycleHandler();
         if (countdownIsActive(game)) {
-            game.reset(false, false);
+            lifeCycleHandler.reset(false, false);
             sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, game.getIdentifier()));
             return;
         }
 
         Message message;
         if (args.length == 4 && args[3].equals("-without")) {
-            game.reset(true, true);
+            lifeCycleHandler.reset(true, true);
             message = Message.GAMEFORCEENDED;
         } else {
-            game.end();
+//            game.end();
+            lifeCycleHandler.endGame();
             message = Message.GAMEFORCEENDEDWITHWINNERS;
         }
 

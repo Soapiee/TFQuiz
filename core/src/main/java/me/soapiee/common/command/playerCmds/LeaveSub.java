@@ -31,7 +31,7 @@ public class LeaveSub extends AbstractPlayerSub {
             return;
         }
 
-        gameToLeave.removePlayer(uuid);
+        gameToLeave.getPlayerHandler().removePlayer(uuid);
         sendMessage(player, messageManager.getWithPlaceholder(Message.GAMELEAVE, gameToLeave));
     }
 

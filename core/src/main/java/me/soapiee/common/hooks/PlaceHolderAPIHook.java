@@ -2,6 +2,7 @@ package me.soapiee.common.hooks;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.handlers.LifeCycleHandler;
 import me.soapiee.common.instance.Game;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -67,7 +68,9 @@ public class PlaceHolderAPIHook extends PlaceholderExpansion {
 
     private String countdownPlaceholder(Game game) {
         if (game == null) return "null";
-        if (game.getCountdown() == null) return "null";
-        return String.valueOf(game.getCountdown().getSeconds());
+
+        LifeCycleHandler lifeCycleHandler = game.getLifeCycleHandler();
+        if (lifeCycleHandler.getCountdown() == null) return "null";
+        return String.valueOf(lifeCycleHandler.getCountdown().getCountdownSeconds());
     }
 }

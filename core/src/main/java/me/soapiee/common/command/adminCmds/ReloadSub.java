@@ -6,6 +6,7 @@ import me.soapiee.common.conversations.ReloadConvo;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
+import me.soapiee.common.instance.Hologram;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;
@@ -61,8 +62,9 @@ public class ReloadSub extends AbstractAdminSub {
         schedulerManager.cancelSchedulers();
 
         for (Game game : gameManager.getGames()) {
-            game.reset(true, true);
-            if (game.getHologram() != null) game.getHologram().despawn();
+            game.getLifeCycleHandler().reset(true, true);
+            Hologram hologram = game.getArenaHandler().getHologram();
+            if (hologram.getSpawnPoint() != null) hologram.despawn();
             game.setState(GameState.CLOSED);
         }
 
