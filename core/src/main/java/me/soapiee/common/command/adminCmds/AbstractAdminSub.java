@@ -5,8 +5,8 @@ import me.soapiee.common.command.SubCmd;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.manager.*;
+import me.soapiee.common.instance.GameSign;
+import me.soapiee.common.managers.*;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,6 +17,7 @@ public abstract class AbstractAdminSub implements SubCmd {
     protected final TFQuiz main;
     protected final MessageManager messageManager;
     protected final GameManager gameManager;
+    protected final GamePlayerManager gamePlayerManager;
     protected final GameSignManager gameSignManager;
     protected final SettingsManager settingsManager;
     protected final SchedulerManager schedulerManager;
@@ -27,11 +28,12 @@ public abstract class AbstractAdminSub implements SubCmd {
 
     public AbstractAdminSub(TFQuiz main, String PERMISSION, int MIN_ARGS, int MAX_ARGS) {
         this.main = main;
-        this.messageManager = main.getMessageManager();
-        this.gameManager = main.getGameManager();
-        this.settingsManager = main.getSettingsManager();
-        this.gameSignManager = main.getGameSignManager();
-        this.schedulerManager = main.getSchedulerManager();
+        messageManager = main.getMessageManager();
+        gameManager = main.getGameManager();
+        settingsManager = main.getSettingsManager();
+        gamePlayerManager = main.getGamePlayerManager();
+        gameSignManager = main.getGameSignManager();
+        schedulerManager = main.getSchedulerManager();
 
         this.PERMISSION = PERMISSION;
         this.MIN_ARGS = MIN_ARGS;
@@ -86,9 +88,9 @@ public abstract class AbstractAdminSub implements SubCmd {
         return !(args.length > MAX_ARGS);
     }
 
-    protected boolean isConsole(CommandSender sender) {
+    protected boolean isConsole(CommandSender sender, boolean sendErrorMsg) {
         if (sender instanceof ConsoleCommandSender) {
-            sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
+            if (sendErrorMsg) sendMessage(sender, messageManager.get(Message.CONSOLEUSAGEERROR));
             return true;
         }
 
@@ -135,7 +137,7 @@ public abstract class AbstractAdminSub implements SubCmd {
     }
 
     protected boolean gameHasSchedulder(CommandSender sender, Game game, Message errorMessage) {
-        if (schedulerManager.hasScheduler(game)) {
+        if (schedulerManager.hasScheduler(game.getIdentifier())) {
             sendMessage(sender, messageManager.getWithPlaceholder(errorMessage, game));
             return true;
         }

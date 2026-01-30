@@ -3,7 +3,7 @@ package me.soapiee.common.command.adminCmds;
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.SettingsManager;
+import me.soapiee.common.managers.SettingsManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,7 +24,7 @@ public class SetspawnSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
-        if (isConsole(sender)) return;
+        if (isConsole(sender, true)) return;
 
         Player player = (Player) sender;
         settingsManager.setLobbySpawn(player.getLocation());

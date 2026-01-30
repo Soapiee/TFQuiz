@@ -4,16 +4,18 @@ import lombok.Getter;
 import me.soapiee.common.command.AdminCommand;
 import me.soapiee.common.command.PlayerCommand;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.hooks.PlaceHolderAPIHook;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.listener.ChatListener;
-import me.soapiee.common.listener.ConnectListener;
-import me.soapiee.common.listener.PlayerListener;
-import me.soapiee.common.manager.*;
+import me.soapiee.common.instance.GameSign;
+import me.soapiee.common.listeners.ChatListener;
+import me.soapiee.common.listeners.ConnectListener;
+import me.soapiee.common.listeners.GameEvents;
+import me.soapiee.common.listeners.PlayerListener;
+import me.soapiee.common.managers.*;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Keys;
-import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
 import me.soapiee.common.utils.Utils;
 import org.bstats.bukkit.Metrics;
@@ -25,6 +27,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 public final class TFQuiz extends JavaPlugin {
 
     //TODO: Add "addGame" + "deleteGame" command functionality
@@ -35,9 +39,9 @@ public final class TFQuiz extends JavaPlugin {
     //TODO:
 
     @Getter private MessageManager messageManager;
-    @Getter private SpectatorManager specManager;
     @Getter private VersionManager versionManager;
     @Getter private PlayerCache playerCache;
+    @Getter private GamePlayerManager gamePlayerManager;
     @Getter private GameManager gameManager;
     @Getter private SettingsManager settingsManager;
     @Getter private QuestionManager questionManager;
@@ -45,19 +49,17 @@ public final class TFQuiz extends JavaPlugin {
     @Getter private SchedulerManager schedulerManager;
     @Getter private UpdateManager updateManager;
     @Getter private PlayerListener playerListener;
-    private InventoryManager inventoryManager;
+    @Getter private InventoryManager inventoryManager;
     private VaultHook vaultHook;
-    private Logger logger;
+    @Getter private CustomLogger customLogger;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         messageManager = new MessageManager(this);
-        logger = new Logger(this);
+        customLogger = new CustomLogger(this);
         settingsManager = new SettingsManager(this);
-        specManager = new SpectatorManager(this);
-        versionManager = new VersionManager(messageManager, logger);
-
+        versionManager = new VersionManager(this);
 
         registerHooks();
         new Metrics(this, 25563);
@@ -69,6 +71,7 @@ public final class TFQuiz extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(playerListener, this);
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new GameEvents(this), this);
 
         getCommand("tf").setExecutor(new AdminCommand(this));
         getCommand("game").setExecutor(new PlayerCommand(this));
@@ -82,27 +85,29 @@ public final class TFQuiz extends JavaPlugin {
         if (gameManager == null) return;
 
         for (Game game : gameManager.getGames()) {
-            for (Player player : game.getAllPlayers()) {
-                if (game.isSpectator(player)) {
-                    player.setGameMode(GameMode.SURVIVAL);
-                }
-                game.restoreInventory(player);
+            for (UUID uuid : gamePlayerManager.getAllPlayers(game.getIdentifier())) removePlayerFromGame(game, uuid);
 
-                if (game.isPhysicalArena()) player.teleport(settingsManager.getLobbySpawn());
-            }
-            if (game.getHologram() != null) game.getHologram().despawn();
-
+            ArenaHandler arenaHandler = game.getArenaHandler();
+            if (arenaHandler.getHologram() != null) arenaHandler.getHologram().despawn();
             killOtherHolos(game);
 
-            if (game.getSigns() == null) continue;
-            for (GameSign sign : game.getSigns()) sign.despawn();
+            if (!game.getSigns().isEmpty()) for (GameSign sign : game.getSigns()) sign.despawn();
         }
+    }
+
+    private void removePlayerFromGame(Game game, UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+
+        if (gamePlayerManager.isSpectator(game.getIdentifier(), uuid)) player.setGameMode(GameMode.SURVIVAL);
+        inventoryManager.restoreInventory(player);
+        if (game.isPhysicalArena()) player.teleport(settingsManager.getLobbySpawn());
     }
 
     private void initiateManagers() {
         questionManager = new QuestionManager(this);
-        if (settingsManager.isSaveInvs()) inventoryManager = new InventoryManager(this);
-        else inventoryManager = null;
+        inventoryManager = new InventoryManager(this);
+        gamePlayerManager = new GamePlayerManager();
         gameManager = new GameManager(this);
         gameSignManager = new GameSignManager(this, gameManager);
         schedulerManager = new SchedulerManager(this);
@@ -132,18 +137,10 @@ public final class TFQuiz extends JavaPlugin {
         else return vaultHook;
     }
 
-    public Logger getCustomLogger() {
-        return logger;
-    }
-
-    public InventoryManager getInventoryManager() {
-        if (!settingsManager.isSaveInvs()) return null;
-        return inventoryManager;
-    }
-
     private void killOtherHolos(Game game) {
-        if (game.getSpawn() != null) {
-            for (Entity entity : game.getSpawn().getWorld().getEntities()) {
+        ArenaHandler arenaHandler = game.getArenaHandler();
+        if (arenaHandler.getSpawn() != null) {
+            for (Entity entity : arenaHandler.getSpawn().getWorld().getEntities()) {
                 if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE)) {
                     entity.remove();
                 }

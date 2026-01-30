@@ -1,6 +1,7 @@
 package me.soapiee.common.command.playerCmds;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.AddPlayerResult;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import org.bukkit.command.CommandSender;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class JoinSub extends AbstractPlayerSub {
 
@@ -22,8 +24,9 @@ public class JoinSub extends AbstractPlayerSub {
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
         Player player = (Player) sender;
+        UUID uuid = player.getUniqueId();
 
-        if (gameManager.getGame(player) != null) {
+        if (gameManager.getGame(uuid) != null) {
             sendMessage(player, messageManager.get(Message.GAMENOTNULL));
             return;
         }
@@ -34,16 +37,19 @@ public class JoinSub extends AbstractPlayerSub {
         Game gameToJoin = validateGame(player, gameID);
         if (gameToJoin == null) return;
 
-        int result = gameToJoin.addPlayer(player);
+        AddPlayerResult result = gameToJoin.getPlayerHandler().addPlayer(uuid);
         switch (result) {
-            case 1:
+            case NOT_SURVIVAL:
                 sendMessage(player, messageManager.get(Message.GAMEINVALIDGAMEMODE));
                 return;
-            case 2:
+            case GAME_CLOSED:
                 sendMessage(player, messageManager.get(Message.GAMEINVALIDSTATE));
                 return;
-            case 3:
+            case GAME_FULL:
                 sendMessage(player, messageManager.get(Message.GAMEFULL));
+                return;
+            case SUCCESS:
+                sendMessage(player, messageManager.getWithPlaceholder(Message.GAMEJOIN, gameToJoin));
         }
     }
 

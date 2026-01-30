@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class LeaveSub extends AbstractPlayerSub {
 
@@ -22,14 +23,15 @@ public class LeaveSub extends AbstractPlayerSub {
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
         Player player = (Player) sender;
+        UUID uuid = player.getUniqueId();
 
-        Game gameToLeave = gameManager.getGame(player);
+        Game gameToLeave = gameManager.getGame(uuid);
         if (gameToLeave == null) {
             sendMessage(player, messageManager.get(Message.GAMELEFTERROR));
             return;
         }
 
-        gameToLeave.removePlayer(player);
+        gameToLeave.getPlayerHandler().removePlayer(uuid);
         sendMessage(player, messageManager.getWithPlaceholder(Message.GAMELEAVE, gameToLeave));
     }
 

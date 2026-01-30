@@ -2,8 +2,8 @@ package me.soapiee.common;
 
 import com.mojang.authlib.GameProfile;
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 class v1_16_R2 implements NMSProvider {
@@ -23,7 +23,7 @@ class v1_16_R2 implements NMSProvider {
     private final String packetClassString = "net.minecraft.server.v1_16_R2.PacketPlayOutPlayerInfo";
     private final String packetDataClassString = "net.minecraft.server.v1_16_R2.PacketPlayOutPlayerInfo$PlayerInfoData";
 
-    private Logger customLogger;
+    private CustomLogger customLogger;
     private MessageManager messageManager;
 
     @Override
@@ -95,7 +95,7 @@ class v1_16_R2 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
         EntityPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {
