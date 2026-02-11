@@ -49,9 +49,9 @@ public class CustomLogger {
             writer.write(System.lineSeparator());
             writer.write(time + " [" + logType.name() + "] " + string);
             writer.write(System.lineSeparator());
-            writer.write(messageManager.get(Message.PLUGINVERSIONSTRING) + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
+            writer.write("BiomeMastery Version: " + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
             writer.write(System.lineSeparator());
-            writer.write(messageManager.get(Message.SERVERVERSIONSTRING) + Bukkit.getBukkitVersion());
+            writer.write("Server Version: " + Bukkit.getBukkitVersion());
             writer.write(System.lineSeparator());
             if (error != null) {
                 writer.write(System.lineSeparator());

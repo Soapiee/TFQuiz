@@ -56,8 +56,6 @@ public enum Message {
     LOGGERFILEERROR("logger_file_error", "&cThe logger.log file could not be created"),
     LOGGERLOGSUCCESS("logger_log_success", "&cAn error was added to the logger.log file"),
     LOGGERLOGERROR("logger_log_error", "&cA new error log failed to be saved"),
-    PLUGINVERSIONSTRING("logger_plugin_version_string", "BiomeMastery Version: "),
-    SERVERVERSIONSTRING("logger_server_version_string", "Server Version: "),
     INVENTORIESFILEERROR("inventories_file_error", "&cThe playerInventories.yml could not be loaded"),
     INVENTORIESSAVEERROR("inventories_saving_error", "&cThere was an error saving %player%'s inventory to playerInventories.yml"),
     INVENTORIESREMOVEERROR("inventories_removing_error", "&cThere was an error removing %player%'s inventory to playerInventories.yml"),
