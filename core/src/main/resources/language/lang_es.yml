@@ -2,7 +2,7 @@
 ##                                  Archivo de idioma español                         ##
 ## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- ##
 
-# # # #                --->    GENERAL MESSAGES    <---                # # # #
+# # # #                --->    MENSAJES GENERALES    <---                # # # #
 console_usage_error: "&cDebes ser un jugador para usar este comando"
 no_permission: "&cNo tienes permiso para usar este comando"
 player_not_found: "&cJugador no encontrado"
@@ -10,7 +10,7 @@ hooked_placeholderapi: "Vinculado con PlaceholderAPI"
 hooked_vault: "Vinculado con Vault"
 hooked_vault_error: "&cError al conectarse con Vault"
 
-# # # #                --->    ADMIN COMMAND MESSAGES    <---                # # # #
+# # # #                --->    MENSAJES DE COMANDOS DE ADMIN    <---                # # # #
 update_available: "&aHay una actualización disponible para TFQuiz"
 unsupported_version: "&cVersión no compatible detectada. Es posible que el plugin no funcione correctamente. Contacta al desarrollador para que tu versión sea compatible"
 disable_spectators_warning:
@@ -124,7 +124,7 @@ game_info:
   - "#01d54aHolograma: &7%game_holocoordinates%"
   - "#01d54aPunto de spawn: &7%game_spawncoordinates%"
 
-# # # #                --->    GAME MESSAGES    <---                # # # #
+# # # #                --->    MENSAJES DEL JUEGO    <---                # # # #
 game_state_closed: "No disponible"
 game_state_recruiting: "Reclutando"
 game_state_countdown: "Empezando pronto"
@@ -227,7 +227,7 @@ game_join_command_usage: "&cUso: /game join <gameID>"
 game_spectator_error: "&cHubo un error al ponerte como espectador. Has sido retirado de la arena"
 game_created: "&aEl juego &e%game_ID% &ase ha creado con éxito"
 
-# # # #                --->    SIGN MESSAGES    <---                # # # #
+# # # #                --->    MENSAJES DE CARTELES    <---                # # # #
 sign_admin_command_usage:
   - "#01d54a--------- Ayuda de Carteles ---------"
   - "#01d54a/tf sign add <gameID> &7- Añade un nuevo cartel para el juego especificado"
