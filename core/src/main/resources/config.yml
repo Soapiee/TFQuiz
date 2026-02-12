@@ -9,6 +9,10 @@
 # Sends a message in console if there is an update available
 update_notification: true
 
+# Choose which language file you want to use
+# Options: lang_en, lang_es, lang_de, lang_fr, lang_nl
+language: lang_en
+
 # These only apply if a game has an arena
 arena_flags:
   allow_fall_damage: false # Should players take fall damage

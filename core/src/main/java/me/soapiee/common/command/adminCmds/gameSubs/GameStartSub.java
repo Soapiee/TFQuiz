@@ -4,6 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
+import me.soapiee.common.handlers.LifeCycleHandler;
 import me.soapiee.common.instance.Game;
 import org.bukkit.command.CommandSender;
 
@@ -31,8 +32,10 @@ public class GameStartSub extends AbstractAdminSub {
         if (gameIsClosed(sender, game)) return;
         if (gameIsEmpty(sender, game)) return;
 
-        game.forceStart();
-        game.getCountdown().start();
+        LifeCycleHandler lifeCycleHandler = game.getLifeCycleHandler();
+        lifeCycleHandler.setForceStart(true);
+        lifeCycleHandler.getCountdown().start();
+
         sendMessage(sender, messageManager.getWithPlaceholder(Message.GAMEFORCESTARTED, game));
     }
 
@@ -45,7 +48,7 @@ public class GameStartSub extends AbstractAdminSub {
     }
 
     private boolean gameIsEmpty(CommandSender sender, Game game) {
-        if (game.getAllPlayers().isEmpty()) {
+        if (gamePlayerManager.getAllPlayers(game.getIdentifier()).isEmpty()) {
             sendMessage(sender, messageManager.get(Message.GAMESTARTEMPTYERROR));
             return true;
         }

@@ -27,7 +27,7 @@ public class RemoveholosSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!settingsManager.isDebugMode()) return;
-        if (isConsole(sender)) return;
+        if (isConsole(sender, true)) return;
         if (!checkRequirements(sender, label, args)) return;
 
         Player player = (Player) sender;

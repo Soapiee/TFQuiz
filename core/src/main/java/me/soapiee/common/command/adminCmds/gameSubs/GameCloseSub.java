@@ -30,7 +30,7 @@ public class GameCloseSub extends AbstractAdminSub {
 
         Message message;
         if (gameIsCloseable(game)) {
-            game.reset(true, true);
+            game.getLifeCycleHandler().reset(true, true);
             game.setState(GameState.CLOSED);
             message = Message.GAMECLOSED;
         } else message = Message.GAMECLOSEDERROR;
@@ -39,7 +39,7 @@ public class GameCloseSub extends AbstractAdminSub {
     }
 
     private boolean gameIsCloseable(Game game) {
-        return game.getState() == GameState.RECRUITING || game.getState() == GameState.COUNTDOWN;
+        return game.isOpen();
     }
 
     @Override

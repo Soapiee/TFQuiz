@@ -2,8 +2,8 @@ package me.soapiee.common.command.adminCmds.signSubs;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
-import me.soapiee.common.instance.cosmetic.GameSign;
-import me.soapiee.common.instance.logic.TeleportTask;
+import me.soapiee.common.instance.GameSign;
+import me.soapiee.common.tasks.TeleportTask;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,7 +22,7 @@ public class SignTeleportSub extends AbstractAdminSub {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
-        if (isConsole(sender)) return;
+        if (isConsole(sender, true)) return;
 
         GameSign sign = getSign(sender, args[2]);
         if (sign == null) return;

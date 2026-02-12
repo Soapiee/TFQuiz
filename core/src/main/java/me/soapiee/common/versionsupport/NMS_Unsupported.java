@@ -3,7 +3,7 @@ package me.soapiee.common.versionsupport;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class NMS_Unsupported implements NMSProvider {
@@ -19,7 +19,7 @@ public class NMS_Unsupported implements NMSProvider {
     }
 
     @Override
-    public void updateTab(Player player, HashSet<UUID> spectators) {
+    public void updateTab(Player player, Set<UUID> spectators) {
 
     }
 }

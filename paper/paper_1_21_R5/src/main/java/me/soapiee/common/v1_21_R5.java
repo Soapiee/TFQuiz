@@ -1,8 +1,8 @@
 package me.soapiee.common;
 
 import me.soapiee.common.enums.Message;
-import me.soapiee.common.manager.MessageManager;
-import me.soapiee.common.utils.Logger;
+import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
@@ -16,12 +16,12 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 class v1_21_R5 implements NMSProvider {
 
-    private Logger customLogger;
+    private CustomLogger customLogger;
     private MessageManager messageManager;
 
     @Override
@@ -93,7 +93,7 @@ class v1_21_R5 implements NMSProvider {
     }
 
     @Override
-    public void updateTab(org.bukkit.entity.Player player, HashSet<UUID> spectators) {
+    public void updateTab(org.bukkit.entity.Player player, Set<UUID> spectators) {
         ServerPlayer playerJoined = ((CraftPlayer) player).getHandle();
 
         for (UUID uuid : spectators) {
