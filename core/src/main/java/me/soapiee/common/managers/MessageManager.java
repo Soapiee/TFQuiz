@@ -7,7 +7,9 @@ import me.soapiee.common.enums.Message;
 import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.tasks.Scheduler;
+import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -22,11 +24,33 @@ public class MessageManager {
 
     public MessageManager(TFQuiz main) {
         this.main = main;
-        language = validateLanguage();
-        file = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
+
+        String languageString = validateLanguage();
+        if (languageString == null) language = Languages.LANG_EN.toString().toLowerCase();
+        else language = languageString;
+
+        //TODO: Revert code back in future updates
+//        file = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
+        file = getFile();
         contents = new YamlConfiguration();
 
         load(null);
+
+        if (languageString == null) Utils.consoleMsg(get(Message.INVALIDLANGUAGE));
+    }
+
+    private File getFile() {
+        File newLangFile = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
+        if (!newLangFile.exists()) main.saveResource("language" + File.separator + language + ".yml", false);
+
+        File legacyFile = new File(main.getDataFolder(), "messages.yml");
+        if (legacyFile.exists()) {
+            Utils.consoleMsg(ChatColor.RED.toString() + ChatColor.BOLD + "[IMPORTANT] " + ChatColor.RESET
+                    + ChatColor.RED + "Please transfer the contents of your messages.yml file to the new language file. Located in the \"language\" folder. Then delete the messages.yml file");
+            return legacyFile;
+        }
+
+        return newLangFile;
     }
 
     public boolean reload(CommandSender sender) {
@@ -34,9 +58,8 @@ public class MessageManager {
     }
 
     private boolean load(CommandSender sender) {
-        if (!file.exists()) {
-            main.saveResource("language" + File.separator + language + ".yml", false);
-        }
+        //TODO: Revert code back in future updates
+//        if (!file.exists()) main.saveResource("language" + File.separator + language + ".yml", false);
 
         try {
             contents.load(file);
@@ -59,14 +82,13 @@ public class MessageManager {
     }
 
     private String validateLanguage() {
-        String configString = main.getConfig().getString("language", "null");
+        String configString = main.getConfig().getString("language", "lang_en");
 
         Languages lang;
         try {
             lang = Languages.valueOf(configString.toUpperCase());
         } catch (IllegalArgumentException error) {
-//            Utils.consoleMsg(get(Message.INVALIDLANGUAGE));
-            lang = Languages.LANG_EN;
+            return null;
         }
 
         return lang.toString().toLowerCase();
