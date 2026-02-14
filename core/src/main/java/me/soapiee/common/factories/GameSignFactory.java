@@ -1,10 +1,10 @@
 package me.soapiee.common.factories;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.GameSign;
-import me.soapiee.common.managers.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
+import me.soapiee.common.utils.Message;
+import me.soapiee.common.utils.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

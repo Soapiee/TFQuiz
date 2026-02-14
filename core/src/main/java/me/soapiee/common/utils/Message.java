@@ -1,4 +1,4 @@
-package me.soapiee.common.enums;
+package me.soapiee.common.utils;
 
 import lombok.Getter;
 

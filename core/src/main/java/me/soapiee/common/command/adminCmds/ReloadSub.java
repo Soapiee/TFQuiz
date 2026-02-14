@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.conversations.ReloadConvo;
 import me.soapiee.common.enums.GameState;
-import me.soapiee.common.enums.Message;
+import me.soapiee.common.utils.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.Hologram;
 import me.soapiee.common.utils.Keys;

@@ -1,13 +1,10 @@
-package me.soapiee.common.managers;
+package me.soapiee.common.utils;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.GameState;
-import me.soapiee.common.enums.Languages;
-import me.soapiee.common.enums.Message;
 import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.tasks.Scheduler;
-import me.soapiee.common.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

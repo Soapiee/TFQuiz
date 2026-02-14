@@ -3,9 +3,9 @@ package me.soapiee.common.handlers;
 import lombok.Getter;
 import lombok.Setter;
 import me.soapiee.common.enums.DescriptionType;
-import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Hologram;
-import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.Message;
+import me.soapiee.common.utils.MessageManager;
 import org.bukkit.Location;
 
 public class ArenaHandler {
