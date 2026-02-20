@@ -5,7 +5,6 @@ import me.soapiee.common.enums.GameState;
 import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.tasks.Scheduler;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,9 +61,8 @@ public class MessageManager {
             contents.load(file);
         } catch (Exception ex) {
             if (sender != null) {
-//                Utils.consoleMsg(get(Message.LANGUAGEFILEERROR));
-                Bukkit.getLogger().throwing("Message Manager", "load()", ex);
-            }
+                main.getCustomLogger().logToPlayer(sender, ex, get(Message.LANGUAGEFILEERROR));
+            } else ex.printStackTrace();
             return true;
         }
         return false;
@@ -133,83 +131,134 @@ public class MessageManager {
 
     public String getWithPlaceholder(Message messageEnum, Game game) {
         int gameID = game.getIdentifier();
-        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
-                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
-                .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
-                .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
-                .replace("%game_status%", game.getStateDescription());
+        String message = get(messageEnum);
+
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", String.valueOf(gameID));
+        if (message.contains("%game_players%"))
+            message = message.replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()));
+        if (message.contains("%game_maxplayers%"))
+            message = message.replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
+        if (message.contains("%game_minplayers%"))
+            message = message.replace("%game_minplayers%", String.valueOf(game.getMinPlayers()));
+        if (message.contains("%game_status%")) message = message.replace("%game_status%", game.getStateDescription());
+
+        return message;
     }
 
     public String getInfo(Message messageEnum, Game game) {
+        String message = get(messageEnum);
         Scheduler scheduler = main.getSchedulerManager().getScheduler(game.getIdentifier());
         int gameID = game.getIdentifier();
         ArenaHandler arenaHandler = game.getArenaHandler();
 
-        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
-                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
-                .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
-                .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
-                .replace("%game_countdown%", String.valueOf(game.getLifeCycleHandler().getCountdown().getTotalSeconds()))
-                .replace("%game_maxrounds%", String.valueOf(game.getMaxRounds()))
-                .replace("%game_doesbroadcast%", String.valueOf(game.isBroadcastWinners()))
-                .replace("%game_reward%", game.getReward().toString())
-                .replace("%game_hasarena%", String.valueOf(game.isPhysicalArena()))
-                .replace("%game_hasscheduler%",
-                        (scheduler == null) ? "false" : "true")
-                .replace("%game_schedulerseconds%",
-                        (scheduler == null) ? "" : String.valueOf(scheduler.getRemainingTime()))
-                .replace("%game_desc%", arenaHandler.getDescString())
-                .replace("%game_doesspectators%", String.valueOf(arenaHandler.isAllowSpectators()))
-                .replace("%game_holocoordinates%",
-                        (arenaHandler.getHologram().getSpawnPoint() == null) ? "not set"
-                                : arenaHandler.getHologram().getLocationString())
-                .replace("%game_spawncoordinates%", arenaHandler.getSpawnString())
-                .replace("%game_status%", game.getStateDescription());
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", String.valueOf(gameID));
+        if (message.contains("%game_players%"))
+            message = message.replace("%game_players%",
+                    String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()));
+        if (message.contains("%game_maxplayers%"))
+            message = message.replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
+        if (message.contains("%game_minplayers%"))
+            message = message.replace("%game_minplayers%", String.valueOf(game.getMinPlayers()));
+        if (message.contains("%game_countdown%"))
+            message = message.replace("%game_countdown%",
+                    String.valueOf(game.getLifeCycleHandler().getCountdown().getTotalSeconds()));
+        if (message.contains("%game_maxrounds%"))
+            message = message.replace("%game_maxrounds%", String.valueOf(game.getMaxRounds()));
+        if (message.contains("%game_doesbroadcast%"))
+            message = message.replace("%game_doesbroadcast%", String.valueOf(game.isBroadcastWinners()));
+        if (message.contains("%game_reward%")) message = message.replace("%game_reward%", game.getReward().toString());
+        if (message.contains("%game_hasarena%"))
+            message = message.replace("%game_hasarena%", String.valueOf(game.isPhysicalArena()));
+        if (message.contains("%game_hasscheduler%"))
+            message = message.replace("%game_hasscheduler%", (scheduler == null) ? "false" : "true");
+        if (message.contains("%game_schedulerseconds%"))
+            message = message.replace("%game_schedulerseconds%",
+                    (scheduler == null) ? "" : String.valueOf(scheduler.getRemainingTime()));
+        if (message.contains("%game_desc%")) message = message.replace("%game_desc%", arenaHandler.getDescString());
+        if (message.contains("%game_doesspectators%"))
+            message = message.replace("%game_doesspectators%",
+                    String.valueOf(arenaHandler.isAllowSpectators()));
+        if (message.contains("%game_holocoordinates%"))
+            message = message.replace("%game_holocoordinates%",
+                    (arenaHandler.getHologram().getSpawnPoint() == null) ? "not set" : arenaHandler.getHologram().getLocationString());
+        if (message.contains("%game_spawncoordinates%"))
+            message = message.replace("%game_spawncoordinates%", arenaHandler.getSpawnString());
+        if (message.contains("%game_status%")) message = message.replace("%game_status%", game.getStateDescription());
+
+        return message;
     }
 
     public String getWithPlaceholder(Message messageEnum, Game game, String string) {
         int gameID = game.getIdentifier();
-        return get(messageEnum).replace("%game_ID%", String.valueOf(gameID))
-                .replace("%game_players%", String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()))
-                .replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()))
-                .replace("%game_minplayers%", String.valueOf(game.getMinPlayers()))
-                .replace("%player%", string)
-                .replace("%game_status%", game.getStateDescription());
+        String message = get(messageEnum);
+
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", String.valueOf(gameID));
+        if (message.contains("%game_players%"))
+            message = message.replace("%game_players%",
+                    String.valueOf(main.getGamePlayerManager().getAllPlayers(gameID).size()));
+        if (message.contains("%game_maxplayers%"))
+            message = message.replace("%game_maxplayers%", String.valueOf(game.getMaxPlayers()));
+        if (message.contains("%game_minplayers%"))
+            message = message.replace("%game_minplayers%", String.valueOf(game.getMinPlayers()));
+        if (message.contains("%player%")) message = message.replace("%player%", string);
+        if (message.contains("%game_status%")) message = message.replace("%game_status%", game.getStateDescription());
+
+        return message;
     }
 
     public String getWithPlaceholder(Message messageEnum, String string) {
-        return get(messageEnum).replace("%player%", string)
-                .replace("%input%", string)
-                .replace("%sign_ID%", string)
-                .replace("%game_ID%", string)
-                .replace("%loc_ID%", string)
-                .replace("%task_message%", string.replaceFirst(("(\\W)(\\D)"), ""))
-                .replace("%question%", string)
-                .replace("%correction_message%\n", (string.isEmpty()) ? "" : string + "\n")
-                .replace("%winners%", string)
-                .replace("%winner%", string);
+        String message = get(messageEnum);
+
+        if (message.contains("%player%")) message = message.replace("%player%", string);
+        if (message.contains("%input%")) message = message.replace("%input%", string);
+        if (message.contains("%sign_ID%")) message = message.replace("%sign_ID%", string);
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", string);
+        if (message.contains("%loc_ID%")) message = message.replace("%loc_ID%", string);
+        if (message.contains("%task_message%"))
+            message = message.replace("%task_message%",
+                    string.replaceFirst(("(\\W)(\\D)"), ""));
+        if (message.contains("%question%")) message = message.replace("%question%", string);
+        if (message.contains("%%correction_message%\n"))
+            message = message.replace("%%correction_message%\n", (string.isEmpty()) ? "" : string + "\n");
+        if (message.contains("%winners%")) message = message.replace("%winners%", string);
+        if (message.contains("%winner%")) message = message.replace("%winner%", string);
+
+        return message;
     }
 
     public String getWithPlaceholder(Message messageEnum, String string, boolean defaultValue) {
-        return get(messageEnum).replace("%field%", string)
-                .replace("%default_value%", String.valueOf(defaultValue));
+        String message = get(messageEnum);
+
+        if (message.contains("%field%")) message = message.replace("%field%", string);
+        if (message.contains("%default_value%"))
+            message = message.replace("%default_value%", String.valueOf(defaultValue));
+
+        return message;
     }
 
     public String getWithPlaceholder(Message messageEnum, String string, int gameID) {
-        return get(messageEnum).replace("%player%", string)
-                .replace("%sign_ID%", string)
-                .replace("%%loc_ID%", string)
-                .replace("%game_ID%", String.valueOf(gameID))
-                .replace("%winners%", string)
-                .replace("%winner%", string);
+        String message = get(messageEnum);
+
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", String.valueOf(gameID));
+        if (message.contains("%player%")) message = message.replace("%player%", string);
+        if (message.contains("%sign_ID%")) message = message.replace("%sign_ID%", string);
+        if (message.contains("%loc_ID%")) message = message.replace("%loc_ID%", string);
+        if (message.contains("%winners%")) message = message.replace("%winners%", string);
+        if (message.contains("%winner%")) message = message.replace("%winner%", string);
+
+        return message;
     }
 
     public String getWithPlaceholder(Message messageEnum, int integer) {
-        String replacement = integer + " second" + (integer == 1 ? "" : "s");
+        String message = get(messageEnum);
 
-        return get(messageEnum).replace("%countdown%", replacement)
-                .replace("%round_countdown%", replacement)
-                .replace("%game_ID%", String.valueOf(integer))
-                .replace("%line_number%", String.valueOf(integer));
+        if (message.contains("%game_ID%")) message = message.replace("%game_ID%", String.valueOf(integer));
+        if (message.contains("%round_countdown%"))
+            message = message.replace("%round_countdown%", integer + " second" + (integer == 1 ? "" : "s"));
+        if (message.contains("%countdown%"))
+            message = message.replace("%countdown%", integer + " second" + (integer == 1 ? "" : "s"));
+        if (message.contains("%line_number%")) message = message.replace("%line_number%", String.valueOf(integer));
+
+        return message;
     }
 }
