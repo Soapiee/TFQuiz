@@ -46,7 +46,11 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.soapiee</shadedPattern>
+                            <shadedPattern>me.soapiee.tfquiz.libs.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.soapiee.bukkit</pattern>
+                            <shadedPattern>me.soapiee.tfquiz.libs.metrics</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
