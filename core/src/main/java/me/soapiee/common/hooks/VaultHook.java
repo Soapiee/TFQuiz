@@ -1,8 +1,8 @@
 package me.soapiee.common.hooks;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.enums.Message;
-import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.Message;
+import me.soapiee.common.utils.MessageManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;

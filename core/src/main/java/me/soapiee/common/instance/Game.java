@@ -10,7 +10,7 @@ import me.soapiee.common.handlers.LifeCycleHandler;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.managers.GameSignManager;
-import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.MessageManager;
 
 import java.util.Collections;
 import java.util.List;

@@ -3,7 +3,7 @@ package me.soapiee.common.instance.rewards;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.soapiee.common.enums.RewardType;
-import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.MessageManager;
 
 @AllArgsConstructor
 public abstract class Reward implements RewardInterface {

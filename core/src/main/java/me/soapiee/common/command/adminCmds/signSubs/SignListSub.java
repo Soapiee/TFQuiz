@@ -2,7 +2,7 @@ package me.soapiee.common.command.adminCmds.signSubs;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
-import me.soapiee.common.enums.Message;
+import me.soapiee.common.utils.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.GameSign;
 import me.soapiee.common.utils.Utils;

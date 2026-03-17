@@ -1,11 +1,11 @@
 package me.soapiee.common.tasks;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.enums.Message;
+import me.soapiee.common.utils.Message;
 import me.soapiee.common.events.RoundEndedEvent;
 import me.soapiee.common.handlers.LiveGameHandler;
 import me.soapiee.common.instance.Game;
-import me.soapiee.common.managers.MessageManager;
+import me.soapiee.common.utils.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
