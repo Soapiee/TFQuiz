@@ -1,8 +1,11 @@
 package me.soapiee.common;
 
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.CustomLogger;
 import me.soapiee.common.utils.MessageManager;
+import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.NMSProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -21,7 +24,9 @@ class v26_R1 implements NMSProvider {
 
     @Override
     public boolean setSpectator(Player player) {
-//        player.setGameMode(GameMode.SPECTATOR);
+        customLogger.logToPlayer(Bukkit.getConsoleSender(), null, "&cThe spectator system is currently unsupported on this version with Paper");
+        if (!Utils.IS_PAPER)
+            customLogger.logToPlayer(Bukkit.getConsoleSender(), null, messageManager.get(Message.DOWNLOADSPIGOTJAR));
         return true;
     }
 

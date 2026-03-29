@@ -72,7 +72,7 @@ public class VersionManager {
             int version = Utils.getMajorVersion();
 
             String providerName;
-            if (version <= 19) providerName = "v1_19_Sign";
+            if (version <= 19) providerName = "v1_16_Sign";
             else providerName = "v1_20_Sign";
 
             provider = (SignProvider) Class.forName(packageName + "." + providerName).newInstance();
