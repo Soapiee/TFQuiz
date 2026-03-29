@@ -1,8 +1,8 @@
 package me.soapiee.common;
 
-import me.soapiee.common.utils.Message;
-import me.soapiee.common.utils.MessageManager;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.CustomLogger;
+import me.soapiee.common.utils.MessageManager;
 import me.soapiee.common.versionsupport.NMSProvider;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;

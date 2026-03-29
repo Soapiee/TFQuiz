@@ -4,7 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.playerCmds.JoinSub;
 import me.soapiee.common.command.playerCmds.LeaveSub;
 import me.soapiee.common.command.playerCmds.ListSub;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.utils.MessageManager;
 import me.soapiee.common.utils.Utils;

@@ -1,7 +1,7 @@
 package me.soapiee.common.command.adminCmds;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

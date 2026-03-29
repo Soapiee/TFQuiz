@@ -4,7 +4,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.*;
 import me.soapiee.common.command.adminCmds.gameSubs.*;
 import me.soapiee.common.command.adminCmds.signSubs.*;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.managers.GameManager;
 import me.soapiee.common.utils.MessageManager;

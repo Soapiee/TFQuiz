@@ -2,7 +2,7 @@ package me.soapiee.common.command.adminCmds.gameSubs;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

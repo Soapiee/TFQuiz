@@ -18,7 +18,7 @@ public final class Utils {
     public static int getMinorVersion() {
         String[] parts = VERSION.split("_");
 
-        if (parts[0].equalsIgnoreCase("1")) return Integer.parseInt(parts[2]);
+        if (parts[0].equalsIgnoreCase("1")) return parts.length == 3 ? Integer.parseInt(parts[2]) : 0;
         return Integer.parseInt(parts[1]);
     }
 

@@ -21,16 +21,16 @@ public enum NMSVersion {
     v1_21_5("v1_21_R4"),
     v1_21_6("v1_21_R5"), v1_21_7("v1_21_R5"), v1_21_8("v1_21_R5"),
     v1_21_9("v1_21_R6"), v_21_10("v1_21_R6"),
-    v1_21_11("v1_21_R7");
-//    v26_1_0("v26_1_R1");
+    v1_21_11("v1_21_R7"),
+    v26_1("v26_R1");
 
-    public final String nms;
+    public final String nmsClass;
 
-    NMSVersion(String nms) {
-        this.nms = nms;
+    NMSVersion(String nmsClass) {
+        this.nmsClass = nmsClass;
     }
 
-    public String getProvider() {
-        return nms;
+    public String getNmsClass() {
+        return nmsClass;
     }
 }

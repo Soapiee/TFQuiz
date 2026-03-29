@@ -1,6 +1,7 @@
 package me.soapiee.common.utils;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class CustomLogger {
             writer.write(System.lineSeparator());
             writer.write(time + " [" + logType.name() + "] " + string);
             writer.write(System.lineSeparator());
-            writer.write("BiomeMastery Version: " + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
+            writer.write("TFQuiz Version: " + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
             writer.write(System.lineSeparator());
             writer.write("Server Version: " + Bukkit.getBukkitVersion());
             writer.write(System.lineSeparator());

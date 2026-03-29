@@ -1,6 +1,6 @@
 name: ${project.parent.name}
 main: me.soapiee.common.TFQuiz
-version: 1.5.2
+version: 1.5.3
 author: Soapiee
 prefix: TFQuiz
 

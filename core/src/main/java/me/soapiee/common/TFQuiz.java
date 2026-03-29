@@ -3,6 +3,7 @@ package me.soapiee.common;
 import lombok.Getter;
 import me.soapiee.common.command.AdminCommand;
 import me.soapiee.common.command.PlayerCommand;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.hooks.PlaceHolderAPIHook;
 import me.soapiee.common.hooks.VaultHook;
@@ -26,13 +27,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.UUID;
 
 public final class TFQuiz extends JavaPlugin {
-
-    //TODO: Add "addGame" + "deleteGame" command functionality
-    //TODO: Add question categories
-    //TODO: Make "True or False" in the question, clickable
-    //TODO: Add a instant confirmation flag to /tf reload cmd
-    //TODO: Let users decide the command label
-    //TODO:
 
     @Getter private MessageManager messageManager;
     @Getter private VersionManager versionManager;

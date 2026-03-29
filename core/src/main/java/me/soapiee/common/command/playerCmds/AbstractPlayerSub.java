@@ -3,7 +3,7 @@ package me.soapiee.common.command.playerCmds;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.SubCmd;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.managers.GameManager;
 import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.utils.MessageManager;

@@ -2,7 +2,7 @@ package me.soapiee.common.command.playerCmds;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.AddPlayerResult;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

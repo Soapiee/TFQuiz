@@ -1,8 +1,8 @@
 package me.soapiee.common.versionsupport;
 
-import me.soapiee.common.utils.Message;
-import me.soapiee.common.utils.MessageManager;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.CustomLogger;
+import me.soapiee.common.utils.MessageManager;
 import org.bukkit.block.Sign;
 
 public class Sign_Unsupported implements SignProvider {
