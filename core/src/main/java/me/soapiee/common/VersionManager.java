@@ -1,11 +1,12 @@
 package me.soapiee.common;
 
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.managers.SettingsManager;
 import me.soapiee.common.utils.CustomLogger;
-import me.soapiee.common.utils.Message;
 import me.soapiee.common.utils.MessageManager;
 import me.soapiee.common.utils.Utils;
 import me.soapiee.common.versionsupport.*;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -39,9 +40,17 @@ public class VersionManager {
         try {
             String version = Utils.VERSION;
             String packageName = VersionManager.class.getPackage().getName();
-            String providerName = NMSVersion.valueOf("v" + version).getProvider();
+            String nmsClassName = NMSVersion.valueOf("v" + version).getNmsClass();
 
-            provider = (NMSProvider) Class.forName(packageName + "." + providerName).newInstance();
+            if (Utils.getMajorVersion() == 26 && Utils.IS_PAPER) {
+                provider = new NMS_Unsupported();
+                Utils.consoleMsg(ChatColor.BLUE
+                        + "The Spectator mode for MC version 26.1+ is currently not supported. Please update the plugin if one is available, or be patient whilst I work on a fix :)");
+            } else {
+                provider = (NMSProvider) Class.forName(packageName + "." + nmsClassName).newInstance();
+            }
+
+            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "NMS Provider: " + nmsClassName);
             provider.initialise(main);
 
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
@@ -63,7 +72,7 @@ public class VersionManager {
             int version = Utils.getMajorVersion();
 
             String providerName;
-            if (version <= 19) providerName = "v1_19_Sign";
+            if (version <= 19) providerName = "v1_16_Sign";
             else providerName = "v1_20_Sign";
 
             provider = (SignProvider) Class.forName(packageName + "." + providerName).newInstance();

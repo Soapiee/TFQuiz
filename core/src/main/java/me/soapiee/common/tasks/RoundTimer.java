@@ -1,7 +1,7 @@
 package me.soapiee.common.tasks;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.events.RoundEndedEvent;
 import me.soapiee.common.handlers.LiveGameHandler;
 import me.soapiee.common.instance.Game;

@@ -2,7 +2,7 @@ package me.soapiee.common.managers;
 
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.utils.MessageManager;
 import me.soapiee.common.utils.Utils;
 import org.bukkit.command.CommandSender;

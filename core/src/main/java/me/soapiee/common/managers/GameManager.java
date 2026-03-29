@@ -2,10 +2,10 @@ package me.soapiee.common.managers;
 
 import lombok.Getter;
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.factories.GameFactory;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.utils.CustomLogger;
-import me.soapiee.common.utils.Message;
 import me.soapiee.common.utils.MessageManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;

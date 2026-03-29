@@ -10,7 +10,7 @@
     <parent>
         <groupId>me.soapiee</groupId>
         <artifactId>tfquiz-parent</artifactId>
-        <version>1.5.2</version>
+        <version>1.5.3</version>
     </parent>
 
     <properties>
@@ -155,6 +155,10 @@
                     <groupId>me.soapiee</groupId>
                     <artifactId>tfquiz-nms_1_21_R7</artifactId>
                 </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-nms_26_R1</artifactId>
+                </dependency>
             </dependencies>
         </profile>
 
@@ -243,6 +247,10 @@
                 <dependency>
                     <groupId>me.soapiee</groupId>
                     <artifactId>tfquiz-paper_1_21_R7</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>me.soapiee</groupId>
+                    <artifactId>tfquiz-paper_26_R1</artifactId>
                 </dependency>
             </dependencies>
         </profile>

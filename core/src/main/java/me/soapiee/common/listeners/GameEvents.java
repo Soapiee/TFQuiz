@@ -3,7 +3,7 @@ package me.soapiee.common.listeners;
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.EndGameResult;
 import me.soapiee.common.enums.GameState;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.events.*;
 import me.soapiee.common.handlers.LifeCycleHandler;
 import me.soapiee.common.handlers.LiveGameHandler;

@@ -1,7 +1,7 @@
 package me.soapiee.common.handlers;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.managers.GamePlayerManager;
 import me.soapiee.common.utils.MessageManager;

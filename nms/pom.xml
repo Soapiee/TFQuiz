@@ -10,7 +10,7 @@
     <parent>
         <groupId>me.soapiee</groupId>
         <artifactId>tfquiz-parent</artifactId>
-        <version>1.5.2</version>
+        <version>1.5.3</version>
     </parent>
 
     <modules>
@@ -34,5 +34,6 @@
         <module>nms_1_21_R5</module>
         <module>nms_1_21_R6</module>
         <module>nms_1_21_R7</module>
+        <module>nms_26_R1</module>
     </modules>
 </project>

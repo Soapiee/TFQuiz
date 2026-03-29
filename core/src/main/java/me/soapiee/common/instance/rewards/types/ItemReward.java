@@ -1,7 +1,7 @@
 package me.soapiee.common.instance.rewards.types;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.utils.Utils;

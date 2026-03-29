@@ -1,13 +1,13 @@
 package me.soapiee.common.factories;
 
 import me.soapiee.common.TFQuiz;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.enums.RewardType;
 import me.soapiee.common.hooks.VaultHook;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.instance.rewards.types.*;
-import me.soapiee.common.utils.MessageManager;
 import me.soapiee.common.utils.CustomLogger;
+import me.soapiee.common.utils.MessageManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -5,7 +5,7 @@ import me.soapiee.common.TFQuiz;
 import me.soapiee.common.command.adminCmds.AbstractAdminSub;
 import me.soapiee.common.enums.DescriptionType;
 import me.soapiee.common.enums.GameState;
-import me.soapiee.common.utils.Message;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.Hologram;
 import org.bukkit.Location;

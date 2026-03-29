@@ -2,12 +2,12 @@ package me.soapiee.common.factories;
 
 import me.soapiee.common.TFQuiz;
 import me.soapiee.common.enums.DescriptionType;
+import me.soapiee.common.enums.Message;
 import me.soapiee.common.handlers.ArenaHandler;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.Hologram;
 import me.soapiee.common.instance.rewards.Reward;
 import me.soapiee.common.utils.CustomLogger;
-import me.soapiee.common.utils.Message;
 import me.soapiee.common.utils.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
