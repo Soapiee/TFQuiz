@@ -216,12 +216,9 @@ public class MessageManager {
         if (message.contains("%sign_ID%")) message = message.replace("%sign_ID%", string);
         if (message.contains("%game_ID%")) message = message.replace("%game_ID%", string);
         if (message.contains("%loc_ID%")) message = message.replace("%loc_ID%", string);
-        if (message.contains("%task_message%"))
-            message = message.replace("%task_message%",
-                    string.replaceFirst(("(\\W)(\\D)"), ""));
         if (message.contains("%question%")) message = message.replace("%question%", string);
-        if (message.contains("%%correction_message%\n"))
-            message = message.replace("%%correction_message%\n", (string.isEmpty()) ? "" : string + "\n");
+        if (message.contains("%correction_message%"))
+            message = message.replace("%correction_message%", (string.isEmpty()) ? "" : string);
         if (message.contains("%winners%")) message = message.replace("%winners%", string);
         if (message.contains("%winner%")) message = message.replace("%winner%", string);
 

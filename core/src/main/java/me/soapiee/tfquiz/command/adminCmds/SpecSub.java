@@ -25,7 +25,8 @@ public class SpecSub extends AbstractAdminSub {
         Player player = Bukkit.getPlayer(args[1]);
         if (player == null) return;
 
-        main.getVersionManager().setSpectator(player);
+        spectatorHandler.setSpectator(player);
+        gamePlayerManager.addFakeSpectator(player.getUniqueId());
     }
 
     @Override

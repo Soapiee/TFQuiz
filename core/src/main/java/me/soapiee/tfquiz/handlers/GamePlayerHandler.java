@@ -7,7 +7,8 @@ import me.soapiee.tfquiz.enums.GameState;
 import me.soapiee.tfquiz.events.MinPlayerReachedEvent;
 import me.soapiee.tfquiz.events.MinPlayerReducedEvent;
 import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.internals.VersionManager;
+import me.soapiee.tfquiz.internals.GamemodeChange;
+import me.soapiee.tfquiz.internals.SpectatorHandler;
 import me.soapiee.tfquiz.managers.GamePlayerManager;
 import me.soapiee.tfquiz.managers.InventoryManager;
 import me.soapiee.tfquiz.managers.SettingsManager;
@@ -23,7 +24,7 @@ public class GamePlayerHandler {
     private final TFQuiz main;
     private final SettingsManager settingsManager;
     private final InventoryManager inventoryManager;
-    private final VersionManager versionManager;
+    private final SpectatorHandler spectatorHandler;
     private final GamePlayerManager gamePlayerManager;
     private final GameMessageHandler gameMessageHandler;
     private final ArenaHandler arenaHandler;
@@ -37,7 +38,7 @@ public class GamePlayerHandler {
         this.main = main;
         settingsManager = main.getSettingsManager();
         inventoryManager = main.getInventoryManager();
-        versionManager = main.getVersionManager();
+        spectatorHandler = main.getVersionManager().getSpectatorHandler();
         gamePlayerManager = main.getGamePlayerManager();
         gameMessageHandler = game.getMessageHandler();
         arenaHandler = game.getArenaHandler();
@@ -123,7 +124,7 @@ public class GamePlayerHandler {
 
     public void setSpectator(Player player) {
         UUID uuid = player.getUniqueId();
-        if (!versionManager.setSpectator(player)) {
+        if (!spectatorHandler.setSpectator(player)) {
             removePlayer(uuid);
             gameMessageHandler.spectatorError(player);
             return;
@@ -137,8 +138,9 @@ public class GamePlayerHandler {
         UUID uuid = player.getUniqueId();
         if (!gamePlayerManager.isSpectator(gameID, uuid)) return;
 
-        if (player.isOnline()) versionManager.unSetSpectator(player);
+        if (player.isOnline()) spectatorHandler.unSetSpectator(player);
         gamePlayerManager.removeSpectator(gameID, uuid);
+        new GamemodeChange(player).runTaskLater(main, 1);
     }
 
     public void eliminate(UUID uuid) {

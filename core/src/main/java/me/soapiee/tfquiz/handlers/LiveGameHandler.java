@@ -113,9 +113,9 @@ public class LiveGameHandler implements Listener {
         canAnswer = false;
 
         if (correctAnswer)
-            messageHandler.sendMessageToAll(messageManager.getWithPlaceholder(Message.GAMETRUEOUTCOME, correctionMessage));
+            messageHandler.sendOutComeMessage(messageManager.getWithPlaceholder(Message.GAMETRUEOUTCOME, correctionMessage));
         else
-            messageHandler.sendMessageToAll(messageManager.getWithPlaceholder(Message.GAMEFALSEOUTCOME, correctionMessage));
+            messageHandler.sendOutComeMessage(messageManager.getWithPlaceholder(Message.GAMEFALSEOUTCOME, correctionMessage));
     }
 
     public void eliminatePlayers() {

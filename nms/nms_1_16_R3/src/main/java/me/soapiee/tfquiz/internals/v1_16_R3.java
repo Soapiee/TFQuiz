@@ -1,7 +1,6 @@
 package me.soapiee.tfquiz.internals;
 
 import com.mojang.authlib.GameProfile;
-import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-class v1_16_R3 implements NMSProvider {
+class v1_16_R3 implements SpectatorHandler {
 
     private final String packetClassString = "net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo";
     private final String packetDataClassString = "net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo$PlayerInfoData";
@@ -27,9 +26,9 @@ class v1_16_R3 implements NMSProvider {
     private MessageManager messageManager;
 
     @Override
-    public void initialise(TFQuiz main) {
-        customLogger = main.getCustomLogger();
-        messageManager = main.getMessageManager();
+    public void initialise(MessageManager messageManager, CustomLogger customLogger) {
+        this.customLogger = customLogger;
+        this.messageManager = messageManager;
     }
 
     @Override

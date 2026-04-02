@@ -7,6 +7,8 @@ import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.instance.Game;
 import me.soapiee.tfquiz.instance.GameSign;
 import me.soapiee.tfquiz.internals.SignHandler;
+import me.soapiee.tfquiz.internals.SpectatorHandler;
+import me.soapiee.tfquiz.internals.VersionManager;
 import me.soapiee.tfquiz.managers.*;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.Utils;
@@ -21,6 +23,7 @@ public abstract class AbstractAdminSub implements SubCmd {
     protected final GameManager gameManager;
     protected final GamePlayerManager gamePlayerManager;
     protected final SignHandler signHandler;
+    protected final SpectatorHandler spectatorHandler;
     protected final GameSignManager gameSignManager;
     protected final SettingsManager settingsManager;
     protected final SchedulerManager schedulerManager;
@@ -35,7 +38,9 @@ public abstract class AbstractAdminSub implements SubCmd {
         gameManager = main.getGameManager();
         settingsManager = main.getSettingsManager();
         gamePlayerManager = main.getGamePlayerManager();
-        signHandler = main.getVersionManager().getSignHandler();
+        VersionManager versionManager = main.getVersionManager();
+        signHandler = versionManager.getSignHandler();
+        spectatorHandler = versionManager.getSpectatorHandler();
         gameSignManager = main.getGameSignManager();
         schedulerManager = main.getSchedulerManager();
 

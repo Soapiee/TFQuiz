@@ -94,6 +94,18 @@ public class GameMessageHandler {
         player.sendTitle("", "", 0, 20, 0);
     }
 
+    public void sendOutComeMessage(String message) {
+        String[] lines = message.split("\n");
+        StringBuilder builder = new StringBuilder();
+
+        for (String line : lines) {
+            if (line.matches("(&[a-f0-8])")) continue;
+            builder.append(line).append("\n");
+        }
+
+        sendMessageToAll(builder.toString());
+    }
+
     public void announceWinners() {
         Set<UUID> playingPlayers = gamePlayerManager.getPlayingPlayers(gameID);
         int size = playingPlayers.size();

@@ -8,104 +8,100 @@ import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 public class VersionManager {
 
-    private final TFQuiz main;
     private final CustomLogger customLogger;
     private final MessageManager messageManager;
-    private final NMSProvider NMSProvider;
+    @Getter private final SpectatorHandler spectatorHandler;
     @Getter private final SignHandler signHandler;
 
-    private final Set<UUID> spectators = new HashSet<>();
+//    private final Set<UUID> spectators = new HashSet<>();
 
     public VersionManager(TFQuiz main) {
-        this.main = main;
         customLogger = main.getCustomLogger();
         messageManager = main.getMessageManager();
         SettingsManager settingsManager = main.getSettingsManager();
 
-        NMSProvider = registerSpectatorHandler(settingsManager);
+        spectatorHandler = registerSpectatorHandler(settingsManager);
         signHandler = registerSignHandler(settingsManager);
     }
 
-    private NMSProvider registerSpectatorHandler(SettingsManager settingsManager) {
-        NMSProvider provider;
+    private SpectatorHandler registerSpectatorHandler(SettingsManager settingsManager) {
+        SpectatorHandler handler;
 
         try {
             String version = Utils.VERSION;
             String packageName = VersionManager.class.getPackage().getName();
-            String nmsClassName = NMSVersion.valueOf("v" + version).getNmsClass();
+
+            if (Utils.getMajorVersion() == 26) version = "26_1";
+            String className = NMSVersion.valueOf("v" + version).getNmsClass();
 
             if (Utils.getMajorVersion() == 26 && Utils.IS_PAPER) {
-                provider = new NMS_Unsupported();
-                Utils.consoleMsg(ChatColor.BLUE
+                handler = new Spectator_Unsupported();
+                Utils.consoleMsg(ChatColor.RED
                         + "The Spectator mode for MC version 26.1+ is currently not supported. Please update the plugin if one is available, or be patient whilst I work on a fix :)");
             } else {
-                provider = (NMSProvider) Class.forName(packageName + "." + nmsClassName).newInstance();
+                handler = (SpectatorHandler) Class.forName(packageName + "." + className).newInstance();
             }
 
-            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "NMS Provider: " + nmsClassName);
-            provider.initialise(main);
+            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "Spec version: " + className);
+            handler.initialise(messageManager, customLogger);
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 ClassCastException | IllegalArgumentException ex) {
-            main.getCustomLogger().logToFile(ex, main.getMessageManager().get(Message.DISABLESPECWARNING));
-            provider = new NMS_Unsupported();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException |
+                 IllegalArgumentException ex) {
+            customLogger.logToFile(ex, messageManager.get(Message.DISABLESPECWARNING));
+            handler = new Spectator_Unsupported();
 
-            if (settingsManager.isDebugMode()) main.getCustomLogger().logToFile(ex, "");
+            if (settingsManager.isDebugMode()) customLogger.logToFile(ex, "");
         }
 
-        return provider;
+        return handler;
     }
 
     private SignHandler registerSignHandler(SettingsManager settingsManager) {
-        SignHandler provider;
+        SignHandler handler;
 
         try {
             String packageName = VersionManager.class.getPackage().getName();
             int version = Utils.getMajorVersion();
 
-            String providerName;
-            if (version <= 19) providerName = "v1_16_Sign";
-            else providerName = "v1_20_Sign";
+            String className;
+            if (version <= 19) className = "v1_16_Sign";
+            else className = "v1_20_Sign";
 
-            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "Signs version: " + providerName);
-            provider = (SignHandler) Class.forName(packageName + "." + providerName).newInstance();
+            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "Signs version: " + className);
+            handler = (SignHandler) Class.forName(packageName + "." + className).newInstance();
+
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  ClassCastException exception) {
             customLogger.logToFile(exception, messageManager.get(Message.UNSUPPORTEDVERSION));
-            provider = new Sign_Unsupported(messageManager, customLogger);
+            handler = new Sign_Unsupported(messageManager, customLogger);
         }
 
-        return provider;
+        return handler;
     }
 
-    public boolean setSpectator(Player player) {
-        if (NMSProvider.setSpectator(player)) {
-            spectators.add(player.getUniqueId());
-            return true;
-        }
-        return false;
-    }
+//    public boolean setSpectator(Player player) {
+//        if (spectatorHandler.setSpectator(player)) {
+//            spectators.add(player.getUniqueId());
+//            return true;
+//        }
+//        return false;
+//    }
 
-    public void unSetSpectator(Player player) {
-        NMSProvider.unSetSpectator(player);
-        spectators.remove(player.getUniqueId());
-        new GamemodeChange(player).runTaskLater(main, 1);
-    }
+//    public void unSetSpectator(Player player) {
+//        spectatorHandler.unSetSpectator(player);
+//        spectators.remove(player.getUniqueId());
+//        new GamemodeChange(player).runTaskLater(main, 1);
+//    }
 
-    public boolean spectatorsExist() {
-        return !spectators.isEmpty();
-    }
+//    public boolean spectatorsExist() {
+//        return !spectators.isEmpty();
+//    }
 
-    public void updateTab(Player player) {
-        new TabUpdate(NMSProvider, player, spectators).runTaskLater(main, 10);
-    }
+//    public void updateTab(Player player) {
+//        new TabUpdate(spectatorHandler, player, spectators).runTaskLater(main, 10);
+//    }
 
 }

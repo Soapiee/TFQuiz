@@ -8,19 +8,19 @@ import java.util.UUID;
 
 public class TabUpdate extends BukkitRunnable {
 
-    private final NMSProvider provider;
+    private final SpectatorHandler spectatorHandler;
     private final Player player;
     private final Set<UUID> spectators;
 
-    public TabUpdate(NMSProvider provider, Player player, Set<UUID> spectators) {
-        this.provider = provider;
+    public TabUpdate(SpectatorHandler spectatorHandler, Player player, Set<UUID> spectators) {
+        this.spectatorHandler = spectatorHandler;
         this.player = player;
         this.spectators = spectators;
     }
 
     @Override
     public void run() {
-        provider.updateTab(player, spectators);
+        spectatorHandler.updateTab(player, spectators);
         this.cancel();
     }
 }

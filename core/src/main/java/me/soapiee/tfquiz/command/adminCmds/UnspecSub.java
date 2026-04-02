@@ -1,6 +1,7 @@
 package me.soapiee.tfquiz.command.adminCmds;
 
 import me.soapiee.tfquiz.TFQuiz;
+import me.soapiee.tfquiz.internals.GamemodeChange;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +26,9 @@ public class UnspecSub extends AbstractAdminSub {
         Player player = Bukkit.getPlayer(args[1]);
         if (player == null) return;
 
-        main.getVersionManager().unSetSpectator(player);
+        spectatorHandler.unSetSpectator(player);
+        gamePlayerManager.removeFakeSpectator(player.getUniqueId());
+        new GamemodeChange(player).runTaskLater(main, 1);
     }
 
     @Override

@@ -2,7 +2,6 @@ package me.soapiee.tfquiz.listeners;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.internals.VersionManager;
 import me.soapiee.tfquiz.managers.GameManager;
 import me.soapiee.tfquiz.managers.GamePlayerManager;
 import me.soapiee.tfquiz.managers.SettingsManager;
@@ -20,17 +19,17 @@ import java.util.UUID;
 public class ConnectListener implements Listener {
 
     private final TFQuiz main;
+    private final GamePlayerManager gamePlayerManager;
     private final GameManager gameManager;
     private final SettingsManager settingsManager;
     private final PlayerCache playerCache;
-    private final VersionManager versionManager;
 
     public ConnectListener(TFQuiz main) {
         this.main = main;
+        gamePlayerManager = main.getGamePlayerManager();
         gameManager = main.getGameManager();
         settingsManager = main.getSettingsManager();
         playerCache = main.getPlayerCache();
-        versionManager = main.getVersionManager();
     }
 
     @EventHandler
@@ -39,7 +38,7 @@ public class ConnectListener implements Listener {
 
         if (settingsManager.isEnforceLobbySpawn()) player.teleport(settingsManager.getLobbySpawn());
 
-        if (versionManager.spectatorsExist()) versionManager.updateTab(player);
+        if (gamePlayerManager.spectatorsExist()) gamePlayerManager.updateTab(main, player);
 
         if (!player.hasPlayedBefore()) playerCache.addOfflinePlayer(player);
 
@@ -61,7 +60,6 @@ public class ConnectListener implements Listener {
 
         Game game = gameManager.getGame(uuid);
         if (game != null) {
-            GamePlayerManager gamePlayerManager = main.getGamePlayerManager();
             if (gamePlayerManager.isSpectator(game.getIdentifier(), uuid)) player.setGameMode(GameMode.SURVIVAL);
 
             if (game.isPhysicalArena()) player.teleport(settingsManager.getLobbySpawn());

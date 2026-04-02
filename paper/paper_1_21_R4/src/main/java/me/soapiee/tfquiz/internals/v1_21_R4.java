@@ -1,6 +1,5 @@
 package me.soapiee.tfquiz.internals;
 
-import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
@@ -19,15 +18,15 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-class v1_21_R4 implements NMSProvider {
+class v1_21_R4 implements SpectatorHandler {
 
     private CustomLogger customLogger;
     private MessageManager messageManager;
 
     @Override
-    public void initialise(TFQuiz main) {
-        customLogger = main.getCustomLogger();
-        messageManager = main.getMessageManager();
+    public void initialise(MessageManager messageManager, CustomLogger customLogger) {
+        this.customLogger = customLogger;
+        this.messageManager = messageManager;
     }
 
     private ServerPlayer getServerPlayer(Player player) {

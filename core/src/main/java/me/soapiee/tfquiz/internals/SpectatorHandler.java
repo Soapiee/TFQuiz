@@ -1,14 +1,15 @@
 package me.soapiee.tfquiz.internals;
 
-import me.soapiee.tfquiz.TFQuiz;
+import me.soapiee.tfquiz.utils.CustomLogger;
+import me.soapiee.tfquiz.utils.MessageManager;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.UUID;
 
-public interface NMSProvider {
+public interface SpectatorHandler {
 
-    default void initialise(TFQuiz main) {
+    default void initialise(MessageManager messageManager, CustomLogger customLogger) {
     }
 
     boolean setSpectator(Player player);

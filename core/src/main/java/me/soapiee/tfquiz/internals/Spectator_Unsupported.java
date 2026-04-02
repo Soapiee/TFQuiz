@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 import java.util.UUID;
 
-public class NMS_Unsupported implements NMSProvider {
+public class Spectator_Unsupported implements SpectatorHandler {
     @Override
     public boolean setSpectator(Player player) {
         player.setGameMode(GameMode.SPECTATOR);

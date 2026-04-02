@@ -1,6 +1,9 @@
 package me.soapiee.tfquiz.managers;
 
+import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.internals.TabUpdate;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -8,6 +11,7 @@ public class GamePlayerManager {
 
     private final Map<Integer, Set<UUID>> playingPlayers = new HashMap<>(), allPlayers = new HashMap<>();
     private final Map<Integer, Set<UUID>> spectators = new HashMap<>();
+    private final Set<UUID> allSpectators = new HashSet<>();
 
     public GamePlayerManager() {
     }
@@ -37,11 +41,21 @@ public class GamePlayerManager {
     public void addSpectator(int gameID, UUID uuid) {
         eliminatePlayer(gameID, uuid);
         spectators.get(gameID).add(uuid);
+        allSpectators.add(uuid);
+    }
+
+    public void addFakeSpectator(UUID uuid) {
+        allSpectators.add(uuid);
+    }
+
+    public void removeFakeSpectator(UUID uuid) {
+        allSpectators.remove(uuid);
     }
 
     public void removeSpectator(int gameID, UUID uuid) {
         Set<UUID> spectatorsList = spectators.get(gameID);
         spectatorsList.remove(uuid);
+        allSpectators.remove(uuid);
     }
 
     public Set<UUID> getPlayingPlayers(int gameID) {
@@ -54,6 +68,14 @@ public class GamePlayerManager {
 
     public boolean isSpectator(int gameID, UUID uuid) {
         return spectators.get(gameID).contains(uuid);
+    }
+
+    public boolean spectatorsExist() {
+        return !allSpectators.isEmpty();
+    }
+
+    public void updateTab(TFQuiz main, Player player) {
+        new TabUpdate(main.getVersionManager().getSpectatorHandler(), player, allSpectators).runTaskLater(main, 10);
     }
 
     private void clearAllPlayers(int gameID) {
