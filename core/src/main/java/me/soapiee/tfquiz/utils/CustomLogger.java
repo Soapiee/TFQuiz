@@ -1,7 +1,6 @@
 package me.soapiee.tfquiz.utils;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

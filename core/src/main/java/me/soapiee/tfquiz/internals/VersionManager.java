@@ -2,7 +2,7 @@ package me.soapiee.tfquiz.internals;
 
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.managers.SettingsManager;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;

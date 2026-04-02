@@ -2,9 +2,9 @@ package me.soapiee.tfquiz.command.adminCmds.signSubs;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.adminCmds.AbstractAdminSub;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.instance.GameSign;
+import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.gameSigns.GameSign;
 import me.soapiee.tfquiz.utils.Utils;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;

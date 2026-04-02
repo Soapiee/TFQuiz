@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.command.adminCmds;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

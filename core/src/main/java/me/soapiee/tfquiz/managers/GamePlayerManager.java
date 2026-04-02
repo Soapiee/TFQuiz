@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.managers;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.games.Game;
 import me.soapiee.tfquiz.internals.TabUpdate;
 import org.bukkit.entity.Player;
 

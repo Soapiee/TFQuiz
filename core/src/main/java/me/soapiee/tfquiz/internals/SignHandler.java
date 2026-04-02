@@ -1,6 +1,6 @@
 package me.soapiee.tfquiz.internals;
 
-import me.soapiee.tfquiz.instance.GameSign;
+import me.soapiee.tfquiz.gameSigns.GameSign;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
