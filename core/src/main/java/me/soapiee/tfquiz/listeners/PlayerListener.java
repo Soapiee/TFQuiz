@@ -2,9 +2,9 @@ package me.soapiee.tfquiz.listeners;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.conversations.SignConvo;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.instance.GameSign;
+import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.gameSigns.GameSign;
 import me.soapiee.tfquiz.managers.GameManager;
 import me.soapiee.tfquiz.managers.GameSignManager;
 import me.soapiee.tfquiz.managers.SettingsManager;

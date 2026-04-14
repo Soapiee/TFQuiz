@@ -1,8 +1,8 @@
 package me.soapiee.tfquiz.conversations;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.instance.GameSign;
+import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.gameSigns.GameSign;
 import me.soapiee.tfquiz.internals.SignHandler;
 import me.soapiee.tfquiz.managers.GameSignManager;
 import me.soapiee.tfquiz.utils.Keys;

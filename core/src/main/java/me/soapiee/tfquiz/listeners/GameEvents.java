@@ -1,15 +1,15 @@
 package me.soapiee.tfquiz.listeners;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.EndGameResult;
-import me.soapiee.tfquiz.enums.GameState;
-import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.events.*;
-import me.soapiee.tfquiz.handlers.LifeCycleHandler;
-import me.soapiee.tfquiz.handlers.LiveGameHandler;
-import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.instance.rewards.Reward;
+import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.games.LifeCycleHandler;
+import me.soapiee.tfquiz.games.LiveGameHandler;
+import me.soapiee.tfquiz.games.enums.EndGameResult;
+import me.soapiee.tfquiz.games.enums.GameState;
 import me.soapiee.tfquiz.managers.GamePlayerManager;
+import me.soapiee.tfquiz.rewards.Reward;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

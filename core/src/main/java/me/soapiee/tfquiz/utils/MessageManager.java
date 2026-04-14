@@ -1,13 +1,10 @@
 package me.soapiee.tfquiz.utils;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.GameState;
-import me.soapiee.tfquiz.enums.Languages;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.handlers.ArenaHandler;
-import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.tasks.Scheduler;
-import org.bukkit.ChatColor;
+import me.soapiee.tfquiz.gameSigns.Scheduler;
+import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.games.arena.ArenaHandler;
+import me.soapiee.tfquiz.games.enums.GameState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,9 +24,7 @@ public class MessageManager {
         if (languageString == null) language = Languages.LANG_EN.toString().toLowerCase();
         else language = languageString;
 
-        //TODO: Revert code back in future updates
-//        file = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
-        file = getFile();
+        file = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
         contents = new YamlConfiguration();
 
         load(null);
@@ -37,27 +32,12 @@ public class MessageManager {
         if (languageString == null) Utils.consoleMsg(get(Message.INVALIDLANGUAGE));
     }
 
-    private File getFile() {
-        File newLangFile = new File(main.getDataFolder() + File.separator + "language", language + ".yml");
-        if (!newLangFile.exists()) main.saveResource("language" + File.separator + language + ".yml", false);
-
-        File legacyFile = new File(main.getDataFolder(), "messages.yml");
-        if (legacyFile.exists()) {
-            Utils.consoleMsg(ChatColor.RED.toString() + ChatColor.BOLD + "[IMPORTANT] " + ChatColor.RESET
-                    + ChatColor.RED + "Please transfer the contents of your messages.yml file to the new language file. Located in the \"language\" folder. Then delete the messages.yml file");
-            return legacyFile;
-        }
-
-        return newLangFile;
-    }
-
     public boolean reload(CommandSender sender) {
         return load(sender);
     }
 
     private boolean load(CommandSender sender) {
-        //TODO: Revert code back in future updates
-//        if (!file.exists()) main.saveResource("language" + File.separator + language + ".yml", false);
+        if (!file.exists()) main.saveResource("language" + File.separator + language + ".yml", false);
 
         try {
             contents.load(file);

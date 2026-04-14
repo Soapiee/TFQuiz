@@ -2,8 +2,8 @@ package me.soapiee.tfquiz.command.adminCmds.signSubs;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.adminCmds.AbstractAdminSub;
-import me.soapiee.tfquiz.instance.GameSign;
-import me.soapiee.tfquiz.tasks.TeleportTask;
+import me.soapiee.tfquiz.gameSigns.GameSign;
+import me.soapiee.tfquiz.games.tasks.TeleportTask;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

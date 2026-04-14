@@ -1,8 +1,8 @@
 package me.soapiee.tfquiz.command.playerCmds;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.games.Game;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

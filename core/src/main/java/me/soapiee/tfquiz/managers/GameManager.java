@@ -2,9 +2,9 @@ package me.soapiee.tfquiz.managers;
 
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.factories.GameFactory;
-import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.games.GameFactory;
+import me.soapiee.tfquiz.games.Game;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
 import org.bukkit.command.CommandSender;

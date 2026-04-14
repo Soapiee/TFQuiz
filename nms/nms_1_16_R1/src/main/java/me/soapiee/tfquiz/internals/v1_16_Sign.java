@@ -1,6 +1,6 @@
 package me.soapiee.tfquiz.internals;
 
-import me.soapiee.tfquiz.instance.GameSign;
+import me.soapiee.tfquiz.gameSigns.GameSign;
 import me.soapiee.tfquiz.utils.Keys;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.Location;

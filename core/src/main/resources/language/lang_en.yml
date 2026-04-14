@@ -165,7 +165,7 @@ game_disallowed_command: "&cYou cannot use that command when in a game with an a
 game_prompt:
   - "&e-----------------------------------"
   - " "
-  - "&6&lTrue or False? %question%"
+  - "&aTrue &6&lor &cFalse&6&l? %question%"
   - " "
   - "&e-----------------------------------"
 game_true_outcome_message:

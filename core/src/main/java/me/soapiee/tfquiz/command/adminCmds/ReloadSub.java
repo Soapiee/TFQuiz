@@ -3,11 +3,10 @@ package me.soapiee.tfquiz.command.adminCmds;
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.conversations.ReloadConvo;
-import me.soapiee.tfquiz.enums.GameState;
-import me.soapiee.tfquiz.enums.Message;
-import me.soapiee.tfquiz.instance.Game;
-import me.soapiee.tfquiz.instance.Hologram;
+import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.games.enums.GameState;
 import me.soapiee.tfquiz.utils.Keys;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
@@ -63,8 +62,7 @@ public class ReloadSub extends AbstractAdminSub {
 
         for (Game game : gameManager.getGames()) {
             game.getLifeCycleHandler().reset(true, true);
-            Hologram hologram = game.getArenaHandler().getHologram();
-            if (hologram.getSpawnPoint() != null) hologram.despawn();
+            game.getArenaHandler().despawnHologram();
             game.setState(GameState.CLOSED);
         }
 
