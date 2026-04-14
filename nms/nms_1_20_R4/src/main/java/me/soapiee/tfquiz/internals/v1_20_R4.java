@@ -1,6 +1,6 @@
 package me.soapiee.tfquiz.internals;
 
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;

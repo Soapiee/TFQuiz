@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.listeners;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.instance.Game;
 import me.soapiee.tfquiz.managers.GameManager;
 import me.soapiee.tfquiz.managers.GamePlayerManager;
 import me.soapiee.tfquiz.managers.SettingsManager;

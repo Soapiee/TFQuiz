@@ -3,12 +3,11 @@ package me.soapiee.tfquiz.command.adminCmds.gameSubs;
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.adminCmds.AbstractAdminSub;
-import me.soapiee.tfquiz.games.Game;
-import me.soapiee.tfquiz.games.arena.ArenaHandler;
-import me.soapiee.tfquiz.games.arena.Hologram;
-import me.soapiee.tfquiz.games.enums.DescriptionType;
-import me.soapiee.tfquiz.games.enums.GameState;
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.DescriptionType;
+import me.soapiee.tfquiz.enums.GameState;
+import me.soapiee.tfquiz.enums.Message;
+import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.instance.Hologram;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,19 +34,15 @@ public class GameSetHoloSpawnSub extends AbstractAdminSub {
         Game game = getGame(sender, args[1]);
         if (game == null) return;
 
-        ArenaHandler arenaHandler = game.getArenaHandler();
-        Hologram hologram = arenaHandler.getHologram();
-
-        arenaHandler.despawnHologram();
-        Location newLocation = player.getLocation();
-        newLocation.setY(newLocation.getY() + (0.25 * hologram.getText().length) + 1);
-
-        hologram.setLocation(newLocation);
-        updateConfig(game.getIdentifier(), newLocation);
+        Hologram hologram = game.getArenaHandler().getHologram();
+        if (hologram.getSpawnPoint() != null) hologram.despawn();
+        Location holoLocation = player.getLocation();
+        hologram.setLocation(holoLocation);
+        updateConfig(game.getIdentifier(), holoLocation);
 
         DescriptionType descType = game.getArenaHandler().getDescType();
         if (game.getState() != GameState.LIVE && (descType == DescriptionType.HOLOGRAM || descType == DescriptionType.BOTH))
-            arenaHandler.spawnHologram();
+            hologram.spawn();
 
         sendMessage(player, messageManager.getWithPlaceholder(Message.GAMEHOLOSPAWNSET, game.getIdentifier()));
     }

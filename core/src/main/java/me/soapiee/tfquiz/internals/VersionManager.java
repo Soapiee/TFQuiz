@@ -2,9 +2,9 @@ package me.soapiee.tfquiz.internals;
 
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
+import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.managers.SettingsManager;
 import me.soapiee.tfquiz.utils.CustomLogger;
-import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.ChatColor;
@@ -15,7 +15,8 @@ public class VersionManager {
     private final MessageManager messageManager;
     @Getter private final SpectatorHandler spectatorHandler;
     @Getter private final SignHandler signHandler;
-    @Getter private final HologramHandler hologramHandler;
+
+//    private final Set<UUID> spectators = new HashSet<>();
 
     public VersionManager(TFQuiz main) {
         customLogger = main.getCustomLogger();
@@ -24,7 +25,6 @@ public class VersionManager {
 
         spectatorHandler = registerSpectatorHandler(settingsManager);
         signHandler = registerSignHandler(settingsManager);
-        hologramHandler = registerHologramHandler(settingsManager);
     }
 
     private SpectatorHandler registerSpectatorHandler(SettingsManager settingsManager) {
@@ -37,7 +37,13 @@ public class VersionManager {
             if (Utils.getMajorVersion() == 26) version = "26_1";
             String className = NMSVersion.valueOf("v" + version).getNmsClass();
 
-            handler = (SpectatorHandler) Class.forName(packageName + "." + className).newInstance();
+            if (Utils.getMajorVersion() == 26 && Utils.IS_PAPER) {
+                handler = new Spectator_Unsupported();
+                Utils.consoleMsg(ChatColor.RED
+                        + "The Spectator mode for MC version 26.1+ is currently not supported. Please update the plugin if one is available, or be patient whilst I work on a fix :)");
+            } else {
+                handler = (SpectatorHandler) Class.forName(packageName + "." + className).newInstance();
+            }
 
             if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + "Spec version: " + className);
             handler.initialise(messageManager, customLogger);
@@ -76,29 +82,26 @@ public class VersionManager {
         return handler;
     }
 
-    private HologramHandler registerHologramHandler(SettingsManager settingsManager) {
-        HologramHandler hologramHandler;
+//    public boolean setSpectator(Player player) {
+//        if (spectatorHandler.setSpectator(player)) {
+//            spectators.add(player.getUniqueId());
+//            return true;
+//        }
+//        return false;
+//    }
 
-        try {
-            String packageName = VersionManager.class.getPackage().getName();
+//    public void unSetSpectator(Player player) {
+//        spectatorHandler.unSetSpectator(player);
+//        spectators.remove(player.getUniqueId());
+//        new GamemodeChange(player).runTaskLater(main, 1);
+//    }
 
-            String className;
-            int majorVersion = Utils.getMajorVersion();
-            int minorVersion = Utils.getMinorVersion();
+//    public boolean spectatorsExist() {
+//        return !spectators.isEmpty();
+//    }
 
-            if (majorVersion > 19) className = "HologramHandler_1_19_4";
-            else
-                className = (majorVersion == 19 && minorVersion > 3) ? "HologramHandler_1_19_4" : "HologramHandler_Legacy";
+//    public void updateTab(Player player) {
+//        new TabUpdate(spectatorHandler, player, spectators).runTaskLater(main, 10);
+//    }
 
-            if (settingsManager.isDebugMode()) Utils.consoleMsg(ChatColor.BLUE + className);
-            hologramHandler = (HologramHandler) Class.forName(packageName + "." + className).newInstance();
-
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 ClassCastException | IllegalArgumentException ex) {
-            customLogger.logToFile(ex, messageManager.get(Message.UNSUPPORTEDVERSION));
-            hologramHandler = new HologramHandler_Legacy();
-        }
-
-        return hologramHandler;
-    }
 }

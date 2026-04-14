@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.hooks;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;

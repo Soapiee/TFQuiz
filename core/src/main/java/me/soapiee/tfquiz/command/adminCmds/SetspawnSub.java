@@ -2,7 +2,7 @@ package me.soapiee.tfquiz.command.adminCmds;
 
 import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.managers.SettingsManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

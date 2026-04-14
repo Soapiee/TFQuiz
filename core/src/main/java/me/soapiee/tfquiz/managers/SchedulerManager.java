@@ -1,8 +1,8 @@
 package me.soapiee.tfquiz.managers;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.games.Game;
-import me.soapiee.tfquiz.gameSigns.Scheduler;
+import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.tasks.Scheduler;
 
 import java.util.HashMap;
 

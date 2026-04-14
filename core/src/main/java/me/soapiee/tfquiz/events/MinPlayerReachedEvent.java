@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.events;
 
 import lombok.Getter;
-import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.instance.Game;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

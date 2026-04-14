@@ -2,14 +2,14 @@ package me.soapiee.tfquiz.command.adminCmds;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.SubCmd;
-import me.soapiee.tfquiz.gameSigns.GameSign;
-import me.soapiee.tfquiz.games.Game;
-import me.soapiee.tfquiz.games.enums.GameState;
+import me.soapiee.tfquiz.enums.GameState;
+import me.soapiee.tfquiz.enums.Message;
+import me.soapiee.tfquiz.instance.Game;
+import me.soapiee.tfquiz.instance.GameSign;
 import me.soapiee.tfquiz.internals.SignHandler;
 import me.soapiee.tfquiz.internals.SpectatorHandler;
 import me.soapiee.tfquiz.internals.VersionManager;
 import me.soapiee.tfquiz.managers.*;
-import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.command.CommandSender;

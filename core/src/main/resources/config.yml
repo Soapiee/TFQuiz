@@ -102,7 +102,7 @@ games:
 #       desc_option: hologram
 #       # Enables the spectator system
 #       spectators: true
-#       # The spawn point for the hologram (Only works if desc_option is not ‘chat’)
+#       # The spawn point for the hologram (Only works if desc_option is not ‘chat’
 #       holo_location:
 #         world: world
 #         x: -50

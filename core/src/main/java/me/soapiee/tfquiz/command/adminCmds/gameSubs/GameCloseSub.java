@@ -2,9 +2,9 @@ package me.soapiee.tfquiz.command.adminCmds.gameSubs;
 
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.adminCmds.AbstractAdminSub;
-import me.soapiee.tfquiz.games.Game;
-import me.soapiee.tfquiz.games.enums.GameState;
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.GameState;
+import me.soapiee.tfquiz.enums.Message;
+import me.soapiee.tfquiz.instance.Game;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

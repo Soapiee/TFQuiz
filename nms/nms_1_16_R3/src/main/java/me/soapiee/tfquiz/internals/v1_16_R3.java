@@ -1,7 +1,7 @@
 package me.soapiee.tfquiz.internals;
 
 import com.mojang.authlib.GameProfile;
-import me.soapiee.tfquiz.utils.Message;
+import me.soapiee.tfquiz.enums.Message;
 import me.soapiee.tfquiz.utils.CustomLogger;
 import me.soapiee.tfquiz.utils.MessageManager;
 import net.minecraft.server.v1_16_R3.*;

@@ -2,8 +2,8 @@ package me.soapiee.tfquiz.hooks;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.games.LifeCycleHandler;
-import me.soapiee.tfquiz.games.Game;
+import me.soapiee.tfquiz.handlers.LifeCycleHandler;
+import me.soapiee.tfquiz.instance.Game;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

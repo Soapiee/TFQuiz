@@ -6,7 +6,7 @@
 
     <groupId>me.soapiee</groupId>
     <artifactId>tfquiz-parent</artifactId>
-    <version>1.5.5</version>
+    <version>1.5.4</version>
     <packaging>pom</packaging>
 
     <name>TrueFalseQuiz</name>
