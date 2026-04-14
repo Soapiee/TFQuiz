@@ -1,7 +1,7 @@
 # **True False Quiz**
 
 <p align="center">
-  <img width="256" height="256" alt="TFQuiz logo" src="https://github.com/user-attachments/assets/8d8e1b2c-1e30-40b1-a917-300da8017172" /></p>  
+  <img width="512" height="512" alt="TFQuiz logo" src="https://i.ibb.co/ymjJ7Pb3/TFQuiz-transparent-logo.png" /></p>  
 
 ## Introduction
 
