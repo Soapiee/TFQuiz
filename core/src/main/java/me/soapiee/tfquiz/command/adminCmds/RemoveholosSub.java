@@ -1,8 +1,8 @@
 package me.soapiee.tfquiz.command.adminCmds;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.Keys;
+import me.soapiee.tfquiz.utils.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -49,7 +49,7 @@ public class RemoveholosSub extends AbstractAdminSub {
         int count = 0;
 
         for (Entity entity : Bukkit.getWorld("world").getEntities()) {
-            if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE)) {
+            if (entity instanceof ArmorStand && entity.getPersistentDataContainer().has(Keys.HOLOGRAM, PersistentDataType.BYTE)) {
                 entity.remove();
                 count++;
             }

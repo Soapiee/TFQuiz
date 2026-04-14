@@ -165,7 +165,7 @@ public enum Message {
     GAMEPROMPT("game_prompt",
             "&e-----------------------------------"
                     + "\n "
-                    + "\n&6&lTrue or False? %question%"
+                    + "\n&aTrue &6&lor &cFalse&6&l? %question%"
                     + "\n "
                     + "\n&e-----------------------------------"),
     GAMETRUEOUTCOME("game_true_outcome_message",

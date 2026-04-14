@@ -1,8 +1,8 @@
 package me.soapiee.tfquiz.games;
 
 import me.soapiee.tfquiz.TFQuiz;
-import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.managers.GamePlayerManager;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.Utils;
 import org.bukkit.Bukkit;

@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.conversations.ReloadConvo;
 import me.soapiee.tfquiz.games.Game;
-import me.soapiee.tfquiz.games.arena.Hologram;
 import me.soapiee.tfquiz.games.enums.GameState;
 import me.soapiee.tfquiz.utils.Keys;
 import me.soapiee.tfquiz.utils.Message;
@@ -63,8 +62,7 @@ public class ReloadSub extends AbstractAdminSub {
 
         for (Game game : gameManager.getGames()) {
             game.getLifeCycleHandler().reset(true, true);
-            Hologram hologram = game.getArenaHandler().getHologram();
-            if (hologram.getSpawnPoint() != null) hologram.despawn();
+            game.getArenaHandler().despawnHologram();
             game.setState(GameState.CLOSED);
         }
 

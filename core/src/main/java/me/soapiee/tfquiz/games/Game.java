@@ -41,7 +41,7 @@ public class Game {
         messageManager = main.getMessageManager();
         signHandler = main.getVersionManager().getSignHandler();
         gameSignManager = main.getGameSignManager();
-        arenaHandler = new ArenaHandler(messageManager);
+        arenaHandler = new ArenaHandler(main, identifier);
 
         state = GameState.valueOf(settings.get("initial_state").toUpperCase());
         maxPlayers = Integer.parseInt(settings.get("max_players"));

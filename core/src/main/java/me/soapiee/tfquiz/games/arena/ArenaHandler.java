@@ -2,9 +2,10 @@ package me.soapiee.tfquiz.games.arena;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.games.enums.DescriptionType;
+import me.soapiee.tfquiz.internals.HologramHandler;
 import me.soapiee.tfquiz.utils.Message;
-import me.soapiee.tfquiz.utils.MessageManager;
 import org.bukkit.Location;
 
 public class ArenaHandler {
@@ -14,11 +15,15 @@ public class ArenaHandler {
     @Getter final private Hologram hologram;
     @Getter @Setter private Location spawn;
 
-    public ArenaHandler(MessageManager messageManager) {
+    private final HologramHandler hologramHandler;
+
+    public ArenaHandler(TFQuiz main, int gameID) {
         descType = DescriptionType.CHAT;
         allowSpectators = false;
-        hologram = new Hologram(messageManager.get(Message.GAMEHOLODESC));
+        hologram = new Hologram(main.getMessageManager().get(Message.GAMEHOLODESC), gameID);
         spawn = null;
+
+        hologramHandler = main.getVersionManager().getHologramHandler();
     }
 
     public String getDescString() {
@@ -31,14 +36,15 @@ public class ArenaHandler {
 
     public void despawnHologram() {
         if (hologram.getSpawnPoint() == null) return;
-        hologram.despawn();
+
+        hologramHandler.despawn(hologram);
     }
 
     public void spawnHologram() {
         if (descType == DescriptionType.CHAT) return;
         if (hologram.getSpawnPoint() == null) return;
 
-        hologram.spawn();
+        hologramHandler.spawn(hologram);
     }
 
 }

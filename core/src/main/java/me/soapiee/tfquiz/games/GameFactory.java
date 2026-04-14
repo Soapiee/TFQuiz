@@ -67,7 +67,7 @@ public class GameFactory {
         arenaHandler.setSpawn(validateSpawn(sender, configID));
         Hologram hologram = arenaHandler.getHologram();
         hologram.setLocation(validateHologramSpawn(configID));
-        hologram.spawn();
+        arenaHandler.spawnHologram();
     }
 
     private void createNonArenaOptions(String configID, Game game, boolean hasArena) {
