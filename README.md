@@ -1,8 +1,5 @@
 # **True False Quiz**
 
-<p align="center">
-  <img width="512" height="512" alt="TFQuiz logo" src="https://i.ibb.co/ymjJ7Pb3/TFQuiz-transparent-logo.png" /></p>  
-
 ## Introduction
 
 Ever wanted to host events on your server to engage your players?
