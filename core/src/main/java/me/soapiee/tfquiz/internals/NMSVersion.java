@@ -22,7 +22,7 @@ public enum NMSVersion {
     v1_21_6("v1_21_R5"), v1_21_7("v1_21_R5"), v1_21_8("v1_21_R5"),
     v1_21_9("v1_21_R6"), v_21_10("v1_21_R6"),
     v1_21_11("v1_21_R7"),
-    v26_1("v26_R1");
+    v26_1("v26_R1"), v26_2("v26_R1");
 
     public final String nmsClass;
 
