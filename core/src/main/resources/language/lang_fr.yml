@@ -36,6 +36,7 @@ admin_command_usage:
   - "#01d54a/tf sign add <gameID> &7- Ajoute un nouveau panneau pour le jeu spécifié"
   - "#01d54a/tf sign remove <signID> &7- Supprime un panneau de jeu"
   - "#01d54a/tf sign edit <signID> <lineNo> text... &7- Modifie le texte sur le panneau de jeu "
+admin_version: "&cVersion actuelle de TFQuiz : %version%"
 admin_reload_command_usage: "&cUsage: /tf reload"
 admin_reload_success: "&aTFQuiz rechargé avec succès"
 admin_reload_error: "&cUne erreur est survenue lors du rechargement de TFQuiz"
