@@ -39,6 +39,7 @@ public enum Message {
                     + "\n#01d54a/tf sign add <gameID> &7- Adds a new game sign for the specified game"
                     + "\n#01d54a/tf sign remove <signID> &7- Deletes an game sign"
                     + "\n#01d54a/tf sign edit <signID> <lineNo> text... &7- Edits the text on the game sign "),
+    ADMINVERSION("admin_version", "&cTFQuiz current version: %version%"),
     ADMINRELOADCMDUSAGE("admin_reload_command_usage", "&cUsage: /tf reload"),
     ADMINRELOADSUCCESS("admin_reload_success", "&aSuccessfully reloaded TFQuiz"),
     ADMINRELOADERROR("admin_reload_error", "&cRan into an error whilst reloading TFQuiz"),

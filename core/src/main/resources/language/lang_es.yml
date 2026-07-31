@@ -36,6 +36,7 @@ admin_command_usage:
   - "#01d54a/tf sign add <gameID> &7- Añade un nuevo cartel para el juego especificado"
   - "#01d54a/tf sign remove <signID> &7- Elimina un cartel del juego"
   - "#01d54a/tf sign edit <signID> <lineNo> text... &7- Edita el texto del cartel del juego"
+admin_version: "&cVersión actual de TFQuiz: %version%"
 admin_reload_command_usage: "&cUso: /tf reload"
 admin_reload_success: "&aTFQuiz recargado correctamente"
 admin_reload_error: "&cSe produjo un error al recargar TFQuiz"

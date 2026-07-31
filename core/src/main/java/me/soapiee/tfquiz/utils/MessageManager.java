@@ -193,6 +193,7 @@ public class MessageManager {
 
         if (message.contains("%player%")) message = message.replace("%player%", string);
         if (message.contains("%input%")) message = message.replace("%input%", string);
+        if (message.contains("%version%")) message = message.replace("%version%", string);
         if (message.contains("%sign_ID%")) message = message.replace("%sign_ID%", string);
         if (message.contains("%game_ID%")) message = message.replace("%game_ID%", string);
         if (message.contains("%loc_ID%")) message = message.replace("%loc_ID%", string);

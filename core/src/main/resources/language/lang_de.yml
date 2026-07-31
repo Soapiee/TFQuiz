@@ -36,6 +36,7 @@ admin_command_usage:
   - "#01d54a/tf sign add <gameID> &7- Fügt ein neues Spiel-Schild hinzu"
   - "#01d54a/tf sign remove <signID> &7- Löscht ein Spiel-Schild"
   - "#01d54a/tf sign edit <signID> <lineNo> text... &7- Bearbeitet den Text auf einem Schild"
+admin_version: "&cTFQuiz aktuelle Version: %version%"
 admin_reload_command_usage: "&cNutze: /tf reload"
 admin_reload_success: "&aTFQuiz wurde erfolgreich neu geladen"
 admin_reload_error: "&cFehler beim Neuladen von TFQuiz"

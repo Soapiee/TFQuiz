@@ -47,7 +47,7 @@ public class CustomLogger {
             writer.write(System.lineSeparator());
             writer.write(time + " [" + logType.name() + "] " + string);
             writer.write(System.lineSeparator());
-            writer.write("TFQuiz Version: " + Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion());
+            writer.write("TFQuiz Version: " + Utils.PLUGIN_VERSION);
             writer.write(System.lineSeparator());
             writer.write("Server Version: " + Bukkit.getBukkitVersion());
             writer.write(System.lineSeparator());

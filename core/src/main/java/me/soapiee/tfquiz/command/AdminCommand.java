@@ -4,9 +4,9 @@ import me.soapiee.tfquiz.TFQuiz;
 import me.soapiee.tfquiz.command.adminCmds.*;
 import me.soapiee.tfquiz.command.adminCmds.gameSubs.*;
 import me.soapiee.tfquiz.command.adminCmds.signSubs.*;
-import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.games.Game;
 import me.soapiee.tfquiz.managers.GameManager;
+import me.soapiee.tfquiz.utils.Message;
 import me.soapiee.tfquiz.utils.MessageManager;
 import me.soapiee.tfquiz.utils.PlayerCache;
 import me.soapiee.tfquiz.utils.Utils;
@@ -38,6 +38,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         this.playerCache = main.getPlayerCache();
 
         register(new ReloadSub(main));
+        register(new VersionSub(main));
         register(new SetspawnSub(main));
         register(new ListAdminSub(main));
         register(new RemoveholosSub(main));
@@ -142,6 +143,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 results.add("list");
                 results.add("setspawn");
                 results.add("game");
+                results.add("version");
                 if (sender instanceof Player && sender.hasPermission("tfquiz.admin.signs")) results.add("sign");
                 if (sender instanceof Player && sender.hasPermission("tfquiz.reload")) results.add("reload");
                 break;

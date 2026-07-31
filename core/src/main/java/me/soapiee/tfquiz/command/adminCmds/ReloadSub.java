@@ -20,10 +20,11 @@ import java.util.List;
 public class ReloadSub extends AbstractAdminSub {
 
     @Getter private final String IDENTIFIER = "reload";
+    private final String INSTANT_RELOAD_FLAG = "confirm";
     private final ConversationFactory convoFactory;
 
     public ReloadSub(TFQuiz main) {
-        super(main, "TFQuiz.reload", 1, 1);
+        super(main, "TFQuiz.reload", 1, 2);
         convoFactory = new ConversationFactory(main)
                 .withFirstPrompt(new ReloadConvo(main))
                 .withTimeout(10)
@@ -36,8 +37,12 @@ public class ReloadSub extends AbstractAdminSub {
     public void execute(CommandSender sender, String label, String[] args) {
         if (!checkRequirements(sender, label, args)) return;
 
-        if (sender instanceof Player) startPlayerConvo(sender);
+        if (sender instanceof Player && !checkForFlag(args)) startPlayerConvo(sender);
         else startConsoleConvo(sender);
+    }
+
+    private boolean checkForFlag(String[] args) {
+        return args.length == 2 && args[1].equalsIgnoreCase(INSTANT_RELOAD_FLAG);
     }
 
     private void startPlayerConvo(CommandSender sender) {

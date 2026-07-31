@@ -36,6 +36,7 @@ admin_command_usage:
   - "#01d54a/tf sign add <gameID> &7- Voegt een nieuw spelbord toe voor het opgegeven spel"
   - "#01d54a/tf sign remove <signID> &7- Verwijdert een spelbord"
   - "#01d54a/tf sign edit <signID> <lineNo> text... &7- Bewerkt de tekst op het spelbord"
+admin_version: "&cHuidige TFQuiz-versie: %version%"
 admin_reload_command_usage: "&cGebruik: /tf reload"
 admin_reload_success: "&aTFQuiz succesvol herladen"
 admin_reload_error: "&cFout opgetreden tijdens het herladen van TFQuiz"

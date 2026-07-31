@@ -1,6 +1,6 @@
 name: ${project.parent.name}
 main: me.soapiee.tfquiz.TFQuiz
-version: 1.5.5
+version: 1.5.6
 author: Soapiee
 prefix: TFQuiz
 
@@ -31,6 +31,7 @@ permissions:
       tfquiz.admin: true
       tfquiz.admin.bypassflags: true
       tfquiz.admin.notification: true
+      tfquiz.admin.version: true
   tfquiz.admin.signs:
     description: Allows access to /tf sign
     default: op
@@ -39,6 +40,9 @@ permissions:
     default: op
   tfquiz.admin.notification:
     description: The user will be sent a notification if there is an update available
+    default: op
+  tfquiz.admin.version:
+    description: The user can view the version of the plugin
     default: op
   tfquiz.reload:
     description: Allows access to /tf reload
