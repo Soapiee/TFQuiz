@@ -31,7 +31,7 @@ public class VersionManager {
         SpectatorHandler handler;
 
         try {
-            String version = Utils.VERSION;
+            String version = Utils.SERVER_VERSION;
             String packageName = VersionManager.class.getPackage().getName();
 
             if (Utils.getMajorVersion() == 26) version = "26_1";

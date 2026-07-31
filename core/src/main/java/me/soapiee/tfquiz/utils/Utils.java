@@ -13,24 +13,29 @@ import java.util.regex.Pattern;
 public final class Utils {
 
     public static final boolean IS_PAPER = detectPaper();
-    public static final String VERSION = getVersion();
+    public static final String SERVER_VERSION = getServerVersion();
+    public static final String PLUGIN_VERSION = getPluginVersion();
 
     public static int getMinorVersion() {
-        String[] parts = VERSION.split("_");
+        String[] parts = SERVER_VERSION.split("_");
 
         if (parts[0].equalsIgnoreCase("1")) return parts.length == 3 ? Integer.parseInt(parts[2]) : 0;
         return Integer.parseInt(parts[1]);
     }
 
     public static int getMajorVersion() {
-        String[] parts = VERSION.split("_");
+        String[] parts = SERVER_VERSION.split("_");
 
         if (parts[0].equalsIgnoreCase("1")) return Integer.parseInt(parts[1]);
         return Integer.parseInt(parts[0]);
     }
 
-    public static String getVersion() {
+    public static String getServerVersion() {
         return Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
+    }
+
+    public static String getPluginVersion() {
+        return Bukkit.getPluginManager().getPlugin("TrueFalseQuiz").getDescription().getVersion();
     }
 
     public static void consoleMsg(String message) {
